@@ -47,5 +47,12 @@ public class AccountController {
         auth.register(user.getUsername(), user.getPassword(), user.getRole());
         return "{\"success\":true}";
     }
+    
+	/*
+	 * @RequestMapping(path = "/logout", method = RequestMethod.POST) public String
+	 * logout(@RequestBody User user, RedirectAttributes flash) {
+	 * 
+	 * }
+	 */
 
 }
