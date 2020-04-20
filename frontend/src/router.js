@@ -4,6 +4,11 @@ import auth from './auth'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import Location from './views/Location.vue'
+import Map from './views/Map.vue'
+import Profile from './views/Profile.vue'
+import Survey from './views/Survey.vue'
+
 
 Vue.use(Router)
 
@@ -25,7 +30,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -44,6 +49,46 @@ const router = new Router({
         requiresAuth: false
       }
     },
+    {
+      path: "/location",
+      name: "location",
+      component: Location,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: Register,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/survey",
+      name: "survey",
+      component: Survey,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/profile/:username",
+      name: "profile",
+      component: Profile,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/map",
+      name: "map",
+      component: Map,
+      meta: {
+        requiresAuth: false
+      }
+    }
   ]
 })
 
