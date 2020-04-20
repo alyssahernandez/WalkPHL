@@ -9,7 +9,6 @@ import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
 import Survey from './views/Survey.vue'
 
-
 Vue.use(Router)
 
 /**
@@ -30,7 +29,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
