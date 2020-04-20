@@ -48,6 +48,7 @@ public class AccountController {
         return "{\"success\":true}";
     }
     
+	
 	/*
 	 * @RequestMapping(path = "/logout", method = RequestMethod.POST) public String
 	 * logout(@RequestBody User user, RedirectAttributes flash) {

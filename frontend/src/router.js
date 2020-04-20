@@ -7,7 +7,7 @@ import Register from './views/Register.vue'
 import Location from './views/Location.vue'
 import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
-import Survey from './views/Survey.vue'
+import Review from './views/Review.vue'
 
 Vue.use(Router)
 
@@ -29,7 +29,7 @@ const router = new Router({
       name: 'home',
       component: Home,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -57,17 +57,9 @@ const router = new Router({
       }
     },
     {
-      path: "/register",
-      name: "register",
-      component: Register,
-      meta: {
-        requiresAuth: false
-      }
-    },
-    {
-      path: "/survey",
-      name: "survey",
-      component: Survey,
+      path: "/review",
+      name: "review",
+      component: Review,
       meta: {
         requiresAuth: false
       }
@@ -77,7 +69,7 @@ const router = new Router({
       name: "profile",
       component: Profile,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
