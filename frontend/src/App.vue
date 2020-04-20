@@ -2,13 +2,18 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link>
-      <router-link v-if="getToken !== null" to="/login" v-on:click="logout()">Login</router-link>
+      <div v-if= "token === null">
+        <router-link to="/login">Login</router-link>
+      </div>
+    
     </div>
     <router-view/>
   </div>
 </template>
 
 <script>
+import auth from '../auth';
+
 export default {
   
 }
