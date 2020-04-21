@@ -23,5 +23,15 @@ export default {
   height: 100vh;
 }
 <style>
+@media only screen and (max-width: 768px) {
+  #app {
+    background-color: red;
+  }
+}
 
+@media only screen and (min-width: 768px) {
+  #app {
+    background-color: blue;
+  }
+}
 </style>
