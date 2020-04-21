@@ -33,6 +33,9 @@ export default {
         map.setCenter(results[0].geometry.location);
         map.fitBounds(results[0].geometry.viewport);
       });
+
+      
+      
     } catch (error) {
       console.error(error);
     }
