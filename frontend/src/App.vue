@@ -2,19 +2,20 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link>
-      <router-link v-if="!loggedIn" to="/login">Login</router-link>
-      <router-link v-if="loggedIn" to="/logout">Logout</router-link>
+      <div>
+        <router-link to="/login">Login</router-link>
+        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+      </div>
       
     </div>
-    <router-view/>
+    <router-view v-on:loginUpdated="setLoggedIn"/>
     <div class="App"></div>
   </div>
 </template>
 
 <script>
-
+import auth from './auth'
 import gmapsInit from './utils/gmaps';
-import auth from '../src/auth';
 
 export default {
   name: 'App',
@@ -40,12 +41,24 @@ export default {
   components: {
 
   },
-  computed: {
-    loggedIn() {
-      return auth.getToken;
+  data() {
+    return {
+      loggedIn: false
     }
+  },
+  methods: {
+    logout() {
+      console.log("logging out");
+      this.loggedIn = false;
+      auth.logout();
+    },
+    setLoggedIn() {
+      this.loggedIn = auth.loggedIn();
+    }
+  },
+  created() {
+    this.loggedIn = auth.loggedIn();
   }
-  
 }
 
 </script>
