@@ -6,6 +6,7 @@
     
     <h1 class="app-title">WalkPHL</h1>
     <p>You must be authenticated to see this</p>
+    <map-widget></map-widget>
   </div>
 </template>
 

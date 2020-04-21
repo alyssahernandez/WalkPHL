@@ -14,13 +14,12 @@
 </template>
 <script>
 import auth from './auth'
-
-// import gmapsInit from './utils/gmaps';
+import gmapsInit from './utils/gmaps'
 
 export default {
   name: 'App',
 
-  /*
+  
   async mounted() {
     try {
       const google = await gmapsInit();
@@ -42,7 +41,7 @@ export default {
       console.error(error);
     }
   }, 
-  */
+  
 
   components: {
   
