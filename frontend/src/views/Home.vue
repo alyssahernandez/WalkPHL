@@ -38,10 +38,6 @@ mounted()  {
 }
 </script>
 
-<script async defer>
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTH-uqyQy7p8oz1hiDeYXFcSnefPoVTqI&callback=initMap"
-</script>
-
 <style scoped>
 .app-title {
   font-family: 'Source Sans Pro', Arial, sans-serif;
