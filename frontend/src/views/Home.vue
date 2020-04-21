@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <h1 class="app-title">WalkPHL</h1>
     <p>You must be authenticated to see this</p>
   </div>
 </template>
@@ -12,9 +12,13 @@ export default {
 </script>
 
 <style scoped>
-.home {
+
+
+@media only screen and (max-width: 768px) {
 
 }
 
+@media only screen and (min-width: 768px) {
 
+}
 </style>
