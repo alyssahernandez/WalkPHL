@@ -9,14 +9,44 @@
       
     </div>
     <router-view v-on:loginUpdated="setLoggedIn"/>
+    <div class="App"></div>
   </div>
 </template>
 
 <script>
 import auth from './auth'
 
+// import gmapsInit from './utils/gmaps';
+
 export default {
+  name: 'App',
+
+  /*
+  async mounted() {
+    try {
+      const google = await gmapsInit();
+      const geocoder = new google.maps.Geocoder();
+      const map = new google.maps.Map(this.$el);
+
+      geocoder.geocode({ address: 'Austria' }, (results, status) => {
+        if (status !== 'OK' || !results[0]) {
+          throw new Error(status);
+        }
+
+        map.setCenter(results[0].geometry.location);
+        map.fitBounds(results[0].geometry.viewport);
+      });
+
+      
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }, 
+  */
+
   components: {
+    
   },
   data() {
     return {
@@ -43,9 +73,16 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
+
+
 #app {
   width: 100vw;
   height: 100vh;
+}
+
+.blue-green-gradient-vertical {
+  background: linear-gradient(180deg, blue, green);
 }
 
 @media only screen and (max-width: 768px) {

@@ -1,44 +1,41 @@
 <template>
   <div class="home">
     
-
-
+    <button class="button is-rounded blue-green-gradient-vertical">Start Walking</button>
+    
     <h1 class="app-title">WalkPHL</h1>
     <p>You must be authenticated to see this</p>
   </div>
 </template>
 
 <script>
-//import GoogleMapsLoader from 'google-maps-api-loader';
 
 export default {
-  name: 'home',
-
-
-}
+  name: 'Home',
+  
+  }
 </script>
 
 <style scoped>
+
+
+
 .app-title {
-  font-family: 'Lobster', Arial, sans-serif;
+  font-family: 'Francois One', sans-serif;
+  color: #03b6fc;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
 .home {
-  width: 100%;
-  height: 100%;
-  background: url('https://billypenn.com/wp-content/uploads/2019/04/transitlayer-02-800x450.png') no-repeat center;
-  background-size: cover;
+  width: 100vw;
+  height: 100vh;
 }
 
-/*
-.home:before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  top: 0; bottom: 0;
-  background: rgba(235, 235, 235, 0.5);
-}
-*/
 
 
 @media only screen and (max-width: 768px) {
