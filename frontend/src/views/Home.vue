@@ -1,31 +1,38 @@
 <template>
   <div class="home">
     <div class="map">
-
+      <GmapMap
+        :center="{lat:39.9526, lng:-75.1652}"
+        :zoom="7"
+        map-type-id="terrain"
+        style="width: 500px; height: 300px"
+      >
+        <GmapMarker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true"
+          :draggable="true"
+          @click="center=m.position"
+        />
+      </GmapMap>
     </div>
-
-
     <h1 class="app-title">WalkPHL</h1>
     <p>You must be authenticated to see this</p>
   </div>
 </template>
 
 <script>
-import GoogleMapsLoader from 'google-maps-api-loader';
+//import GoogleMapsLoader from 'google-maps-api-loader';
 
 export default {
   name: 'home',
 
 
 mounted()  {
-    GoogleMapsLoader.load(function(google) {
-      var uluru = {lat: -25.344, lng: 131.036};
-      let map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: uluru});
-        var marker = new google.maps.Marker({position: uluru, map: map});   
+    this.$refs.mapRef.$mapPromise.then((map) => {
+      map.panTo({lat: 1.38, lng: 103.80})
     })
-
 },
 
 }
