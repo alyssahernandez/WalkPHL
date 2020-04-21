@@ -49,7 +49,6 @@ export default {
         user = parsedToken;
       }
     }
-
     return user;
   },
   logout() {

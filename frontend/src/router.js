@@ -8,7 +8,7 @@ import Location from './views/Location.vue'
 import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
 import Review from './views/Review.vue'
-import Logout from './components/Logout.vue'
+
 
 Vue.use(Router)
 
@@ -48,11 +48,6 @@ const router = new Router({
       meta: {
         requiresAuth: false
       }
-    },
-    {
-      path: "/logout",
-      name: "logout",
-      component: Logout
     },
     {
       path: "/location",
