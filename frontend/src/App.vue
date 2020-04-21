@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link>
       <div>
         <router-link v-if="!loggedIn" to="/login">Login</router-link>
-        <router-link to="/logout">Logout</router-link>
+        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
       </div>
       
     </div>
@@ -12,16 +12,14 @@
     <div class="App"></div>
   </div>
 </template>
-
 <script>
 import auth from './auth'
-
-// import gmapsInit from './utils/gmaps';
+import gmapsInit from './utils/gmaps'
 
 export default {
   name: 'App',
 
-  /*
+  
   async mounted() {
     try {
       const google = await gmapsInit();
@@ -43,10 +41,10 @@ export default {
       console.error(error);
     }
   }, 
-  */
+  
 
   components: {
-    
+  
   },
   data() {
     return {
@@ -68,6 +66,7 @@ export default {
   created() {
     this.loggedIn = auth.loggedIn();
   }
+ 
 }
 
 </script>
