@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link>
       <div>
         <router-link v-if="!loggedIn" to="/login">Login</router-link>
-        <a v-if="loggedIn" v-on:click.prevent="logout" href="/">Logout</a>
+        <router-link to="/logout">Logout</router-link>
       </div>
       
     </div>
@@ -15,10 +15,13 @@
 
 <script>
 import auth from './auth'
-import gmapsInit from './utils/gmaps';
+
+// import gmapsInit from './utils/gmaps';
 
 export default {
   name: 'App',
+
+  
   async mounted() {
     try {
       const google = await gmapsInit();
@@ -39,10 +42,11 @@ export default {
     } catch (error) {
       console.error(error);
     }
-  },
+  }, 
+  
 
   components: {
-
+    
   },
   data() {
     return {
@@ -51,9 +55,11 @@ export default {
   },
   methods: {
     logout() {
-      console.log("logging out");
       this.loggedIn = false;
       auth.logout();
+      fetch(`${process.env.VUE_APP_REMOTE_API}/logout`, {
+        method: 'POST',
+      })
     },
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();
@@ -67,14 +73,16 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
+
+
 #app {
   width: 100vw;
   height: 100vh;
 }
 
-.App {
-  width: 100vw;
-  height: 100vh;
+.blue-green-gradient-vertical {
+  background: linear-gradient(180deg, blue, green);
 }
 
 @media only screen and (max-width: 768px) {

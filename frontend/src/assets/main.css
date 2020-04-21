@@ -1,0 +1,5 @@
+.blue-green-gradient-vertical {
+    background: linear-gradient(180deg, #2ddde3, #03fc88);
+    color: white;
+    text-shadow: 1px 1px 4px #000000;
+  }
