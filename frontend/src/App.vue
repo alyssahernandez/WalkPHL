@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link>
       <router-link v-if="!loggedIn" to="/login">Login</router-link>
-      <router-link v-if="loggedIn" to="/">Logout</router-link>
+      <router-link v-if="loggedIn" to="/logout">Logout</router-link>
       
     </div>
     <router-view/>
@@ -23,7 +23,6 @@ export default {
   }
   
 }
-
 
 </script>
 
