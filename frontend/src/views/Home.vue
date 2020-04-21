@@ -12,9 +12,7 @@ export default {
 </script>
 
 <style scoped>
-.app-title {
-  font-family:
-}
+
 
 @media only screen and (max-width: 768px) {
 
