@@ -1,8 +1,7 @@
 <template>
-  <div>
-  <div class="Home"></div>
+  <div class="home">
     
-
+    <button class="button is-rounded blue-green-gradient-vertical">Start Walking</button>
     
     <h1 class="app-title">WalkPHL</h1>
     <p>You must be authenticated to see this</p>
@@ -19,8 +18,11 @@ export default {
 
 <style scoped>
 
+
+
 .app-title {
-  font-family: Arial, sans-serif;
+  font-family: 'Francois One', sans-serif;
+  color: #03b6fc;
 }
 
 
@@ -29,7 +31,7 @@ body {
   padding: 0;
 }
 
-.Home {
+.home {
   width: 100vw;
   height: 100vh;
 }
