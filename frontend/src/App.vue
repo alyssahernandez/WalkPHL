@@ -12,31 +12,16 @@
 </template>
 
 <script>
-// import auth from '../auth';
+//import auth from '../auth';
 
 export default {
   
 }
 </script>
-
-<style>
 #app {
   width: 100vw;
   height: 100vh;
 }
+<style>
 
-@media only screen and (max-width: 768px) {
-    #app {
-        background-color: blue;
-    }
-    img { 
-        display: none;
-    }
-}
-
-@media only screen and (min-width: 768px) {
-    #app {
-        background-color: red;
-    }
-}
 </style>
