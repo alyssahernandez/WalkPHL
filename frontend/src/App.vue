@@ -3,8 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link>
       <div>
-        <router-link to="/login">Login</router-link>
-        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+        <router-link v-if="!loggedIn" to="/login">Login</router-link>
+        <router-link to="/logout">Logout</router-link>
       </div>
       
     </div>
@@ -55,9 +55,11 @@ export default {
   },
   methods: {
     logout() {
-      console.log("logging out");
       this.loggedIn = false;
       auth.logout();
+      fetch(`${process.env.VUE_APP_REMOTE_API}/logout`, {
+        method: 'POST',
+      })
     },
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();

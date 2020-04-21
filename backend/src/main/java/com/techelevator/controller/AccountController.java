@@ -50,12 +50,7 @@ public class AccountController {
     
 	
 	@RequestMapping(path = "/logout", method = RequestMethod.POST) 
-	public String logout(@RequestBody User user, RedirectAttributes flash) {
-	  
-		if (auth.isLoggedIn()) {
-			auth.logOff();
-			return "{\"success\":true}";
-		}
-		return "{\booo\":false";
+	public void logout(RedirectAttributes flash) {
+		auth.logOff();
 	}	
 }
