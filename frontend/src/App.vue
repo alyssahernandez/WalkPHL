@@ -3,8 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link>
       <div>
-        <router-link to="/login">Login</router-link>
-        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+        <router-link v-if="!loggedIn" to="/login">Login</router-link>
+        <a v-if="loggedIn" v-on:click.prevent="logout" href="/">Logout</a>
       </div>
       
     </div>
