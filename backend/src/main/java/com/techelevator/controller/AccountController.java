@@ -49,18 +49,10 @@ public class AccountController {
     }
     
 	
-	
 	@RequestMapping(path = "/logout", method = RequestMethod.POST) 
 	public String logout(@RequestBody User user, RedirectAttributes flash) throws UnauthorizedException {
 	  
-		if (auth.isLoggedIn())
-		{
 			auth.logOff();
 			return "{\"success\":true}";
-		}
-		else
-		{
-			throw new UnauthorizedException();
-		}
 	}	
 }
