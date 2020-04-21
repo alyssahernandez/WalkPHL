@@ -17,10 +17,9 @@ export default {
   saveToken(token) {
     localStorage.setItem('Authorization', token);
   },
-  getters: {
-    loggedIn() {
-      return this.getToken !== null;
-    }
+  
+  loggedIn() {
+    return this.getToken() !== null;
   },
   /**
    * Invalidates the local authentication token.
