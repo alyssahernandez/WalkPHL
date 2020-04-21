@@ -2,19 +2,22 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link>
-      <div v-if= "token === null">
-        <router-link to="/login">Login</router-link>
-      </div>
-    
+      <router-link v-if="!loggedIn" to="/login">Login</router-link>
+      <router-link v-if="loggedIn" to="/logout">Logout</router-link>
     </div>
     <router-view/>
   </div>
 </template>
 
 <script>
-// import auth from '../auth';
+import auth from '../src/auth';
 
 export default {
+  computed: {
+    loggedIn() {
+      return auth.getToken;
+    }
+  }
   
 }
 
