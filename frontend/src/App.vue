@@ -15,14 +15,20 @@
 
 <script>
 import auth from './auth'
-
-// import gmapsInit from './utils/gmaps';
+import gmapsInit from './utils/gmaps';
 
 export default {
   name: 'App',
 
-  
-  async mounted() {
+  components: {
+    
+  },
+  data() {
+    return {
+      loggedIn: false
+    }
+  },
+    async mounted() {
     try {
       const google = await gmapsInit();
       const geocoder = new google.maps.Geocoder();
@@ -41,16 +47,6 @@ export default {
       
     } catch (error) {
       console.error(error);
-    }
-  }, 
-  
-
-  components: {
-    
-  },
-  data() {
-    return {
-      loggedIn: false
     }
   },
   methods: {
