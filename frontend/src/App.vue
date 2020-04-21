@@ -81,10 +81,6 @@ export default {
   height: 100vh;
 }
 
-.blue-green-gradient-vertical {
-  background: linear-gradient(180deg, blue, green);
-}
-
 @media only screen and (max-width: 768px) {
     #app {
        
