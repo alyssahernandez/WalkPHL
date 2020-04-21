@@ -75,6 +75,9 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
 
+#nav {
+
+}
 
 #app {
   width: 100vw;
