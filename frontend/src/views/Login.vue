@@ -101,7 +101,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .login-form {
   z-index: 11;
   position: fixed;

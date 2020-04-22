@@ -1,38 +1,61 @@
 <template>
-  <div id="register" class="text-center">
+  <div>
     <form class="form-register registration-form" @submit.prevent="register">
-      <h1 class="h3 mb-3 font-weight-normal">Create Account</h1>
-      <div class="alert alert-danger" role="alert" v-if="registrationErrors">
+      <h1>Create Account</h1>
+      <div class="alert is-danger" role="alert" v-if="registrationErrors">
         There were problems registering this user.
       </div>
-      <label for="username" class="sr-only">Username</label>
-      <input
-        type="text"
-        id="username"
-        class="form-control"
-        placeholder="Username"
-        v-model="user.username"
-        required
-        autofocus
-      />
+      
+      <label for="username" class="label">Username</label>
+      <div class="control has-icos-left has-icons-right">
+        <input
+          type="text"
+          id="username"
+          class="control"
+          placeholder="Username"
+          v-model="user.username"
+          required
+          autofocus
+        />
+        <span class="icon is-small is-left">
+          <i class="fas fa-user"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-check"></i>
+        </span>
+      </div>
+      <div class="control has-icons-left has-icons-right">
       <label for="password" class="sr-only">Password</label>
-      <input
-        type="password"
-        id="password"
-        class="form-control"
-        placeholder="Password"
-        v-model="user.password"
-        required
-      />
-      <input
-        type="password"
-        id="confirmPassword"
-        class="form-control"
-        placeholder="Confirm Password"
-        v-model="user.confirmPassword"
-        required
-      />
-      <router-link :to="{ name: 'login' }">
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Password"
+          v-model="user.password"
+          required
+        />
+        <span class="icon is-small is-left">
+          <i class="fas fa-user"></i>
+        </span>
+          <span class="icon is-small is-right">
+          <i class="fas fa-check"></i>
+        </span>
+        <input
+          type="password"
+          id="confirmPassword"
+          class="form-control"
+          placeholder="Confirm Password"
+          v-model="user.confirmPassword"
+          required
+        />
+         <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+          </span>
+            <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+      </div>
+      <router-link class="have-account-link" :to="{ name: 'login' }">
         Have an account?
       </router-link>
       <button class="btn btn-lg btn-primary btn-block" type="submit">
@@ -80,7 +103,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 .registration-form {
   z-index: 11;
@@ -88,4 +111,9 @@ export default {
   margin-top: 5em;
   display: flex;
 }
+
+.have-account-link {
+  color: black;
+}
+
 </style>
