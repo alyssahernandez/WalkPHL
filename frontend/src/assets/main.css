@@ -8,6 +8,11 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.explore-btn {
+  text-shadow: 1px 1px 4px #000000;
+  width: 30%;
+}
+
 .nav-menu-background {
   background-color: #575757;
   height: 3.5rem;

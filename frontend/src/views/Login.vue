@@ -87,5 +87,10 @@ export default {
   position: fixed;
   margin-top: 5em;
   display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+
 }
 </style>
