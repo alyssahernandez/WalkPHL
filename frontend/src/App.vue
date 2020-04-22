@@ -1,49 +1,26 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>
       <div>
         <router-link v-if="!loggedIn" to="/login">Login</router-link>
         <router-link to="/logout">Logout</router-link>
       </div>
       
     </div>
+    <router-link id="" to="/">Home</router-link>
     <router-view v-on:loginUpdated="setLoggedIn"/>
     <div class="App"></div>
+
   </div>
 </template>
 
 <script>
-import auth from './auth'
-import gmapsInit from './utils/gmaps'
+import auth from './auth';
+//import gmapsInit from './utils/gmaps';
+
 
 export default {
   name: 'App',
-
-  
-  async mounted() {
-    try {
-      const google = await gmapsInit();
-      const geocoder = new google.maps.Geocoder();
-      const map = new google.maps.Map(this.$el);
-
-      geocoder.geocode({ address: 'Austria' }, (results, status) => {
-        if (status !== 'OK' || !results[0]) {
-          throw new Error(status);
-        }
-
-        map.setCenter(results[0].geometry.location);
-        map.fitBounds(results[0].geometry.viewport);
-      });
-
-      
-      
-    } catch (error) {
-      console.error(error);
-    }
-  }, 
-  
-
   components: {
     
   },
@@ -74,6 +51,11 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 #app {
   width: 100vw;
@@ -92,4 +74,10 @@ export default {
         
     }
 }
+
+.App {
+  width: 100px;
+  height: 100px;
+}
+
 </style>
