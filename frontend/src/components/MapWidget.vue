@@ -7,8 +7,6 @@
 <script>
 import gmapsInit from './../utils/gmaps';
 
-import MarkerClusterer from '@google/markerclusterer';
-
 const locations = [
   {
     position: {
@@ -52,7 +50,7 @@ async mounted() {
       const google = await gmapsInit();
       const geocoder = new google.maps.Geocoder();
       const map = new google.maps.Map(this.$el);
-      geocoder.geocode({ address: `Philadelphia` }, (results, status) => {
+      geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
         if (status !== `OK` || !results[0]) {
           throw new Error(status);
         }

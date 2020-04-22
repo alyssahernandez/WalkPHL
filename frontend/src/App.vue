@@ -133,8 +133,8 @@ export default {
 }
 
 .App {
-  width: 100px;
-  height: 100px;
+  width: 100vh;
+  height: 100vh;
 }
 
 </style>
