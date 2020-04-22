@@ -45,8 +45,8 @@ a:visited {
 }
 
 /* mouse over link */
-a:hover {
-  color: #03fc88;
+a:hover, a:focus {
+  color: #03b6fc;
 }
 
 /* selected link */

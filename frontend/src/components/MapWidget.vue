@@ -7,6 +7,33 @@
 <script>
 import gmapsInit from './../utils/gmaps';
 
+const DirectionRequests = [
+    {
+      origin: 'City Hall, Philadelphia',
+      destination: 'Philadelphia Museum of Art',
+      travelMode: 'WALKING',
+      provideRouteAlternatives: true,
+    },
+    {
+      origin: 'City Hall, Philadelphia',
+      destination: 'Reading Terminal Market',
+      travelMode: 'WALKING',
+      provideRouteAlternatives: true,
+    },
+    {
+      origin: 'City Hall, Philadelphia',
+      destination: 'Liberty Bell, Philadelphia',
+      travelMode: 'WALKING',
+      provideRouteAlternatives: true,
+    },
+    {
+      origin: 'Liberty Bell, Philadelphia',
+      destination: 'City Hall, Philadelphia',
+      travelMode: 'WALKING',
+      provideRouteAlternatives: true,
+    },
+];
+
 const locations = [
   {
     position: {
@@ -44,36 +71,41 @@ const locations = [
 export default {
     name: 'map-widget',
     data() {
+      return {
+        
+      }
 
     },
-async mounted() {
-    try {
-      const google = await gmapsInit();
-      const geocoder = new google.maps.Geocoder();
-      const map = new google.maps.Map(this.$el);
-      geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
-        if (status !== `OK` || !results[0]) {
-          throw new Error(status);
-        }
-        map.setCenter(results[0].geometry.location);
-        map.fitBounds(results[0].geometry.viewport);
-      });
-      const markerClickHandler = (marker) => {
-        map.setZoom(13);
-        map.setCenter(marker.getPosition());
-      };
-      const markers = locations
-        .map((location) => {
-          const marker = new google.maps.Marker({ ...location, map });
-          marker.addListener(`click`, () => markerClickHandler(marker));
-          return marker;
+    async mounted() {
+      try {
+        const google = await gmapsInit();
+        const geocoder = new google.maps.Geocoder();
+        const map = new google.maps.Map(this.$el);
+        geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
+          if (status !== `OK` || !results[0]) {
+            throw new Error(status);
+          }
+          map.setCenter(results[0].geometry.location);
+          map.fitBounds(results[0].geometry.viewport);
         });
-      // eslint-disable-next-line no-new;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
+        const markerClickHandler = (marker) => {
+          map.setZoom(13);
+          map.setCenter(marker.getPosition());
+        };
+        const markers = locations
+          .map((location) => {
+            const marker = new google.maps.Marker({ ...location, map });
+            marker.addListener(`click`, () => markerClickHandler(marker));
+            return marker;
+          });
+        // eslint-disable-next-line no-new;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    },
+    methods: {
     }
-  },
 }
 </script>
 

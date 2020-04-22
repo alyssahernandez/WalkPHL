@@ -1,34 +1,54 @@
 <template>
-  <div id="login" class="text-center">
-    <form class="form-signin login-form" @submit.prevent="login">
-      <h1 class="h3 mb-3 font-weight-normal">Please Sign In</h1>
-      <div class="alert alert-danger" role="alert" v-if="invalidCredentials">
-        Invalid username and password!
+  <div id="main-div">
+    <form class="login-form" @submit.prevent="login">
+    <h1>Please Sign In</h1>
+      <div class="field">
+        <div class="help is-danger" role="alert" v-if="invalidCredentials">
+          Invalid username and password!
+        </div>
+        <div class="alert alert-success" role="alert" v-if="this.$route.query.registration">
+          Thank you for registering, please sign in.
+        </div>
+        <label for="username" class="label">Username</label>
+        <div class="control has-icons-left has-icons-right">
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            placeholder="Username"
+            v-model="user.username"
+            required
+            autofocus
+          />
+          <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+        </div>
+        <div class="control has-icons-left has-icons-right">
+        <label for="password" class="label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Password"
+            v-model="user.password"
+            required
+          />
+          <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+          </span>
+            <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+        </div>
+        <a class="need-account-link" href="/register">Need an account?</a>
+          <div class="control">
+           <button class="button" type="submit">Submit</button>
+          </div>
       </div>
-      <div class="alert alert-success" role="alert" v-if="this.$route.query.registration">
-        Thank you for registering, please sign in.
-      </div>
-      <label for="username" class="sr-only">Username</label>
-      <input
-        type="text"
-        id="username"
-        class="form-control"
-        placeholder="Username"
-        v-model="user.username"
-        required
-        autofocus
-      />
-      <label for="password" class="sr-only">Password</label>
-      <input
-        type="password"
-        id="password"
-        class="form-control"
-        placeholder="Password"
-        v-model="user.password"
-        required
-      />
-      <router-link :to="{ name: 'register' }">Need an account?</router-link>
-      <button class="button is-primary" type="submit">Sign in</button>
     </form>
   </div>
 </template>
@@ -72,16 +92,15 @@ export default {
             }
             auth.saveToken(token);
             this.$emit('loginUpdated');
-            this.$router.push({name: 'home'});
+            this.$router.push('/').catch(err => {})
           }
         })
-        .catch((err) => console.error(err));
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .login-form {
   z-index: 11;
   position: fixed;
@@ -90,7 +109,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-content: center;
+  align-content: center; 
+}
 
+.need-account-link {
+  color: black;
+}
+
+#main-div {
+  margin-left: 10px;
 }
 </style>

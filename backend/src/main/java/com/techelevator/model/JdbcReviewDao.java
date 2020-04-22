@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
-public class JdbcReviewDao {
+public class JdbcReviewDao implements ReviewDao
+{
 
 }
