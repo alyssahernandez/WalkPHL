@@ -14,7 +14,7 @@
 </template>
 <script>
 import auth from './auth'
-import gmapsInit from './utils/gmaps'
+//import gmapsInit from './utils/gmaps'
 
 export default {
   name: 'App',
@@ -53,10 +53,17 @@ export default {
   },
   methods: {
     logout() {
-      this.loggedIn = false;
-      auth.logout();
       fetch(`${process.env.VUE_APP_REMOTE_API}/logout`, {
         method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken()
+        }
+      })
+      .then(response => {
+        if(response.ok) {
+          auth.logout();
+          this.loggedIn = false;
+        }
       })
     },
     setLoggedIn() {
