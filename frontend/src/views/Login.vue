@@ -14,7 +14,7 @@
           <input
             type="text"
             id="username"
-            class="form-control"
+            class="input form-control"
             placeholder="Username"
             v-model="user.username"
             required
@@ -32,7 +32,7 @@
           <input
             type="password"
             id="password"
-            class="form-control"
+            class="input form-control"
             placeholder="Password"
             v-model="user.password"
             required
