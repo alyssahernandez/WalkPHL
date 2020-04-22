@@ -13,10 +13,11 @@
 .app-title-white {
   font-family: 'Francois One', sans-serif;
   color: white;
+  font-size: 4vh;
 }
 
 
-.app-title {
+.app-title-landing {
   font-family: 'Francois One', sans-serif;
   color: #03b6fc;
 }

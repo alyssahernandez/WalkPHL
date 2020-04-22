@@ -1,12 +1,11 @@
 <template>
   <div class="home">
-    
-    <div class="hi"></div>
-    <button class="button is-rounded blue-green-gradient-vertical">Start </button>
-    
-    <h1 class="app-title">WalkPHL</h1>
-    <p>You must be authenticated to see this</p>
-    <map-widget></map-widget>
+    <div class="container">
+      <h1 class="app-title-landing">WalkPHL</h1>
+      <p>You must be authenticated to see this</p>
+      <button class="button is-rounded blue-green-gradient-vertical">Start Exploring</button>
+      <map-widget></map-widget>
+    </div>
   </div>
 </template>
 
@@ -19,13 +18,6 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-.app-title {
-  font-family: 'Francois One', sans-serif;
-  color: #03b6fc;
-}
 
 
 body {
