@@ -72,7 +72,7 @@ export default {
             }
             auth.saveToken(token);
             this.$emit('loginUpdated');
-            this.$router.push('/');
+            this.$router.push({name: 'home'});
           }
         })
         .catch((err) => console.error(err));
