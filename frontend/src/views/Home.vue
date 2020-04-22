@@ -5,7 +5,7 @@
     <div class="container landing-text">
       <h1 class="app-title-landing">WalkPHL</h1>
       <p class="browser-view-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <button class="button is-rounded is-primary">Start Exploring</button>
+      <button class="button is-rounded is-primary explore-btn">Start Exploring</button>
     </div>
   </div>
 </template>
