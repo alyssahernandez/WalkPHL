@@ -26,6 +26,7 @@ CREATE TABLE user_reviews
         user_id int not null,
         title varchar(255) not null,
         review varchar(255) not null,
+        review_date date not null,
         
         constraint fk_user_reviews_users foreign key (user_id) references users (id)
 );
@@ -42,6 +43,7 @@ CREATE TABLE badge
         badge_id serial PRIMARY KEY,
         category_id int,
         name varchar(64) not null,
+        description varchar(128) not null,
         
         constraint fk_badge_badge_category foreign key (category_id) references badge_category (category_id)
 );
