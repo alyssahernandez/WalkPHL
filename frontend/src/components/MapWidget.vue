@@ -44,7 +44,9 @@ const locations = [
 export default {
     name: 'map-widget',
     data() {
-
+      return {
+        
+      }
     },
 async mounted() {
     try {
