@@ -34,7 +34,7 @@ public class AccountController {
             throw new UnauthorizedException();
         }
     }
-
+ 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public String register(@Valid @RequestBody User user, BindingResult result) throws UserCreationException {
         if (result.hasErrors()) {

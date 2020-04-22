@@ -1,6 +1,6 @@
 <template>
   <div id="register" class="text-center">
-    <form class="form-register" @submit.prevent="register">
+    <form class="form-register registration-form" @submit.prevent="register">
       <h1 class="h3 mb-3 font-weight-normal">Create Account</h1>
       <div class="alert alert-danger" role="alert" v-if="registrationErrors">
         There were problems registering this user.
@@ -81,4 +81,11 @@ export default {
 </script>
 
 <style>
+
+.registration-form {
+  z-index: 11;
+  position: fixed;
+  margin-top: 5em;
+  display: flex;
+}
 </style>

@@ -1,36 +1,60 @@
 <template>
   <div class="home">
-    
-    <div class="hi"></div>
-    <button class="button is-rounded blue-green-gradient-vertical">Start </button>
-    
-    <h1 class="app-title">WalkPHL</h1>
-    <p>You must be authenticated to see this</p>
-    <map-widget></map-widget>
+    <map-widget class="static-map"></map-widget>
+    <div class="map-overlay"></div>
+    <div class="container landing-text">
+      <h1 class="app-title-landing">WalkPHL</h1>
+      <p class="browser-view-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <button class="button is-rounded is-primary">Start Exploring</button>
+    </div>
   </div>
 </template>
 
 <script>
-import MapWidget from '@/components/MapWidget'
+import MapWidget from "@/components/MapWidget";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     MapWidget
   }
-  
-  }
+};
 </script>
 
 <style scoped>
-
-
-
-.app-title {
-  font-family: 'Francois One', sans-serif;
-  color: #03b6fc;
+.static-map {
+  height: 150%;
+  width: 150%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  filter: grayscale(100%);
 }
 
+.browser-view-description {
+  font-weight: bold;
+  font-size: 1.2em;
+  padding-bottom: 1em;
+  text-shadow: 1px 1px 4px #FFFFFF;
+}
+
+.map-overlay {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0.60;
+}
+
+.landing-text {
+ position: fixed;
+ z-index: 2;
+ margin-top: 17em;
+ margin-left: 3em;
+ width: 42%; 
+}
 
 body {
   margin: 0;
@@ -42,19 +66,15 @@ body {
   height: 100vh;
 }
 
-
-
 @media only screen and (max-width: 768px) {
-
 }
 
 @media only screen and (min-width: 768px) {
-
 }
 
- #map {
-   width: 100%;
-   height: 400px;
-   background-color: grey;
- }
+#map {
+  width: 100%;
+  height: 400px;
+  background-color: grey;
+}
 </style>

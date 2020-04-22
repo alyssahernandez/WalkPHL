@@ -30,6 +30,7 @@ CREATE TABLE user_reviews
         constraint fk_user_reviews_users foreign key (user_id) references users (user_id)
 );
 
+-- Update badge/category to category + bridge table if we want badges to include multiple categories (e.g. Art Museum has a Museum category + Rocky category)
 CREATE TABLE badge_category
 (
         category_id serial PRIMARY KEY,

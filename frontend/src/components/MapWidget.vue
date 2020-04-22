@@ -40,6 +40,7 @@ const locations = [
   }
 ];
 
+
 export default {
     name: 'map-widget',
     data() {

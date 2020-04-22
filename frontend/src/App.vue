@@ -8,7 +8,7 @@
         
       </span>
       <h1 class="app-title-white level-item has-text-centered">
-        WalkPHL
+        <router-link to="/">WalkPHL</router-link>
       </h1>
       <span class="level-item has-text-centered">
         

@@ -1,24 +1,33 @@
 .blue-green-gradient-vertical {
-    background: linear-gradient(180deg, #2ddde3, #03fc88);
-    color: white;
-    text-shadow: 1px 1px 4px #000000;
-  }
+  background: linear-gradient(180deg, #2ddde3, #03fc88);
+  background: #03fc88;
+  color: white;
+  text-shadow: 1px 1px 4px #000000;
+  font-size: 1em;
+  width: 30%;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-  .nav-menu-background {
-    background-color: #575757;
-    height: 3.5rem;
-  }
+.nav-menu-background {
+  background-color: #575757;
+  height: 3.5rem;
+  width: 100%;
+  z-index: 10;
+  position: absolute;
+}
 
   
 .app-title-white {
   font-family: 'Francois One', sans-serif;
   color: white;
+  font-size: 4vh;
 }
 
 
-.app-title {
+.app-title-landing {
   font-family: 'Francois One', sans-serif;
   color: #03b6fc;
+  font-size: 5.5em;
 }
 
 a:link {
@@ -37,5 +46,5 @@ a:hover {
 
 /* selected link */
 a:active {
-  color: blue;
+  color: #03b6fc;
 }
