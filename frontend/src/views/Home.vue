@@ -10,9 +10,13 @@
 </template>
 
 <script>
+import MapWidget from '@/components/MapWidget'
 
 export default {
   name: 'Home',
+  components: {
+    MapWidget
+  }
   
   }
 </script>
