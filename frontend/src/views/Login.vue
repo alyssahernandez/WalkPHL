@@ -1,6 +1,6 @@
 <template>
   <div id="login" class="text-center">
-    <form class="form-signin" @submit.prevent="login">
+    <form class="form-signin login-form" @submit.prevent="login">
       <h1 class="h3 mb-3 font-weight-normal">Please Sign In</h1>
       <div class="alert alert-danger" role="alert" v-if="invalidCredentials">
         Invalid username and password!
@@ -82,5 +82,10 @@ export default {
 </script>
 
 <style>
-
+.login-form {
+  z-index: 11;
+  position: fixed;
+  margin-top: 5em;
+  display: flex;
+}
 </style>
