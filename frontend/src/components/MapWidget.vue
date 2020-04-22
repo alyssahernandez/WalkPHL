@@ -7,9 +7,6 @@
 <script>
 import gmapsInit from './../utils/gmaps';
 
-import MarkerClusterer from '@google/markerclusterer';
-
-/*
 const locations = [
   {
     position: {
@@ -42,7 +39,7 @@ const locations = [
     },
   }
 ];
-*/
+
 
 export default {
     name: 'map-widget',

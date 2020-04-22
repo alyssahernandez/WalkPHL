@@ -8,14 +8,14 @@
         
       </span>
       <h1 class="app-title-white level-item has-text-centered">
-        <router-link to="/">WalkPHL</router-link>
+        <a href="/">WalkPHL</a>
       </h1>
       <span class="level-item has-text-centered">
         
       </span>
       <span class="level-item has-text-centered">
         <router-link v-if="!loggedIn" to="/login">Sign In</router-link>
-                <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>  
+        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>  
       </span>
     </nav>
 
@@ -83,30 +83,6 @@ export default {
   },
   created() {
     this.loggedIn = auth.loggedIn();
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Get all "navbar-burger" elements
-      const $navbarBurgers = Array.prototype.slice.call(
-        document.querySelectorAll(".navbar-burger"),
-        0
-      );
-
-      // Check if there are any navbar burgers
-      if ($navbarBurgers.length > 0) {
-        // Add a click event on each of them
-        $navbarBurgers.forEach(el => {
-          el.addEventListener("click", () => {
-            // Get the target from the "data-target" attribute
-            const target = el.dataset.target;
-            const $target = document.getElementById(target);
-
-            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-            el.classList.toggle("is-active");
-            $target.classList.toggle("is-active");
-          });
-        });
-      }
-    });
   }
 };
 </script>
@@ -133,8 +109,8 @@ export default {
 }
 
 .App {
-  width: 100px;
-  height: 100px;
+  width: 100vh;
+  height: 100vh;
 }
 
 </style>
