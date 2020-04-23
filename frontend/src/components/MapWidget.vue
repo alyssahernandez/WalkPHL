@@ -237,9 +237,11 @@ export default {
           });
 
         const start = new google.maps.LatLng(locations[0].position.lat, locations[0].position.lng);
-        const end = new google.maps.LatLng(locations[2].position.lat, locations[2].position.lng);
+        const end = new google.maps.LatLng(locations[4].position.lat, locations[4].position.lng);
 
+        const directionsService = new google.maps.DirectionsService(); 
         const directionsDisplay = new google.maps.DirectionsRenderer();// also, constructor can get "DirectionsRendererOptions" object
+        
         directionsDisplay.setMap(map); // map should be already initialized.
 
         const request = {
@@ -247,7 +249,7 @@ export default {
             destination : end,
             travelMode : google.maps.TravelMode.DRIVING
         };
-        const directionsService = new google.maps.DirectionsService(); 
+
         directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
