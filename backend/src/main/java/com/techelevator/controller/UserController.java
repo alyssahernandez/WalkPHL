@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/profile")
+@RequestMapping()
 public class UserController {
     @Autowired
     private AuthProvider auth;
@@ -28,10 +28,5 @@ public class UserController {
     private UserDao user;
     
 	
-	@GetMapping(path = "/{username}") 
-	public User getUser(@PathVariable String username) {
-		
-		return user.getUserByUsername(username);
-		
-	}	
+	
 }

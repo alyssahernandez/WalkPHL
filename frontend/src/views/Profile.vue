@@ -1,6 +1,6 @@
 <template>
   <div class="contanier profile">
-      <h1>{{user}}</h1>
+      <h1>{{user.username}}</h1>
   </div>
 </template>
 
@@ -18,12 +18,20 @@ export default {
     User(username) {
       fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username, {
         method: 'GET',
-        header: {
-          Authorization: 'Bearer ' + auth.getToken()
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken(),
         }
       })
       .then((response) => {
-        return response.json;
+        if(response.ok) {
+          console.log(response);
+          return response.json();
+          
+        }
+      })
+      .then((user) => {
+        this.user = user;
+        console.log(user);
       })
       .catch(err => console.log(err))
     }
