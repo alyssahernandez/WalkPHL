@@ -14,8 +14,8 @@
         
       </span>
       <span class="level-item has-text-centered">
-        <router-link v-if="!loggedIn" to='/login'>Sign In</router-link>
-        <router-link v-if="loggedIn" :to="{name:'profile', params:{username: user.sub}}">{{user.sub}}</router-link>
+        <router-link v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
+        <router-link v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
         <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
       </span>
     </nav>
@@ -45,7 +45,7 @@
       </div>
     </div>
     -->
-    <router-view v-on:loginUpdated="setLoggedIn" />
+    <router-view v-on:loginUpdated="setLoggedIn"/>
   </div>
 </template>
 
@@ -61,8 +61,9 @@ export default {
   data() {
     return {
       loggedIn: false,
-      user: auth.getUser()
-    };
+      user: null
+      
+    }
   },
   methods: {
     logout() {
@@ -82,10 +83,15 @@ export default {
     },
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();
+      this.user = auth.getUser().sub;
+    },
+    setUsername(username) {
+      this.user = username;
     }
   },
   created() {
     this.loggedIn = auth.loggedIn();
+    this.user = auth.getUser().sub;
   }
 };
 </script>

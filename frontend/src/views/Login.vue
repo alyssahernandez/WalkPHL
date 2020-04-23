@@ -92,7 +92,7 @@ export default {
             }
             auth.saveToken(token);
             this.$emit('loginUpdated');
-            //this.$emit('username', this.username);
+            this.$emit('username', this.username);
             this.$router.push({name: 'home'});
           }
         })
