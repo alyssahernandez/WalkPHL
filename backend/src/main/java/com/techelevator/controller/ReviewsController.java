@@ -23,7 +23,7 @@ import com.techelevator.model.Review;
 import com.techelevator.model.ReviewDao;
 import com.techelevator.model.User;
 
-/*
+
 import com.techelevator.reviews.dao.ProductReviewDao;
 import com.techelevator.reviews.exception.ProductReviewNotFoundException;
 import com.techelevator.reviews.model.ProductReview;
@@ -34,14 +34,14 @@ import com.techelevator.reviews.model.ProductReview;
 public class ReviewsController {
 	
 	@Autowired
-	private ReviewDao ReviewDAO;
+	private ReviewDao reviewDAO;
+
 	
-	/*
 	// We return objects that are Beans
 	// typically POJOs or collections of POJOs
 	@GetMapping
 	public List<Review> list() {
-		//return ReviewDAO.list();
+		return 
 	}
 	
 	@PostMapping
@@ -53,7 +53,7 @@ public class ReviewsController {
 	}
 	
 	@GetMapping("/profile")
-	public Review read(@PathVariable User user){
+	public Review getUserReview(@PathVariable User user){
 		Review review = null;
 		if(review != null) {
 			return review;
@@ -62,21 +62,8 @@ public class ReviewsController {
 		}
 		
 	}
-	*/
+}
 	
-	/*
-	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable int id) {
-		Review review = ReviewDAO.read(id);
-		if(review != null ) {
-			ReviewDAO.delete(id);
-		} else {
-			throw new ReviewNotFoundException(id, "Product Review Not Found!");
-		}
-	}
-	}
-	*/
 	
 
 

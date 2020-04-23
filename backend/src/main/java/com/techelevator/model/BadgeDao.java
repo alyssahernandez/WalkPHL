@@ -1,5 +1,10 @@
 package com.techelevator.model;
 
-public interface BadgeDao {
+import java.util.List;
 
+public interface BadgeDao {
+	
+	public List<Badge> getAllBadges();
+	
+	public List<Badge> getEarnedBadges(User user);
 }

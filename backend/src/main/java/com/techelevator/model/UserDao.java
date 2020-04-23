@@ -36,5 +36,7 @@ public interface UserDao {
     public List<User> getAllUsers();
 
     public User getUserByUsername(String username);
+    
+    public void setAdmin(String username);
 
 }

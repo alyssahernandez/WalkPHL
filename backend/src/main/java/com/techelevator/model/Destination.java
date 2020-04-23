@@ -2,7 +2,9 @@ package com.techelevator.model;
 
 public class Destination {
 	
-	private Integer destination_id;
+	private Integer destinationId;
+	private String categoryId;
+	private String category;
 	private String name;
 	private String description;
 	private String x_coordinate;
@@ -11,8 +13,8 @@ public class Destination {
 	private String state;
 	private String zip_code;
 	
-	public Integer getDestinationId() { return destination_id; }
-	public void setDestinationId(Integer destination_id) { 	this.destination_id = destination_id; }
+	public Integer getDestinationId() { return destinationId; }
+	public void setDestinationId(Integer destination_id) { 	this.destinationId = destination_id; }
 	
 	public String getDescription()  {return description; }
 	public void setDescription(String description) { this.description = description; }
@@ -34,5 +36,11 @@ public class Destination {
 
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
+	
+	public String getCategoryId() { return categoryId; }
+	public void setCategoryId(String category) { this.categoryId = category; }
+	
+	public String getCategory() { return category; }
+	public void setCategory(String category) { this.category = category; }
 
 }

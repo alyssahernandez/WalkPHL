@@ -30,5 +30,43 @@ public class JdbcBadgeDao implements BadgeDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
-
+    @Override
+    public List<Badge> getAllBadges()
+    {
+    	List<Badge> badges = new ArrayList<>();
+    	String query = "SELECT * FROM badge, badge_category";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+    	
+    	while (results.next())
+    	{
+    		Badge badge = new Badge();
+    		badge.setBadgeId(results.getInt("badge_id"));
+    		badge.setCategory(results.getString("category_name"));
+    		badge.setName(results.getString("name"));
+    		badge.setDescription(results.getString("description"));
+    		badges.add(badge);
+    	}
+    	return badges;
+    }
+    
+    @Override
+    public List<Badge> getEarnedBadges(User user)
+    {
+    	List<Badge> badges = new ArrayList<>();
+    	String query = "SELECT * FROM badge_category INNER JOIN badge ON badge.category_id = badge_category.category_id "
+    			+ "INNER JOIN user_badge ON badge.badge_id = user_badge.badge_id WHERE user_badge.username = ?";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+    	
+    	while (results.next())
+    	{
+    		Badge badge = new Badge();
+    		badge.setBadgeId(results.getInt("badge_id"));
+    		badge.setCategory(results.getString("category_name"));
+    		badge.setName(results.getString("name"));
+    		badge.setDescription(results.getString("description"));
+    		badges.add(badge);
+    	}
+    	return badges;
+    }
+   
 }

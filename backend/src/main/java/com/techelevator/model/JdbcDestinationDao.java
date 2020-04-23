@@ -27,6 +27,7 @@ public class JdbcDestinationDao implements DestinationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
+    @Override
     public List<Destination> getAllDestinations()
     {
     	String query = "SELECT * FROM destination";
@@ -34,6 +35,7 @@ public class JdbcDestinationDao implements DestinationDao {
     	return mapRowSetToDestinations(results);
     }
     
+    @Override
     public Destination getDestination(Integer destination_id)
     {
     	String query = "SELECT * FROM destination WHERE destination_id = ?";
@@ -41,6 +43,7 @@ public class JdbcDestinationDao implements DestinationDao {
     	return mapRowSetToDestination(results);
     }
     
+    @Override
     public List<Destination> getDestinationsByCategory(Integer category_id)
     {
     	String query = "SELECT * FROM destination WHERE category_id = ?";
@@ -48,11 +51,35 @@ public class JdbcDestinationDao implements DestinationDao {
     	return mapRowSetToDestinations(results);
     }
     
+    @Override
     public List<Destination> getVisitedDestinations(User user)
     {
-    	String query = "SELECT * FROM destination INNER JOIN user_destination ON destination.destination_id = user_destination.destination_id WHERE user_destination.user_id = ?";
+    	String query = "SELECT * FROM destination INNER JOIN user_destination ON destination.destination_id = user_destination.destination_id WHERE user_destination.username = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, user.getId());
     	return mapRowSetToDestinations(results);
+    }
+    
+    @Override
+    public void createDestination(Destination destination)
+    {
+    	String query = "INSERT INTO destination (category_id, name, description, x_coordinate, y_coordinate, city, state, zip_code) "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    	
+    	Integer categoryId = getCategoryId(destination.getCategory());
+    	
+    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getX_coordinate(), destination.getY_coordinate(), destination.getCity(), destination.getState(), destination.getZip_code());
+    }
+    
+    private Integer getCategoryId(String categoryName)
+    {
+    	Integer i = null;
+    	String query = "SELECT * FROM destination_category WHERE name = ?";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, categoryName);
+    	if (results.next())
+    	{
+    		i = results.getInt("category_id");
+    	}
+    	return i;
     }
     
     private List<Destination> mapRowSetToDestinations(SqlRowSet results)
@@ -69,6 +96,7 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setX_coordinate(results.getString("x_coordinate"));
     		d.setY_coordinate(results.getString("y_coordinate"));
     		d.setZip_code(results.getString("zip_code"));
+    		d.setCategoryId(results.getString("category_id"));
     	}
     	return destinations;
     }
@@ -86,6 +114,7 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setX_coordinate(results.getString("x_coordinate"));
     		d.setY_coordinate(results.getString("y_coordinate"));
     		d.setZip_code(results.getString("zip_code"));
+    		d.setCategoryId(results.getString("category_id"));
     	}
     	return d;
     }
