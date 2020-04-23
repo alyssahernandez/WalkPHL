@@ -104,10 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
 
-#nav {
-
-}
-
 #app {
   width: 100vw;
   height: 100vh;

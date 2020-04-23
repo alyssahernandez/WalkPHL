@@ -273,6 +273,10 @@ export default {
   height: 100vh;
 }
 
+.map-widget {
+  padding-top: 5rem;
+}
+
 @media only screen and (max-width: 768px) {
     #app {
        
