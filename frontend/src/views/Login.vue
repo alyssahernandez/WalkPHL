@@ -44,7 +44,7 @@
             <i class="fas fa-check"></i>
           </span>
         </div>
-        <router-link class="need-account-link" :to="{ name: 'register' }">Need an account?</router-link>
+        <a class="need-account-link" href="/register">Need an account?</a>
           <div class="control">
            <button class="button" type="submit">Submit</button>
           </div>
@@ -92,11 +92,9 @@ export default {
             }
             auth.saveToken(token);
             this.$emit('loginUpdated');
-            this.$emit('username', this.username);
             this.$router.push({name: 'home'});
           }
         })
-        .catch((err) => console.error(err));
     },
   },
 };
@@ -118,5 +116,9 @@ export default {
 
 .need-account-link {
   color: black;
+}
+
+#main-div {
+  margin-left: 10px;
 }
 </style>

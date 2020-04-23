@@ -27,6 +27,18 @@ import MapWidget from "@/components/MapWidget";
 
 export default {
   name: "Home",
+  data() {
+    return {
+      askedLocation: false,
+      coordinates: {
+        lat: 0,
+        lng: 0
+      }
+    }
+  },
+  props: {
+    login: Boolean
+  },
   components: {
     MapWidget
   },
@@ -42,9 +54,19 @@ export default {
       let infoBlock = document.getElementById("app-info-block");
       infoBlock.classList.add('fade');
       setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
-      }
-    }
+
+      this.$getLocation({})
+          .then(coordinates => {
+            this.coordinates = coordinates;
+            this.$emit('coords', coordinates);
+          })
+    },
+  },
+  created() {
   }
+}
+
+
 </script>
 
 <style scoped>

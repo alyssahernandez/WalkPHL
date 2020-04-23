@@ -13,10 +13,12 @@
       <span class="level-item has-text-centered">
         
       </span>
+      
       <span class="level-item has-text-centered">
         <router-link v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
         <router-link v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
         <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+<!--    <router-link v-bind:login="this.loggedIn" :to="{path: '/'}"></router-link>   // Why can't we bind shit to the home view?! -->
       </span>
     </nav>
 
@@ -36,8 +38,7 @@ export default {
   data() {
     return {
       loggedIn: false,
-      user: null
-      
+      user: null,
     }
   },
   methods: {
