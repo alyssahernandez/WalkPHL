@@ -13,39 +13,16 @@
       <span class="level-item has-text-centered">
         
       </span>
+      
       <span class="level-item has-text-centered">
         <router-link v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
         <router-link v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
         <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+<!--    <router-link v-bind:login="this.loggedIn" :to="{path: '/'}"></router-link>   // Why can't we bind shit to the home view?! -->
       </span>
     </nav>
 
-    <!--
-      <nav class="navbar level" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <h1 class="level-item has-text-centered">WalkPHL</h1>
-        </div>
-        <div class="navbar-menu">
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <router-link v-if="!loggedIn" to="/login">Sign In</router-link>
-                <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>            
-            </div>
-          </div>
-        </div>
-      </nav>
-    -->
-
-    <!--
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-      <div>
-        <router-link v-if="!loggedIn" to="/login">Login</router-link>
-        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
-      </div>
-    </div>
-    -->
-    <router-view v-on:loginUpdated="setLoggedIn"/>
+    <router-view v-on:loginUpdated="setLoggedIn" />
   </div>
 </template>
 
@@ -61,8 +38,7 @@ export default {
   data() {
     return {
       loggedIn: false,
-      user: null
-      
+      user: null,
     }
   },
   methods: {
@@ -94,12 +70,42 @@ export default {
     this.user = auth.getUser().sub;
   }
 };
+
+/*
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Get all "navbar-burger" elements
+  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+  // Check if there are any navbar burgers
+  if ($navbarBurgers.length > 0) {
+
+    // Add a click event on each of them
+    $navbarBurgers.forEach( el => {
+      el.addEventListener('click', () => {
+
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    });
+  }
+
+}); */
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Francois+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
 
 #nav {
+
 }
 
 #app {
@@ -120,6 +126,11 @@ export default {
 .App {
   width: 100vh;
   height: 100vh;
+}
+
+.div-title {
+  font-family: 'Nanum Gothic', sans-serif;
+  font-weight: bold;
 }
 
 </style>

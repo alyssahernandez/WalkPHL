@@ -16,6 +16,7 @@
     "google-maps": "^4.2.3",
     "google-maps-api-loader": "^1.1.1",
     "vue": "^2.6.10",
+    "vue-browser-geolocation": "^1.8.0",
     "vue-router": "^3.0.3",
     "vue2-google-maps": "^0.10.7"
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="container registration-form">
     <form class="registration-form" @submit.prevent="register">
-      <h1 class="div-title">Create Account</h1>
+      <h1 class="div-title">Grab your feather and adventure cap.<br>Join us!</h1>
         <div class="field">
         <div class="alert is-danger" role="alert" v-if="registrationErrors">
           There were problems registering this user.
@@ -121,5 +121,6 @@ export default {
 .have-account-link {
   color: black;
 }
+
 
 </style>
