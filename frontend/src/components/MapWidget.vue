@@ -48,6 +48,10 @@ export default {
         
       }
     },
+methods: {
+  
+
+},
 async mounted() {
     try {
       const google = await gmapsInit();
@@ -64,6 +68,7 @@ async mounted() {
         map.setZoom(13);
         map.setCenter(marker.getPosition());
       };
+      
       locations
         .map((location) => {
           const marker = new google.maps.Marker({ ...location, map });
@@ -77,6 +82,7 @@ async mounted() {
     }
   },
 }
+
 </script>
 
 
