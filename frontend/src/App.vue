@@ -14,8 +14,9 @@
         
       </span>
       <span class="level-item has-text-centered">
-        <router-link v-if="!loggedIn" to="/login">Sign In</router-link>
-        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>  
+        <router-link v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
+        <router-link v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
+        <a v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
       </span>
     </nav>
 
@@ -34,8 +35,10 @@ export default {
   },
   data() {
     return {
-      loggedIn: false
-    };
+      loggedIn: false,
+      user: null
+      
+    }
   },
   methods: {
     logout() {
@@ -49,15 +52,21 @@ export default {
         if(response.ok) {
           auth.logout();
           this.loggedIn = false;
+          this.$router.push({name: 'home'});
         }
       })
     },
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();
+      this.user = auth.getUser().sub;
+    },
+    setUsername(username) {
+      this.user = username;
     }
   },
   created() {
     this.loggedIn = auth.loggedIn();
+    this.user = auth.getUser().sub;
   }
 };
 
@@ -95,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
 
 #nav {
-  
+
 }
 
 #app {
