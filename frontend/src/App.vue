@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       loggedIn: false,
-      user: null,
+      user: "",
     }
   },
   methods: {
@@ -53,6 +53,7 @@ export default {
         if(response.ok) {
           auth.logout();
           this.loggedIn = false;
+          this.user = "";
           this.$router.push({name: 'home'});
         }
       })
@@ -60,9 +61,6 @@ export default {
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();
       this.user = auth.getUser().sub;
-    },
-    setUsername(username) {
-      this.user = username;
     }
   },
   created() {
