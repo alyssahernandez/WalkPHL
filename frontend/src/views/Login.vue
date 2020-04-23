@@ -1,7 +1,7 @@
 <template>
-  <div id="main-div">
+  <div class="container login-form">
     <form class="login-form" @submit.prevent="login">
-    <h1>Please Sign In</h1>
+    <h1 class="div-title">Hi! Welcome back.<br>Please sign in.</h1>
       <div class="field">
         <div class="help is-danger" role="alert" v-if="invalidCredentials">
           Invalid username and password!
@@ -92,6 +92,7 @@ export default {
             }
             auth.saveToken(token);
             this.$emit('loginUpdated');
+            this.$emit('username', this.username);
             this.$router.push({name: 'home'});
           }
         })
@@ -102,15 +103,17 @@ export default {
 
 <style scoped>
 .login-form {
-  z-index: 11;
-  position: fixed;
-  margin-top: 5em;
+  height: 100vh;
+  padding: 0;
   display: flex;
-  display: flex;
-  flex-direction: column;
+  flex-wrap: nowrap;
   justify-content: center;
-  align-content: center; 
+  align-items: center;
+  flex-direction: column;
+  z-index: 9;
 }
+
+.login-form-div {}
 
 .need-account-link {
   color: black;

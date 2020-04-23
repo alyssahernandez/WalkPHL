@@ -1,3 +1,8 @@
+.div-title {
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
 .blue-green-gradient-vertical {
   background: linear-gradient(180deg, #2ddde3, #03fc88);
   background: #03fc88;
@@ -16,23 +21,15 @@
 .nav-menu-background {
   background-color: #575757;
   height: 3.5rem;
-  width: 100%;
+  width: 100vw;
   z-index: 10;
   position: absolute;
 }
-
   
 .app-title-white {
   font-family: 'Francois One', sans-serif;
   color: white;
   font-size: 4vh;
-}
-
-
-.app-title-landing {
-  font-family: 'Francois One', sans-serif;
-  color: #03b6fc;
-  font-size: 5.5em;
 }
 
 a:link {

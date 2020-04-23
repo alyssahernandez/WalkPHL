@@ -32,8 +32,6 @@
         <option value="los angeles, ca">Los Angeles</option>
       </select>
     </div>
-    <div id="right-panel"></div>
-    <div id="map"></div>
 </template>
 
 <script>

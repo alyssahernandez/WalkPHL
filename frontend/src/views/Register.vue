@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <form class="form-register registration-form" @submit.prevent="register">
-      <h1>Create Account</h1>
+  <div class="container registration-form">
+    <form class="registration-form" @submit.prevent="register">
+      <h1 class="div-title">Grab your feather and adventure cap.<br>Join us!</h1>
         <div class="field">
         <div class="alert is-danger" role="alert" v-if="registrationErrors">
           There were problems registering this user.
@@ -108,14 +108,14 @@ export default {
 <style scoped>
 
 .registration-form {
-  z-index: 11;
-  position: fixed;
-  margin-top: 5em;
+  height: 100vh;
+  padding: 0;
   display: flex;
-  display: flex;
-  flex-direction: column;
+  flex-wrap: nowrap;
   justify-content: center;
-  align-content: center; 
+  align-items: center;
+  flex-direction: column;
+  z-index: 9;
 }
 
 .have-account-link {

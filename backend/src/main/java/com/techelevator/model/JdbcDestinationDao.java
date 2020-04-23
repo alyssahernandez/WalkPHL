@@ -15,13 +15,9 @@ public class JdbcDestinationDao implements DestinationDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     * Create a new user dao with the supplied data source and the password hasher
-     * that will salt and hash all the passwords for users.
-     *
-     * @param dataSource an SQL data source
-     * @param passwordHasher an object to salt and hash passwords
-     */
+    // TODO: Figure out updating Check-in -- we'll need to reference both a username and destination name.
+    // Can we pass this all back in same API call?
+    
     @Autowired
     public JdbcDestinationDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -99,6 +95,11 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setCategoryId(results.getString("category_id"));
     	}
     	return destinations;
+    }
+    
+    private void setCheckedIn()
+    {
+    	
     }
     
     private Destination mapRowSetToDestination(SqlRowSet results)

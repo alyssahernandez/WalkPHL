@@ -1,14 +1,21 @@
 package com.techelevator.model;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techelevator.authentication.PasswordHasher;
 
+
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.test.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -47,7 +54,7 @@ public class JdbcReviewDao implements ReviewDao {
     {
     	List<Review> reviews = new ArrayList<>();
     	String query = "SELECT * FROM user_reviews WHERE username = ?";
-    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, user.getId());
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, user.getUsername());
     	
     	while (results.next())
     	{
@@ -67,6 +74,7 @@ public class JdbcReviewDao implements ReviewDao {
     	String query = "INSERT INTO user_reviews (user_id, title, review, review_date) VALUES (?, ?, ?, ?)";
     	jdbcTemplate.update(query, review.getUser_id(), review.getTitle(), review.getReview(), LocalDate.now());
     }
+    
 }
     
     
