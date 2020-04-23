@@ -12,10 +12,10 @@
       <button v-on:click="showMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
       <div class="mobile-buttons-div">
         <router-link class="have-account-link" :to="{ name: 'login' }">          
-          <button v-on:click="goToLogin" class="button is-rounded is-primary mobile-button">Sign In</button>
+          <button class="button is-rounded is-primary mobile-button">Sign In</button>
         </router-link>
         <router-link class="need-account-link" :to="{ name: 'register' }">
-          <button v-on:click="gotoRegister" class="button is-rounded is-primary mobile-button">Sign Up</button>
+          <button class="button is-rounded is-primary mobile-button">Sign Up</button>
         </router-link>
       </div>
     </div>
