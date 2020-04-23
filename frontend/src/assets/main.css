@@ -1,3 +1,5 @@
+
+
 .div-title {
   padding-bottom: 3rem;
   text-align: center;
@@ -23,7 +25,7 @@
   height: 3.5rem;
   width: 100vw;
   z-index: 10;
-  position: absolute;
+  position: fixed;
 }
   
 .app-title-white {

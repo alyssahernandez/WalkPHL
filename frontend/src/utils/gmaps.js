@@ -37,5 +37,6 @@ script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=${
 script.onerror = rejectInitPromise;
 document.querySelector('head').appendChild(script);
 
+
 return initPromise;
 }
