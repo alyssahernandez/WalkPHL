@@ -8,7 +8,8 @@
           <h1 class="app-title-white navbar-item has-text-centered blue-nav-item">
             <a href="/">WalkPHL</a>
           </h1>
-        
+
+          
         <a role="button" class="navbar-burger burger { is Active }" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
