@@ -1,6 +1,8 @@
 <template>
   <div class="contanier profile">
       <h1>{{user.username}}</h1>
+      <h1>{{user}}</h1>
+      <h1>{{directions}}</h1>
   </div>
 </template>
 
@@ -11,12 +13,13 @@ export default {
   data() {
     return {
       username: null,
-      user: null
+      user: null,
+      directions: null
     }
   },
   methods: {
-    User(username) {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username, {
+    User() {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + this.username, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + auth.getToken(),
@@ -34,12 +37,32 @@ export default {
         console.log(user);
       })
       .catch(err => console.log(err))
-    }
+    },
+    getDirections() {
+      fetch('https://maps.googleapis.com/maps/api/directions/json?origin=Brooklyn&destination=Queens&mode=walking&key=AIzaSyCsnAc4fR8Sd-AqYRNkEhaH434Lm9r8trI', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((response) => {
+        if(response.ok) {
+          console.log(response);
+          return response.json();
+        }
+      })
+      .then((directions) => {
+        this.directions = directions;
+        console.log(directions);
+      })
+      .catch(err => console.log(err))
+    },
   },
   created() {
     this.username = this.$route.params.username;
-
-    this.user = this.User(this.username);
+    this.user = this.User();
+    this.directions = this.getDirections();
   }
 }
 </script>
