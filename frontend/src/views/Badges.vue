@@ -1,57 +1,7 @@
 <template>
-    <div id="floating-panel">
-      
-      
-      
-      
-      <img v-bind:src="'assets/images/' + this.badgeURL">
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <!--
-      <strong>Start:</strong>
-      <select id="start">
-        <option value="chicago, il">Chicago</option>
-        <option value="st louis, mo">St Louis</option>
-        <option value="joplin, mo">Joplin, MO</option>
-        <option value="oklahoma city, ok">Oklahoma City</option>
-        <option value="amarillo, tx">Amarillo</option>
-        <option value="gallup, nm">Gallup, NM</option>
-        <option value="flagstaff, az">Flagstaff, AZ</option>
-        <option value="winona, az">Winona</option>
-        <option value="kingman, az">Kingman</option>
-        <option value="barstow, ca">Barstow</option>
-        <option value="san bernardino, ca">San Bernardino</option>
-        <option value="los angeles, ca">Los Angeles</option>
-      </select>
-      <br>
-      <strong>End:</strong>
-      <select id="end">
-        <option value="chicago, il">Chicago</option>
-        <option value="st louis, mo">St Louis</option>
-        <option value="joplin, mo">Joplin, MO</option>
-        <option value="oklahoma city, ok">Oklahoma City</option>
-        <option value="amarillo, tx">Amarillo</option>
-        <option value="gallup, nm">Gallup, NM</option>
-        <option value="flagstaff, az">Flagstaff, AZ</option>
-        <option value="winona, az">Winona</option>
-        <option value="kingman, az">Kingman</option>
-        <option value="barstow, ca">Barstow</option>
-        <option value="san bernardino, ca">San Bernardino</option>
-        <option value="los angeles, ca">Los Angeles</option>
-      </select>
-      -->
-    </div>
+   <div>
+     
+   </div>
 </template>
 
 <script>
@@ -61,34 +11,35 @@ export default {
   name: 'badges',
   data() {
     return {
-      badgeURL: null
+      badges: null
     }
   },
   methods: {
-    getBadge() {
+    getBadges() {
       fetch(`${process.env.VUE_APP_REMOTE_API}/badges`, {
         method: 'GET',
         headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + auth.getToken()
         }
       })
       .then((response) => {
         if(response.ok) {
           console.log(response);
-          return response.text;
+          return response.json();
         }
       })
-      .then((url) => {
-        console.log(url);
-        this.badgeURL = url;
+      .then((badges) => {
+        this.badges = badges;
+        console.log(badges);
       })
       .catch(err => {console.log(err)})
     }
   },
   created(){
-   this.badgeURL = this.getBadge();
+   this.badges = this.getBadges();
   }
-
 }
 </script>
 
