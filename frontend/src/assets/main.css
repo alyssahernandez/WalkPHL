@@ -35,12 +35,17 @@
 }
 
 a:link {
-  color: white;
+  color: black;
 }
+
 
 /* visited link */
 a:visited {
-  color: white;
+  color: black;
+}
+
+a:visited.blue-nav-item {
+  color: #03b6fc;
 }
 
 /* mouse over link */

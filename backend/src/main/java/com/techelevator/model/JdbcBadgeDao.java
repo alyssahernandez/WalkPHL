@@ -31,39 +31,46 @@ public class JdbcBadgeDao implements BadgeDao {
     }
     
     @Override
-    public List<Badge> getAllBadges()
-    {
+    public List<Badge> getAllBadges() {
     	List<Badge> badges = new ArrayList<>();
-    	String query = "SELECT * FROM badge, badge_category";
+    	String query = "SELECT * FROM badge";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
     	
-    	while (results.next())
-    	{
+    	while (results.next()){
     		Badge badge = new Badge();
     		badge.setBadgeId(results.getInt("badge_id"));
     		badge.setCategory(results.getString("category_name"));
     		badge.setName(results.getString("name"));
     		badge.setDescription(results.getString("description"));
+    		badge.setImgUrl(results.getString("img_url"));
     		badges.add(badge);
     	}
     	return badges;
     }
     
     @Override
-    public List<Badge> getEarnedBadges(User user)
-    {
+    public String getBadgeImage() {
+    	String imgUrl = "";
+    	String query = "SELECT img_url FROM badge WHERE badge_id = 3";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+    	imgUrl = results.getString("img_url");
+    	return imgUrl;
+    }
+    
+    @Override
+    public List<Badge> getEarnedBadges(String username) {
     	List<Badge> badges = new ArrayList<>();
     	String query = "SELECT * FROM badge_category INNER JOIN badge ON badge.category_id = badge_category.category_id "
     			+ "INNER JOIN user_badge ON badge.badge_id = user_badge.badge_id WHERE user_badge.username = ?";
-    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, username);
     	
-    	while (results.next())
-    	{
+    	while (results.next()) {
     		Badge badge = new Badge();
     		badge.setBadgeId(results.getInt("badge_id"));
     		badge.setCategory(results.getString("category_name"));
     		badge.setName(results.getString("name"));
     		badge.setDescription(results.getString("description"));
+    		badge.setImgUrl(results.getString("img_url"));
     		badges.add(badge);
     	}
     	return badges;

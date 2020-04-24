@@ -7,6 +7,7 @@ public class Badge {
 	private String category;
 	private String name;
 	private String description;
+	private String imgUrl;
 
 	
 	public Integer getBadgeId() {
@@ -33,5 +34,12 @@ public class Badge {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public String getImgUrl() {
+		return imgUrl;
+	}
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+	
 
 }

@@ -1,5 +1,24 @@
 <template>
     <div id="floating-panel">
+      
+      
+      
+      
+      <img v-bind:src="'assets/images/' + this.badgeURL">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <!--
       <strong>Start:</strong>
       <select id="start">
         <option value="chicago, il">Chicago</option>
@@ -31,13 +50,45 @@
         <option value="san bernardino, ca">San Bernardino</option>
         <option value="los angeles, ca">Los Angeles</option>
       </select>
+      -->
     </div>
 </template>
 
 <script>
+import auth from '../auth';
     
 export default {
-  name: 'badges'
+  name: 'badges',
+  data() {
+    return {
+      badgeURL: null
+    }
+  },
+  methods: {
+    getBadge() {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/badges`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken()
+        }
+      })
+      .then((response) => {
+        if(response.ok) {
+          console.log(response);
+          return response.text;
+        }
+      })
+      .then((url) => {
+        console.log(url);
+        this.badgeURL = url;
+      })
+      .catch(err => {console.log(err)})
+    }
+  },
+  created(){
+   this.badgeURL = this.getBadge();
+  }
+
 }
 </script>
 

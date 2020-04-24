@@ -1,6 +1,6 @@
 <template>
-      <div>
-        <div v-if="userHasLocation" id="right-panel" ></div>
+      <div id="app" class="map-widget">
+        <div v-if="userHasLocation" id="right-panel"></div>
         <div id="map" v-bind:class="{'maps': userHasLocation}"></div>
       </div>
 </template>
@@ -341,6 +341,15 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
 
+#app {
+  width: 100vw;
+  height: 100vh;
+}
+
+.map-widget {
+  padding-top: 5rem;
+}
+
 @media only screen and (max-width: 768px) {
     #app {
        
@@ -355,11 +364,12 @@ export default {
 }
 
 /* Always set the map height explicitly to define the size of the div
-  * element that contains the map. */
+  * element that contains the map.*/ 
 #map {
   height: 100%;
   padding-top: 5rem;
 }
+
 /* Optional: Makes the sample page fill the window. */
 html, body {
   height: 100%;
