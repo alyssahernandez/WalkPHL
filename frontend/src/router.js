@@ -54,9 +54,6 @@ const router = new Router({
       path: "/badges",
       name: "badges",
       component: Badges,
-      meta: {
-        requiresAuth: false
-      }
     },
     {
       path: "/about",

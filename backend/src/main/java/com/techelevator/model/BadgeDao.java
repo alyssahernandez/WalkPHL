@@ -6,5 +6,8 @@ public interface BadgeDao {
 	
 	public List<Badge> getAllBadges();
 	
-	public List<Badge> getEarnedBadges(User user);
+	public List<Badge> getEarnedBadges(String username);
+	
+	public String getBadgeImage();
+	
 }

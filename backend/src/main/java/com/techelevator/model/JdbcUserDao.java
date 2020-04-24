@@ -134,11 +134,10 @@ public class JdbcUserDao implements UserDao {
     	jdbcTemplate.update(query, admin);
     }
     
-    public void checkIn(User user, Destination destination)
-    {
-    	String query = "UPDATE user_destination SET checked_in"
-    }
-    
+	/*
+	 * public void checkIn(User user, Destination destination) { String query =
+	 * "UPDATE user_destination SET checked_in" }
+	 */
     private User mapResultToUser(SqlRowSet results) {
         User user = new User();
         user.setId(results.getLong("id"));

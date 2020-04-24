@@ -27,7 +27,7 @@ import com.techelevator.model.User;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/reviews")
+@RequestMapping("/reviews")
 public class ReviewsController {
 	
 	@Autowired

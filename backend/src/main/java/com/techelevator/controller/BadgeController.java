@@ -5,6 +5,7 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.model.BadgeDao;
 import com.techelevator.model.User;
 import com.techelevator.model.UserDao;
 
@@ -19,14 +20,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @RestController
 @CrossOrigin
-@RequestMapping()
-public class UserController {
-    @Autowired
+public class BadgeController {
+    
+	@Autowired
     private AuthProvider auth;
     
     @Autowired
-    private UserDao user;
+    private BadgeDao badge;
     
-	
+	@GetMapping("/badges")
+	public String getBadge() {
+		return badge.getBadgeImage();
+	}
 	
 }
