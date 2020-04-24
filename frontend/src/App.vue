@@ -1,12 +1,11 @@
 <template>
   <div id="app">
 
-
     
     <nav class="navbar nav-shadow" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-          <h1 class="app-title-white navbar-item has-text-centered blue-nav-item">
-            <a href="/">WalkPHL</a>
+          <h1 class="app-title-white navbar-item has-text-centered">
+            <a class="walk-phl-nav blue-nav-item" href="/">WalkPHL</a>
           </h1>
 
           
@@ -147,11 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 @import url("https://fonts.googleapis.com/css2?family=Francois+One&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
-
-.blue-nav-item {
-  color: #03b6fc;
-}
-
 
 #app {
   width: 100vw;
