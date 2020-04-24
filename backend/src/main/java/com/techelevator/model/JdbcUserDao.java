@@ -131,7 +131,7 @@ public class JdbcUserDao implements UserDao {
     {
     	String admin = "City Administrator";
     	String query = "UPDATE users SET role = ? WHERE username = ?";
-    	jdbcTemplate.update(query, admin);
+    	jdbcTemplate.update(query, admin, username);
     }
     
 	/*
