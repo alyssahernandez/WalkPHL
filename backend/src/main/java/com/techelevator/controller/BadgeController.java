@@ -5,9 +5,12 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 
 import com.techelevator.authentication.UnauthorizedException;
+import com.techelevator.model.Badge;
 import com.techelevator.model.BadgeDao;
 import com.techelevator.model.User;
 import com.techelevator.model.UserDao;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -29,8 +32,8 @@ public class BadgeController {
     private BadgeDao badge;
     
 	@GetMapping("/badges")
-	public String getBadge() {
-		return badge.getBadgeImage();
-	}
+	public List<Badge> getBadge() {
+		return badge.getAllBadges();
+		}
 	
 }
