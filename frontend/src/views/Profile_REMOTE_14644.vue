@@ -6,6 +6,7 @@
   </div>
 </template>
 
+
 <script>
 import auth from '../auth';
 export default {
@@ -28,6 +29,7 @@ export default {
         if(response.ok) {
           console.log(response);
           return response.json();
+          
         }
       })
       .then((user) => {

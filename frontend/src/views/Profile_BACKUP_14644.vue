@@ -1,8 +1,13 @@
 <template>
   <div class="contanier profile">
+<<<<<<< HEAD
+      <h1>{{user.user.username}}</h1>
+      <h1>{{user}}</h1>
+=======
       <h1>{{user.username}}</h1>
       <h1>{{user}}</h1>
       <h1>{{directions}}</h1>
+>>>>>>> b76c5dfb9a39b97f12d6bc76ef3db4c4c4d86e91
   </div>
 </template>
 
