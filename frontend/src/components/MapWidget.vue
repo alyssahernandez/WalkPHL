@@ -181,6 +181,9 @@ export default {
         displayInfo: false
       }
     },
+    props: {
+      coords: Object
+    },
     methods: {
     },
     async mounted() {
@@ -236,7 +239,7 @@ export default {
             return marker;
           });
 
-        const start = new google.maps.LatLng(locations[0].position.lat, locations[0].position.lng);
+        const start = new google.maps.LatLng(this.coords.lat, this.coords.lng);
         const end = new google.maps.LatLng(locations[4].position.lat, locations[4].position.lng);
 
         const directionsService = new google.maps.DirectionsService(); 

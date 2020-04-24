@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map"></map-widget>
-    <side-bar class="sidebar" id="sidebar-container"></side-bar>
+    <!-- <sidebar-comp class="sidebar" id="sidebar-container"></sidebar-comp> -->
     <div id="map-static" class="map-overlay"></div>
     <div id="mobile-map-overlay"></div>
     <div class="map-inactive"></div>
@@ -27,7 +27,7 @@
 
 <script>
 import MapWidget from "@/components/MapWidget";
-import SideBar from "@/components/SideBar";
+// import SideBar from "@/components/SideBar";
 
 export default {
   name: "Home",
@@ -67,7 +67,6 @@ export default {
       this.$getLocation({})
           .then(coordinates => {
             this.coordinates = coordinates;
-            this.$emit('coords', coordinates);
           })
     },
   },
@@ -145,7 +144,7 @@ body {
 
 .home {
   width: 100vw;
-  height: 100vh;
+  height: 75vh;
 }
 
 @media only screen and (max-width: 768px) {
