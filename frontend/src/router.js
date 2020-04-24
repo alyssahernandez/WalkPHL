@@ -4,10 +4,11 @@ import auth from './auth'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
-import Location from './views/Location.vue'
+import Badges from './views/Badges.vue'
 import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
 import Review from './views/Review.vue'
+import About from './views/About.vue'
 
 
 Vue.use(Router)
@@ -50,9 +51,17 @@ const router = new Router({
       }
     },
     {
-      path: "/location",
-      name: "location",
-      component: Location,
+      path: "/badges",
+      name: "badges",
+      component: Badges,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: About,
       meta: {
         requiresAuth: false
       }

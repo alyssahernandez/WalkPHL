@@ -18,13 +18,17 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">
+          <router-link class="navbar-item" :to="{name: 'badges'}">
             Badges
-          </a>
+          </router-link>
 
-          <a class="navbar-item">
+          <router-link class="navbar-item" :to="{name: 'review'}">
+            Reviews
+          </router-link>
+
+          <router-link class="navbar-item" :to="{name: 'about'}">
             About WalkPHL
-          </a>
+          </router-link>
 
           <!-- THIS IS A DROP-DOWN MENU IF WE WANT IT LATER
           <div class="navbar-item has-dropdown is-hoverable">
