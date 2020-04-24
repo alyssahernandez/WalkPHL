@@ -1,6 +1,6 @@
 <template>
   <div class="contanier profile">
-      <h1>{{user.username}}</h1>
+      <h1>{{user.user.username}}</h1>
       <h1>{{user}}</h1>
   </div>
 </template>

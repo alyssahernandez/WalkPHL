@@ -37,7 +37,7 @@
 <script>
     
 export default {
-  name: 'location',
+  name: 'badges'
 }
 </script>
 
