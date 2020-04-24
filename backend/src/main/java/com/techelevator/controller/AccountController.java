@@ -63,10 +63,12 @@ public class AccountController {
 	}	
 	
 	@RequestMapping(path = "/profile/{username}", method=RequestMethod.GET) 
-	public User getUser(@PathVariable String username) {
+	public Map<String, Object> getUser(@PathVariable String username) {
 		Map<String, Object> userInfo = new HashMap<>();
 		
-		return user.getUserByUsername(username);
+		userInfo.put("user", user.getUserByUsername(username));
+		
+		return userInfo;
 		
 	}	
 	

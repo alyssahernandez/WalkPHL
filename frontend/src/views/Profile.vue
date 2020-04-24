@@ -1,9 +1,9 @@
 <template>
   <div class="contanier profile">
-      <h1>{{user.username}}</h1>
+      <h1>{{user.user.username}}</h1>
+      <h1>{{user}}</h1>
   </div>
 </template>
-
 
 <script>
 import auth from '../auth';
@@ -26,7 +26,6 @@ export default {
         if(response.ok) {
           console.log(response);
           return response.json();
-          
         }
       })
       .then((user) => {
