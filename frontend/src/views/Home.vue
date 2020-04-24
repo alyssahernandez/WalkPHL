@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map"></map-widget>
+    <!-- <sidebar-comp class="sidebar" id="sidebar-container"></sidebar-comp> -->
     <div id="map-static" class="map-overlay"></div>
     <div id="mobile-map-overlay"></div>
     <div class="map-inactive"></div>
@@ -8,17 +9,17 @@
       <div class="walkphl-wrap">
         <h1 class="app-title-landing mobile-landing-title">WalkPHL</h1>
       </div>
-      <p class="browser-view-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <p class="mobile-view-description blue-font">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p class="browser-view-description push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <button v-on:click="showMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
       <div class="mobile-buttons-div">
         <router-link class="have-account-link" :to="{ name: 'login' }">          
-          <button class="button is-rounded is-primary mobile-button">Sign In</button>
+          <button class="button is-rounded is-primary mobile-button position-button-mobile-1">Sign In</button>
         </router-link>
         <router-link class="need-account-link" :to="{ name: 'register' }">
-          <button class="button is-rounded is-primary mobile-button">Sign Up</button>
+          <button class="button is-rounded is-primary mobile-button position-button-mobile-2">Sign Up</button>
         </router-link>        
-        <p v-on:click="showMapView" class="mobile-view-description blue-font">Continue Without an Account</p>
+        <p v-on:click="showMapView" class="mobile-view-description blue-font continue-link-mobile">Continue Without an Account</p>
       </div>
     </div>
   </div>
@@ -26,6 +27,7 @@
 
 <script>
 import MapWidget from "@/components/MapWidget";
+// import SideBar from "@/components/SideBar";
 
 export default {
   name: "Home",
@@ -43,6 +45,7 @@ export default {
   },
   components: {
     MapWidget
+  //  SideBar 
   },
   methods: {
     showMapView() {
@@ -77,9 +80,29 @@ export default {
 
 <style scoped>
 
+.sidebar {
+  display: hidden;
+}
+
 .padding-from-nav {
   padding-top: 5rem;
 }
+
+.push-away {
+  margin-top: 7rem;
+  width: 75%;
+}
+
+.position-button-mobile-1 {
+  margin-top: -2rem;
+  padding: -1rem;
+}
+
+.position-button-mobile-2 {
+  margin-top: -1.2rem;
+ 
+}
+
 .greyscale {
   transition: filter 2s ease-in-out;
   -webkit-filter: grayscale(100%);
@@ -177,7 +200,7 @@ body {
     background: white;
     opacity: 1;
     margin-top: 50vh;
-    animation-name: fadeUp;
+    box-shadow: 0px -2px 5px 1px #c7c7c7;
   }
 
     .map-overlay {
@@ -186,7 +209,7 @@ body {
     z-index: 1;
     width: 100%;
     height: 100%;
-    background: white;
+    background: #ababab;
     opacity: 0.60;  
     -webkit-transition: opacity 2000ms linear;
     transition: opacity 2000ms linear;
