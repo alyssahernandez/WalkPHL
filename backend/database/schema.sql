@@ -4,12 +4,12 @@ DROP TABLE IF EXISTS user_reviews;
 DROP TABLE IF EXISTS destination_badge;
 DROP TABLE IF EXISTS user_badge;
 DROP TABLE IF EXISTS badge;
-DROP TABLE IF EXISTS badge_category;
 DROP TABLE IF EXISTS user_destination;
-DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS user_destination_submission;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS destination;
-DROP TABLE IF EXISTS destination_category;
+DROP TABLE IF EXISTS category;
+
 
 CREATE TABLE users 
 (
@@ -17,7 +17,9 @@ CREATE TABLE users
           username varchar(255) NOT NULL UNIQUE,     -- Username
           password varchar(32) NOT NULL,      -- Password
           salt varchar(256) NOT NULL,          -- Password Salt
-          role varchar(255) NOT NULL default('City Vistor')
+          role varchar(255) NOT NULL default('City Vistor'),
+          img_url varchar(255),
+          bio varchar(255)
 );
 
 
@@ -29,11 +31,12 @@ CREATE TABLE user_reviews
         review varchar(255) not null,
         review_date date not null,
         
+        
         constraint fk_user_reviews_users foreign key (username) references users (username)
 );
 
 -- Update badge/category to category + bridge table if we want badges to include multiple categories (e.g. Art Museum has a Museum category + Rocky category)
-CREATE TABLE badge_category
+CREATE TABLE category
 (
         category_id serial PRIMARY KEY,
         category_name varchar(64) not null
@@ -45,25 +48,20 @@ CREATE TABLE badge
         category_id int,
         name varchar(64) not null UNIQUE,
         description varchar(128) not null,
+        img_url varchar(255),
         
-        constraint fk_badge_badge_category foreign key (category_id) references badge_category (category_id)
+        constraint fk_badge_category foreign key (category_id) references category (category_id)
 );
 
-
+-- Probably change username to user_id, but seemed easier with doing API calls.
 CREATE TABLE user_badge
 (
         username varchar(128),
-        badge_name varchar(128),
+        badge_id int,
         
-        constraint pk_user_badge primary key (username, badge_name),
+        constraint pk_user_badge primary key (username, badge_id),
         constraint fk_user_badge_users foreign key (username) references users (username),
-        constraint fk_user_badge_badge foreign key (badge_name) references badge (name)
-);
-
-CREATE TABLE destination_category
-(
-        category_id serial PRIMARY KEY,
-        category_name varchar(64) not null
+        constraint fk_user_badge_badge foreign key (badge_id) references badge (badge_id)
 );
 
 CREATE TABLE destination
@@ -78,14 +76,13 @@ CREATE TABLE destination
         state varchar(32) not null,
         zip_code varchar(16) not null,
         
-        constraint fk_destination_destination_category foreign key (category_id) references destination_category (category_id)
+        constraint fk_destination_category foreign key (category_id) references category (category_id)
 );
 
 CREATE TABLE user_destination
 (
         username varchar(128) not null,
         destination_id int not null,
-        checked_in boolean,
         
         constraint pk_user_destination primary key (username, destination_id),
         constraint fk_user_destination_users foreign key (username) references users (username),
@@ -102,4 +99,12 @@ CREATE TABLE destination_badge
         constraint fk_destination_badge_badge foreign key (badge_id) references badge (badge_id)
 );
 
+CREATE TABLE user_destination_submission
+(
+        destination_id serial PRIMARY KEY,
+        destination_name varchar(128) not null,
+        submitted_by varchar(128) not null,
+        
+        constraint fk_user_destination_submission_users foreign key (submitted_by) references users (username)
+);
 COMMIT;

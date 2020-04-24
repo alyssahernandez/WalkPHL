@@ -31,6 +31,7 @@ public class JdbcDestinationDao implements DestinationDao {
     	return mapRowSetToDestinations(results);
     }
     
+    // TODO: This likely won't be needed. Pull destinations, filter by name, pull info from Google by name, etc.
     @Override
     public Destination getDestination(Integer destination_id)
     {

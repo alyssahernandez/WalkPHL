@@ -44,7 +44,7 @@ public class JdbcReviewDao implements ReviewDao {
     		review.setReview_date(results.getDate("review_date"));
     		review.setReview_id(results.getInt("review_id"));
     		review.setTitle(results.getString("title"));
-    		review.setUser_id(results.getInt("user_id"));
+    		review.setUser_id(results.getInt("username"));
     		reviews.add(review);
     	}
     	return reviews;
@@ -63,7 +63,7 @@ public class JdbcReviewDao implements ReviewDao {
     		review.setReview_date(results.getDate("review_date"));
     		review.setReview_id(results.getInt("review_id"));
     		review.setTitle(results.getString("title"));
-    		review.setUser_id(results.getInt("user_id"));
+    		review.setUser_id(results.getInt("username"));
     		reviews.add(review);
     	}
     	return reviews;
@@ -71,7 +71,7 @@ public class JdbcReviewDao implements ReviewDao {
     
     public void createReview(Review review)
     {
-    	String query = "INSERT INTO user_reviews (user_id, title, review, review_date) VALUES (?, ?, ?, ?)";
+    	String query = "INSERT INTO user_reviews (username, title, review, review_date) VALUES (?, ?, ?, ?)";
     	jdbcTemplate.update(query, review.getUser_id(), review.getTitle(), review.getReview(), LocalDate.now());
     }
     

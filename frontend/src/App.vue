@@ -2,7 +2,7 @@
   <div id="app">
 
 
-
+    
     <nav class="navbar nav-shadow" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
           <h1 class="app-title-white navbar-item has-text-centered blue-nav-item">

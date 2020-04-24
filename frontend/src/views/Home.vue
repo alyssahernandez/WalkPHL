@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map"></map-widget>
-    <!-- <sidebar-comp class="sidebar" id="sidebar-container"></sidebar-comp> -->
+    <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map" v-bind:coords="this.coordinates"></map-widget>
+    <side-bar class="sidebar" id="sidebar-container"></side-bar>
     <div id="map-static" class="map-overlay"></div>
     <div id="mobile-map-overlay"></div>
     <div class="map-inactive"></div>
@@ -27,7 +27,7 @@
 
 <script>
 import MapWidget from "@/components/MapWidget";
-// import SideBar from "@/components/SideBar";
+import SideBar from "@/components/SideBar";
 
 export default {
   name: "Home",
@@ -44,8 +44,8 @@ export default {
     login: Boolean
   },
   components: {
-    MapWidget
-  //  SideBar 
+    MapWidget,
+    SideBar 
   },
   methods: {
     showMapView() {
@@ -64,13 +64,14 @@ export default {
       infoBlock.classList.add('fade');
       setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
 
-      this.$getLocation({})
-          .then(coordinates => {
-            this.coordinates = coordinates;
-          })
     },
   },
   created() {
+    this.$getLocation({})
+      .then(coordinates => {
+        this.coordinates = coordinates;
+        this.$emit('coords', coordinates);
+      })
   }
 }
 </script>
@@ -144,7 +145,7 @@ body {
 
 .home {
   width: 100vw;
-  height: 75vh;
+  height: 100vh;
 }
 
 @media only screen and (max-width: 768px) {
