@@ -60,14 +60,13 @@ public class JdbcBadgeDao implements BadgeDao {
     @Override
     public List<Badge> getEarnedBadges(String username) {
     	List<Badge> badges = new ArrayList<>();
-    	String query = "SELECT * FROM badge_category INNER JOIN badge ON badge.category_id = badge_category.category_id "
-    			+ "INNER JOIN user_badge ON badge.badge_id = user_badge.badge_id WHERE user_badge.username = ?";
+    	String query = "SELECT * FROM badge INNER JOIN user_badge ON badge.badge_id = user_badge.badge_id WHERE username = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, username);
     	
     	while (results.next()) {
     		Badge badge = new Badge();
     		badge.setBadgeId(results.getInt("badge_id"));
-    		badge.setCategory(results.getString("category_name"));
+    		badge.setCategory(results.getString("category_id"));
     		badge.setName(results.getString("name"));
     		badge.setDescription(results.getString("description"));
     		badge.setImgUrl(results.getString("img_url"));
