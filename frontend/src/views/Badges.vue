@@ -1,9 +1,13 @@
 <template>
    <div>
+    
+     <div>
+       <img v-for="badge in badges" :key="badge.badgeId" src="@/assets/images/art.png" alt="pictures">
+     </div>
      
    </div>
 </template>
-
+<!--C:\Users\Student\workspace\java-final-capstone-team-2\frontend\src\assets\images\Art.png-->
 <script>
 import auth from '../auth';
     
@@ -43,6 +47,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 
 </style>

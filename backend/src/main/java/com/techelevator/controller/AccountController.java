@@ -71,7 +71,7 @@ public class AccountController {
 		Map<String, Object> userInfo = new HashMap<>();
 		
 		userInfo.put("user", user.getUserByUsername(username));
-		//userInfo.put("userBadges", badge.getEarnedBadges(username));
+		userInfo.put("userBadges", badge.getEarnedBadges(username));
 		return userInfo;
 		
 	}	
