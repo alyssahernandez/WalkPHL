@@ -1,12 +1,44 @@
 <template>
       <div id="app" class="map-widget">
-        <div v-if="userHasLocation" id="right-panel"></div>
+        <div v-if="userHasLocation" id="right-panel">
+          <button class="button is-primary">Get Directions</button>
+          <button class="button is-primary">Show Reviews</button>
+          <div id="review-div">
+            <form @submit.prevent="leaveReview" id="submit-review-form">
+              <p><strong>Leave a review?</strong></p>
+              <label for="title">
+                <input 
+                  type="text"
+                  v-model="review.title"
+                  placeholder="Review Title"
+                  id="title"
+                  class="input"
+                  required
+                  autofocus
+                />
+              </label>
+              <label for="review">
+                <input
+                  type="text"
+                  v-model="review.review"
+                  placeholder="Review..."
+                  id="review"
+                  class="input"
+                  required
+                  autofocus
+                />
+              </label>
+              <button class="button" type="submit">Submit Review</button>
+            </form>
+          </div>
+        </div>
         <div id="map" v-bind:class="{'maps': userHasLocation}"></div>
       </div>
 </template>
 
 <script>
 import gmapsInit from './../utils/gmaps';
+import auth from '../auth';
 
 /*
 const DirectionRequests = [
@@ -181,7 +213,14 @@ export default {
     name: 'map-widget',
     data() {
       return {
-        displayInfo: false
+        displayInfo: false,
+        destinationName: '',
+        review: {
+          username: '',
+          title: '',
+          review: '',
+        },
+        user: '',
       }
     },
     props: {
@@ -213,6 +252,40 @@ export default {
     methods: {
       toRad(degree) {
         return degree * Math.PI / 180;
+      },
+      showMapView() {
+        let whiteOverlay = document.getElementById("map-static");
+        whiteOverlay.style.opacity = '0';
+        setTimeout(function(){whiteOverlay.parentNode.removeChild(whiteOverlay);}, 2000);
+
+        let mobileMapOverlay = document.getElementById("mobile-map-overlay");
+        mobileMapOverlay.classList.add('fade');
+        setTimeout(function(){mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);}, 2000);
+        
+        let greyscaleMap = document.getElementById("landing-page-map");
+        greyscaleMap.classList.add('greyscale-click');
+
+        let infoBlock = document.getElementById("app-info-block");
+        infoBlock.classList.add('fade');
+        setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
+      },
+      leaveReview() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.review)
+        })
+        .then((response) => {
+          if(response.ok) {
+            this.$router.push({ path: '/'});
+            console.log("success! review posted");
+          } else {
+          console.log("error leaving review");
+          }
+        })
       }
     },
     async mounted() {
@@ -334,12 +407,28 @@ export default {
     created() {
         // TODO: Fetch all locations.  
     }
-};
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  if(auth.getToken() != null) {
+    this.review.username = auth.getUser().sub;
+
+    let form = document.getElementById('submit-review-form');
+    form.classList.add('hide-form');
+  }
+
+});
+
 </script>
 
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
+
+.hide-form {
+  display: none;
+}
 
 #app {
   width: 100vw;
