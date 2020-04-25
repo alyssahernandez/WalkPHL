@@ -37,8 +37,8 @@
         <div class="navbar-end">
 
 
-          <div class="navbar-item has-dropdown is-hoverable">
-             <router-link class="navbar-item navbar-link" v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
+          <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
+             <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
 
             <div class="navbar-dropdown">
               <a class="navbar-item">

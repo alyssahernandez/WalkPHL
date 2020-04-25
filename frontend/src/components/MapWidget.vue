@@ -4,7 +4,7 @@
           <button class="button is-primary">Get Directions</button>
           <button class="button is-primary">Show Reviews</button>
           <div id="review-div">
-            <form @submit.prevent="leaveReview" v-bind:class="{'hide-form': !userLoggedIn}">
+            <form @submit.prevent="leaveReview" v-if="userLoggedIn">
               <p><strong>Leave a review?</strong></p>
               <label for="title">
                 <input 
