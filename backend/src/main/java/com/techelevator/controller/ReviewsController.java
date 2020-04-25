@@ -27,20 +27,19 @@ import com.techelevator.model.User;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/reviews")
 public class ReviewsController {
 	
 	@Autowired
 	private ReviewDao reviewDAO;
-
 	
 	// We return objects that are Beans
 	// typically POJOs or collections of POJOs
-	@GetMapping
+	@GetMapping("/reviews")
 	public List<Review> listAll() {
 		return reviewDAO.getAllReviews();
 	}
 	
+	/*
 	@PostMapping(path = "/profile/{username}/{destination}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Review create(@RequestBody Review review) {
@@ -49,7 +48,7 @@ public class ReviewsController {
 		return review;
 	}
 	
-	/*
+	
 	@GetMapping("/profile")
 	public Review getUserReview(@PathVariable User user){
 		Review review = null;
