@@ -74,7 +74,5 @@ public class JdbcReviewDao implements ReviewDao {
     	String query = "INSERT INTO user_reviews (username, title, review, review_date) VALUES (?, ?, ?, ?)";
     	jdbcTemplate.update(query, review.getUsername(), review.getTitle(), review.getReview(), LocalDate.now());
     }
-    
 }
-    
-    
+        
