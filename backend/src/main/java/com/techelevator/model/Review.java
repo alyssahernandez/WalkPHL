@@ -5,7 +5,7 @@ import java.util.Date;
 public class Review {
 	
 	private Integer review_id;
-	private Integer user_id;
+	private String username;
 	private String title;
 	private String review;
 	private Date createdAt;
@@ -16,11 +16,11 @@ public class Review {
 	public void setReview_id(Integer review_id) {
 		this.review_id = review_id;
 	}
-	public Integer getUser_id() {
-		return user_id;
+	public String getUsername() {
+		return username;
 	}
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getTitle() {
 		return title;
