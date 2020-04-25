@@ -4,7 +4,7 @@
           <button class="button is-primary">Get Directions</button>
           <button class="button is-primary">Show Reviews</button>
           <div id="review-div">
-            <form @submit.prevent="leaveReview" id="submit-review-form">
+            <form @submit.prevent="leaveReview" v-bind:class="{'hide-form': !userLoggedIn}">
               <p><strong>Leave a review?</strong></p>
               <label for="title">
                 <input 
@@ -216,7 +216,7 @@ export default {
         displayInfo: false,
         destinationName: '',
         review: {
-          username: '',
+          username: auth.getUser().sub,
           title: '',
           review: '',
         },
@@ -227,6 +227,11 @@ export default {
       coords: Object
     },
     computed: {
+
+      userLoggedIn() {
+        return (auth.getToken() != null);
+      },
+
       // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
       userHasLocation() {
         return !(this.coords.lat == 0 || this.coords.lng == 0);
@@ -408,17 +413,6 @@ export default {
         // TODO: Fetch all locations.  
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-
-  if(auth.getToken() != null) {
-    this.review.username = auth.getUser().sub;
-
-    let form = document.getElementById('submit-review-form');
-    form.classList.add('hide-form');
-  }
-
-});
 
 </script>
 
