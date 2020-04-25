@@ -17,9 +17,9 @@ INSERT INTO category (category_name) VALUES ('Sights');
 INSERT INTO category (category_name) VALUES ('Parks');
 INSERT INTO category (category_name) VALUES ('Arts');
 
-INSERT INTO badge (category_id, name, description, img_url) VALUES (1, 'Sky Badge', 'You''re sky high!', 'img.png');
-INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'X Park Badge', 'Look! A squirrel smoking a cigar!', 'img.png');
-INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Art Museum & Rocky Steps Badge', 'So cultured, you are!', 'img.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (1, 'Sky Badge', 'You''re sky high!', 'sky.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'X Park Badge', 'Look! A squirrel smoking a cigar!', 'harborpark.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Art Museum & Rocky Steps Badge', 'So cultured, you are!', 'art.png');
 
 INSERT INTO user_badge (username, badge_id) VALUES ('admin', 1);
 INSERT INTO user_badge (username, badge_id) VALUES ('admin', 2);
