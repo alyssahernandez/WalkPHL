@@ -61,7 +61,7 @@
           Have an account?
         </router-link>
         <div class="control">
-          <button class="button" type="submit">Create Account</button>
+          <button class="button space-below-input" type="submit">Create Account</button>
         </div>
       </div>
     </form>

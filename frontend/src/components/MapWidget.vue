@@ -13,20 +13,22 @@
                   placeholder="Review Title"
                   id="title"
                   class="input"
+                  maxlength="40"
                   required
                   autofocus
                 />
               </label>
               <label for="review">
-                <input
+                <textarea
                   type="text"
                   v-model="review.review"
                   placeholder="Review..."
-                  id="review"
-                  class="input"
+                  id="review" 
+                  class="textarea is-primary"
+                  maxlength="255"
                   required
-                  autofocus
-                />
+                  autofocus>
+                </textarea>
               </label>
               <button class="button" type="submit">Submit Review</button>
             </form>
