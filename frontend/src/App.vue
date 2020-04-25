@@ -180,4 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0px 2px 5px 1px #c7c7c7;
 }
 
+.space-below-input {
+  margin-top: 1rem;
+}
+
 </style>

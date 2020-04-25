@@ -3,12 +3,12 @@
     <form class="registration-form" @submit.prevent="register">
       <h1 class="div-title">Grab your feather and adventure cap.<br>Join us!</h1>
         <div class="field">
-        <div class="alert is-danger" role="alert" v-if="registrationErrors">
+        <div class="help is-danger" role="alert" v-if="registrationErrors">
           There were problems registering this user.
         </div>
         
-        <label for="username" class="label">Username</label>
-        <div class="control has-icos-left has-icons-right">
+        <label for="username" class="label space-below-input">Username</label>
+        <div class="control has-icons-left has-icons-right">
           <input
             type="text"
             id="username"
@@ -26,7 +26,7 @@
           </span>
         </div>
         <div class="control has-icons-left has-icons-right">
-        <label for="password" class="sr-only">Password</label>
+        <label for="password" class="label space-below-input" >Password</label>
           <input
             type="password"
             id="password"
@@ -41,6 +41,7 @@
             <span class="icon is-small is-right">
             <i class="fas fa-check"></i>
           </span>
+          <p class="label space-below-input">Confirm Password</p>
           <input
             type="password"
             id="confirmPassword"
@@ -56,7 +57,7 @@
               <i class="fas fa-check"></i>
             </span>
         </div>
-        <router-link class="have-account-link" :to="{ name: 'login' }">
+        <router-link class="have-account-link space-below-input" :to="{ name: 'login' }">
           Have an account?
         </router-link>
         <div class="control">
