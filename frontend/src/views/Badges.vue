@@ -2,7 +2,7 @@
    <div>
     
      <div>
-       <img v-for="badge in badges" :key="badge.badgeId" :src="require(`../assets/images/${badge.imgUrl}`)" alt="picture" >
+       <img v-for="badge in badges" :key="badge.badgeId" :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
      </div>
      
    </div>

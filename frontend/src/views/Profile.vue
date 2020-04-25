@@ -1,6 +1,7 @@
 <template>
   <div class="contanier profile">
       <h1>{{user.user.username}}</h1>
+      <img v-for="badge in user.userBadges" :key="badge.badgeId" :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures">
       <h1>{{user}}</h1>
   </div>
 </template>
