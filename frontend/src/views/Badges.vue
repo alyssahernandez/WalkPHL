@@ -2,7 +2,7 @@
    <div>
     
      <div>
-       <img v-for="badge in badges" :key="badge.badgeId" src="@/assets/images/art.png" alt="pictures">
+       <img v-for="badge in badges" :key="badge.badgeId" :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
      </div>
      
    </div>
@@ -43,6 +43,7 @@ export default {
   },
   created(){
    this.badges = this.getBadges();
+   
   }
 }
 </script>
