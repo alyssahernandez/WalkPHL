@@ -1,6 +1,6 @@
 <template>
    <div>
-     
+     <h1>{{badges}}</h1>
    </div>
 </template>
 
@@ -43,6 +43,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 
 </style>
