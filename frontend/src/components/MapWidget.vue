@@ -278,6 +278,7 @@ export default {
         fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
           method: 'POST',
           headers: {
+            Authorization: 'Bearer ' + auth.getToken(),
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
@@ -291,6 +292,7 @@ export default {
           console.log("error leaving review");
           }
         })
+        .then((err) => console.log(err));
       }
     },
     async mounted() {

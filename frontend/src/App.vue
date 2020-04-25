@@ -30,11 +30,15 @@
             About WalkPHL
           </router-link>
 
-          <!-- THIS IS A DROP-DOWN MENU IF WE WANT IT LATER
+           <!-- THIS IS A DROP-DOWN MENU IF WE WANT IT LATER -->
+
+        </div>
+
+        <div class="navbar-end">
+
+
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              More
-            </a>
+             <router-link class="navbar-item navbar-link" v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
 
             <div class="navbar-dropdown">
               <a class="navbar-item">
@@ -51,13 +55,13 @@
                 Report an issue
               </a>
             </div>
-          </div> -->
+          </div> 
 
-        </div>
 
-        <div class="navbar-end">
+
+
+          
           <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
-          <router-link class="navbar-item" v-if="loggedIn" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
           <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
         </div>
       </div>
