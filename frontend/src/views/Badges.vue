@@ -1,4 +1,5 @@
 <template>
+<<<<<<< 6ae3b881bcbfa525a7a83e0103026b23fcfb0f2c
   <div>
     <div class="card" v-for="badge in badges" :key="badge.badgeId">
       <div class="card-content">
@@ -17,6 +18,24 @@
             </div>
           </div>
         </div>
+=======
+   <div>
+     <div class="card" v-for="badge in badges" :key="badge.badgeId">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        <figure class="image is-128x128">
+          <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
+        </figure>
+      </div>
+      <div class="media-content">
+        <p class="title is-4">{{badge.name}}</p>
+        <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
+        <p class="subtitle is-6">Location</p>
+        <div class="content">
+          {{badge.description}}
+      <br>
+>>>>>>> fixed stuff
     </div>
     </div>
   </div>
