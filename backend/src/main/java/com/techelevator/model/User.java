@@ -18,6 +18,10 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
     private String confirmPassword;
+    
+    private String profilePicture;
+    
+    private String bio;
 
     private boolean passwordMatching;
 
@@ -49,6 +53,14 @@ public class User {
      */
     public long getId() {
         return id;
+    }
+    
+    public String getProfilePicture() {
+    	return profilePicture;
+    }
+    
+    public String getBio() {
+    	return bio;
     }
 
     /**
@@ -85,5 +97,13 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+    
+    public void setProfilePicture(String profilePicture) {
+    	this.profilePicture = profilePicture;
+    }
+    
+    public void setBio(String bio) {
+    	this.bio = bio;
     }
 }
