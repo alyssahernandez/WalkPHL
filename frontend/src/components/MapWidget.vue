@@ -4,6 +4,39 @@
           <button class="button is-primary">Get Directions</button>
           <button class="button is-primary">Show Reviews</button>
           <div id="review-div">
+
+            <div class="container">
+              <div class="box" v-for="review in reviews" :key="review.review_id">
+                <article class="media">
+                  <div class="media-left">
+                    <figure class="image is-64x64">
+                      <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                    </figure>
+                  </div>
+                <div class="media-content">
+                  <div class="content">
+                    <p>
+                      <strong>{{review.username}}</strong>
+                      <br>
+                      <br>
+                      <strong>{{review.title}}</strong>
+                      <br>
+                      {{review.review}}
+                    </p>
+                </div>
+                <nav class="level is-mobile">
+                  <div class="level-left">
+                    <p class="level-item">
+                      <span>
+                        {{review.review_date}}
+                      </span>
+                    </p>
+                  </div>
+                </nav>
+              </div>
+            </article>
+          </div>
+        </div>
             <form @submit.prevent="leaveReview" v-if="userLoggedIn">
               <p><strong>Leave a review?</strong></p>
               <label for="title">
@@ -41,6 +74,237 @@
 <script>
 import gmapsInit from './../utils/gmaps';
 import auth from '../auth';
+
+export default {
+    name: 'map-widget',
+    components: {
+      
+    },
+    data() {
+      return {
+        displayInfo: false,
+        destinationName: '',
+        review: {
+          username: auth.getUser().sub,
+          title: '',
+          review: '',
+        },
+        user: '',
+        reviews: null
+      }
+    },
+    props: {
+      coords: Object
+    },
+    computed: {
+
+      userLoggedIn() {
+        return (auth.getToken() != null);
+      },
+
+      // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
+      userHasLocation() {
+        return !(this.coords.lat == 0 || this.coords.lng == 0);
+      },
+      // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
+      filterLocations() {
+        return locations.filter( (location) => {
+          var R = 6371000;
+          var dLat = this.toRad(location.position.lat-this.coords.lat);
+          var dLon = this.toRad(location.position.lng-this.coords.lng);
+          var lat1 = this.toRad(this.coords.lat);
+          var lat2 = this.toRad(location.position.lat);
+
+          var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          var d = R * c;
+
+          if (d <= 3500) return location;
+        })
+      },
+    },
+    methods: {
+      getReviews() {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/reviews`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken()
+        }
+      })
+      .then((response) => {
+        if(response.ok) {
+          console.log(response);
+          return response.json();
+        }
+      })
+      .then((reviews) => {
+        console.log(reviews);
+        this.reviews = reviews;
+      })
+      .catch(err => {console.log(err)})
+      },
+      toRad(degree) {
+        return degree * Math.PI / 180;
+      },
+      showMapView() {
+        let whiteOverlay = document.getElementById("map-static");
+        whiteOverlay.style.opacity = '0';
+        setTimeout(function(){whiteOverlay.parentNode.removeChild(whiteOverlay);}, 2000);
+
+        let mobileMapOverlay = document.getElementById("mobile-map-overlay");
+        mobileMapOverlay.classList.add('fade');
+        setTimeout(function(){mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);}, 2000);
+        
+        let greyscaleMap = document.getElementById("landing-page-map");
+        greyscaleMap.classList.add('greyscale-click');
+
+        let infoBlock = document.getElementById("app-info-block");
+        infoBlock.classList.add('fade');
+        setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
+      },
+      leaveReview() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken(),
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.review)
+        })
+        .then((response) => {
+          if(response.ok) {
+            this.$router.push({ path: '/'});
+            console.log("success! review posted");
+          } else {
+          console.log("error leaving review");
+          }
+        })
+        .then((err) => console.log(err));
+      }
+    },
+    created() {
+      this.reviews = this.getReviews();
+    },
+    async mounted() {
+      try {
+        const google = await gmapsInit();
+        const geocoder = new google.maps.Geocoder();
+        const map = new google.maps.Map(document.getElementById('map'));
+        //const places = new google.maps.places.PlacesService(map);
+        const directionsService = new google.maps.DirectionsService(); 
+        const directionsDisplay = new google.maps.DirectionsRenderer();
+        
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
+        directionsDisplay.setMap(map); 
+
+        var icons = {
+          artcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/arts.png', scaledSize: new google.maps.Size(35, 35)}},
+          sightcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/camera.png', scaledSize: new google.maps.Size(28, 28)} },
+          foodcon: {icon: {url: 'http://maps.google.com/mapfiles/kml/pal2/icon37.png', scaledSize: new google.maps.Size(28, 28)}},
+          infocon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/info.png', scaledSize: new google.maps.Size(28, 28)}},
+          secretcon: { icon: { url: 'http://maps.google.com/mapfiles/kml/shapes/info_circle.png', scaledSize: new google.maps.Size(28, 28)}},
+          parkcon: { icon: { url: 'http://maps.google.com/mapfiles/kml/pal2/icon4.png', scaledSize: new google.maps.Size(28, 28)}},
+          camdencon: { icon: { url: 'http://maps.google.com/mapfiles/kml/pal3/icon37.png', scaledSize: new google.maps.Size(50, 50) }}
+        };
+
+        geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
+          if (status !== `OK` || !results[0]) {
+            throw new Error(status);
+          }
+          map.setCenter(results[0].geometry.location);
+          map.fitBounds(results[0].geometry.viewport);
+        });
+
+        const markerClickHandler = (marker) => {
+          map.setZoom(17);
+          map.setCenter(marker.getPosition());
+        };
+
+        google.maps.Map.prototype.markers = new Array();
+
+        google.maps.Map.prototype.getMarkers = function() {
+            return this.markers
+        };
+
+        this.filterLocations
+          .map((location) => {
+            let marker = '';
+            marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, animation: google.maps.Animation.DROP, icon: icons[location.category + 'con'].icon});
+            marker.addListener(`dblclick`, () => markerClickHandler(marker));
+            let infowindow = new google.maps.InfoWindow();
+              marker.addListener('click', function() {
+                if (!this.displayInfo) {
+                  infowindow.setContent(location.content);
+                  infowindow.open(map, marker);
+                  this.displayInfo = !this.displayInfo;
+                } else {
+                  infowindow.close(map, marker);
+                  this.displayInfo = !this.displayInfo;
+                }
+              });
+            return marker;
+          });
+/*
+          var request1 = {
+            query: 'Philadelphia Museum of Art',
+            fields: ['name', 'place_id'],
+          };
+
+          var service = new google.maps.places.PlacesService(map);
+
+          service.findPlaceFromQuery(request1, function(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              for (var i = 0; i < results.length; i++) {
+              }
+              map.setCenter(results[0].geometry.location);
+            }
+          });
+
+        Need to use findPlaceFromQuery(), I think(?), to get placeId, then plug placeId into a request object, then getDetails. Then we're in action.
+
+        var request1 = {
+          placeId: "ChIJT_x1AIOB0IkRhcd1YOHXJXk"
+        };
+        var infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+
+        service.getDetails(request1, function(place, status) {
+          console.log(status)
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            console.log(place)
+            var marker = new google.maps.Marker({
+              map: map,
+              position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.setContent(place.name);
+              infowindow.open(map, this);
+            });
+          }
+        });
+*/
+        const request = {
+            origin : this.coords,
+            destination : locations[4].name + ', Philadelphia',
+            travelMode : google.maps.TravelMode.WALKING
+        };
+
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+            } 
+        });
+        
+        // eslint-disable-next-line no-new
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    }
+}
+
 
 /*
 const DirectionRequests = [
@@ -210,213 +474,6 @@ const locations = [
     }
   }
 ];
-
-export default {
-    name: 'map-widget',
-    data() {
-      return {
-        displayInfo: false,
-        destinationName: '',
-        review: {
-          username: auth.getUser().sub,
-          title: '',
-          review: '',
-        },
-        user: '',
-      }
-    },
-    props: {
-      coords: Object
-    },
-    computed: {
-
-      userLoggedIn() {
-        return (auth.getToken() != null);
-      },
-
-      // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
-      userHasLocation() {
-        return !(this.coords.lat == 0 || this.coords.lng == 0);
-      },
-      // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
-      filterLocations() {
-        return locations.filter( (location) => {
-          var R = 6371000;
-          var dLat = this.toRad(location.position.lat-this.coords.lat);
-          var dLon = this.toRad(location.position.lng-this.coords.lng);
-          var lat1 = this.toRad(this.coords.lat);
-          var lat2 = this.toRad(location.position.lat);
-
-          var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                  Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-          var d = R * c;
-
-          if (d <= 3500) return location;
-        })
-      },
-    },
-    methods: {
-      toRad(degree) {
-        return degree * Math.PI / 180;
-      },
-      showMapView() {
-        let whiteOverlay = document.getElementById("map-static");
-        whiteOverlay.style.opacity = '0';
-        setTimeout(function(){whiteOverlay.parentNode.removeChild(whiteOverlay);}, 2000);
-
-        let mobileMapOverlay = document.getElementById("mobile-map-overlay");
-        mobileMapOverlay.classList.add('fade');
-        setTimeout(function(){mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);}, 2000);
-        
-        let greyscaleMap = document.getElementById("landing-page-map");
-        greyscaleMap.classList.add('greyscale-click');
-
-        let infoBlock = document.getElementById("app-info-block");
-        infoBlock.classList.add('fade');
-        setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
-      },
-      leaveReview() {
-        fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
-          method: 'POST',
-          headers: {
-            Authorization: 'Bearer ' + auth.getToken(),
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.review)
-        })
-        .then((response) => {
-          if(response.ok) {
-            this.$router.push({ path: '/'});
-            console.log("success! review posted");
-          } else {
-          console.log("error leaving review");
-          }
-        })
-        .then((err) => console.log(err));
-      }
-    },
-    async mounted() {
-      try {
-        const google = await gmapsInit();
-        const geocoder = new google.maps.Geocoder();
-        const map = new google.maps.Map(document.getElementById('map'));
-        //const places = new google.maps.places.PlacesService(map);
-        const directionsService = new google.maps.DirectionsService(); 
-        const directionsDisplay = new google.maps.DirectionsRenderer();
-        
-        directionsDisplay.setPanel(document.getElementById('right-panel'));
-        directionsDisplay.setMap(map); 
-
-        var icons = {
-          artcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/arts.png', scaledSize: new google.maps.Size(35, 35)}},
-          sightcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/camera.png', scaledSize: new google.maps.Size(28, 28)} },
-          foodcon: {icon: {url: 'http://maps.google.com/mapfiles/kml/pal2/icon37.png', scaledSize: new google.maps.Size(28, 28)}},
-          infocon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/info.png', scaledSize: new google.maps.Size(28, 28)}},
-          secretcon: { icon: { url: 'http://maps.google.com/mapfiles/kml/shapes/info_circle.png', scaledSize: new google.maps.Size(28, 28)}},
-          parkcon: { icon: { url: 'http://maps.google.com/mapfiles/kml/pal2/icon4.png', scaledSize: new google.maps.Size(28, 28)}},
-          camdencon: { icon: { url: 'http://maps.google.com/mapfiles/kml/pal3/icon37.png', scaledSize: new google.maps.Size(50, 50) }}
-        };
-
-        geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
-          if (status !== `OK` || !results[0]) {
-            throw new Error(status);
-          }
-          map.setCenter(results[0].geometry.location);
-          map.fitBounds(results[0].geometry.viewport);
-        });
-
-        const markerClickHandler = (marker) => {
-          map.setZoom(17);
-          map.setCenter(marker.getPosition());
-        };
-
-        google.maps.Map.prototype.markers = new Array();
-
-        google.maps.Map.prototype.getMarkers = function() {
-            return this.markers
-        };
-
-        this.filterLocations
-          .map((location) => {
-            let marker = '';
-            marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, animation: google.maps.Animation.DROP, icon: icons[location.category + 'con'].icon});
-            marker.addListener(`dblclick`, () => markerClickHandler(marker));
-            let infowindow = new google.maps.InfoWindow();
-              marker.addListener('click', function() {
-                if (!this.displayInfo) {
-                  infowindow.setContent(location.content);
-                  infowindow.open(map, marker);
-                  this.displayInfo = !this.displayInfo;
-                } else {
-                  infowindow.close(map, marker);
-                  this.displayInfo = !this.displayInfo;
-                }
-              });
-            return marker;
-          });
-/*
-          var request1 = {
-            query: 'Philadelphia Museum of Art',
-            fields: ['name', 'place_id'],
-          };
-
-          var service = new google.maps.places.PlacesService(map);
-
-          service.findPlaceFromQuery(request1, function(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              for (var i = 0; i < results.length; i++) {
-              }
-              map.setCenter(results[0].geometry.location);
-            }
-          });
-
-        Need to use findPlaceFromQuery(), I think(?), to get placeId, then plug placeId into a request object, then getDetails. Then we're in action.
-
-        var request1 = {
-          placeId: "ChIJT_x1AIOB0IkRhcd1YOHXJXk"
-        };
-        var infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-
-        service.getDetails(request1, function(place, status) {
-          console.log(status)
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place)
-            var marker = new google.maps.Marker({
-              map: map,
-              position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.setContent(place.name);
-              infowindow.open(map, this);
-            });
-          }
-        });
-*/
-        const request = {
-            origin : this.coords,
-            destination : locations[4].name + ', Philadelphia',
-            travelMode : google.maps.TravelMode.WALKING
-        };
-
-        directionsService.route(request, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-            } 
-        });
-        
-        // eslint-disable-next-line no-new
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    },
-    created() {
-        // TODO: Fetch all locations.  
-    }
-}
 
 </script>
 
