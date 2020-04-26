@@ -39,7 +39,7 @@ public class JdbcBadgeDao implements BadgeDao {
     	while (results.next()){
     		Badge badge = new Badge();
     		badge.setBadgeId(results.getInt("badge_id"));
-    		badge.setCategory(results.getString("category_id"));
+    		badge.setCategory(results.getString("category_name"));
     		badge.setName(results.getString("name"));
     		badge.setDescription(results.getString("description"));
     		badge.setImgUrl(results.getString("img_url"));
