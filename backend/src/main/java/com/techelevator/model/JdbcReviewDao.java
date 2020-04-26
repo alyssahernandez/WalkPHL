@@ -34,7 +34,27 @@ public class JdbcReviewDao implements ReviewDao {
     public List<Review> getAllReviews()
     {
     	List<Review> reviews = new ArrayList<>();
-    	String query = "SELECT * FROM user_reviews";
+    	String query = "SELECT * FROM user_reviews ORDER BY review_date DESC";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+    	
+    	while (results.next())
+    	{
+    		Review review = new Review();
+    		review.setReview(results.getString("review"));
+    		review.setReview_date(results.getDate("review_date"));
+    		review.setReview_id(results.getInt("review_id"));
+    		review.setTitle(results.getString("title"));
+    		review.setUsername(results.getString("username"));
+    		reviews.add(review);
+    	}
+    	return reviews;
+    }
+    
+    @Override
+    public List<Review> getRecentReviews()
+    {
+    	List<Review> reviews = new ArrayList<>();
+    	String query = "SELECT * FROM user_reviews ORDER BY review_date DESC LIMIT 5";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
     	
     	while (results.next())
@@ -74,7 +94,5 @@ public class JdbcReviewDao implements ReviewDao {
     	String query = "INSERT INTO user_reviews (username, title, review, review_date) VALUES (?, ?, ?, ?)";
     	jdbcTemplate.update(query, review.getUsername(), review.getTitle(), review.getReview(), LocalDate.now());
     }
-    
 }
-    
-    
+        

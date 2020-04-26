@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map" v-bind:coords="this.coordinates"></map-widget>
+    <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map" v-bind:panel="this.exploring"></map-widget>
     <div id="map-static" class="map-overlay"></div>
     <div id="mobile-map-overlay"></div>
     <div class="map-inactive"></div>
@@ -12,7 +12,7 @@
       <p class="browser-view-description push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
  
       <p v-if="!userLoggedIn" class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button v-on:click="showMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
+      <button v-on:click="showMapView(), startedExploring()" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
       <div class="mobile-buttons-div">
         <router-link class="have-account-link" :to="{ name: 'login' }"> 
           <button class="button is-rounded is-primary mobile-button position-button-mobile-1">Sign In</button>
@@ -39,6 +39,7 @@ export default {
         lat: 0,
         lng: 0
       },
+      exploring: false
     }
   },
   props: {
@@ -48,6 +49,9 @@ export default {
     MapWidget
   },
   methods: {
+    startedExploring() {
+      this.exploring = true;
+    },
     showMapView() {
       let whiteOverlay = document.getElementById("map-static");
       whiteOverlay.style.opacity = '0';
@@ -89,11 +93,6 @@ export default {
       }
   },
   created() {
-    this.$getLocation({})
-      .then(coordinates => {
-        this.coordinates = coordinates;
-        this.$emit('coords', coordinates);
-      })
   }
 }
 </script>

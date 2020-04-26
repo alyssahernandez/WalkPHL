@@ -1,13 +1,23 @@
 <template>
       <div id="app" class="map-widget">
         <!-- <div id="swiper" v-touch:swipe.top="swipeUpSidebar" v-touch:swipe.bottom="swipeDownSidebar"> -->
-          <div v-if="userHasLocation" id="right-panel">
-            <div class="location-buttons">
-              <button class="button is-primary button-1">Get Directions</button>
-              <button class="button is-primary button-2" v-if="userLoggedIn">Show Reviews</button>
-              <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+        <div v-show="panel" id="right-panel">
+          <div class="location-buttons">
+            <button id="dir" class="button is-primary">Get Directions</button>
+            <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
+            <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+          </div>
+            <div id="destination-div">
+              <div class="container">
+                <div class="box" v-for="destination in destinations" :key="destination.destinationId">
+                   <img :src="`${destination.imgUrl}`" />
+                   <h4>{{destination.name}}</h4>
+                   <p>{{destination.description}}</p>
+                   <p>{{destination.openTo}} - {{destination.openFrom}} - Weekends:{{destination.openOnWeekends}}</p>
+                </div>
+              </div>
             </div>
-            <div id="review-div">
+            <div v-if="this.displayReviews" id="review-div">
               <div class="container">
                 <div class="box" v-for="review in reviews" :key="review.review_id">
                   <article class="media">
@@ -70,9 +80,10 @@
               </form>
             </div>
           </div>
-          <div id="map" v-bind:class="{'maps': userHasLocation}"></div>
-        </div>
-      <!-- </div> -->
+          <div id="map" v-bind:class="{'maps': panel}"></div>
+      </div>
+      
+
 </template>
 
 <script>
@@ -86,7 +97,10 @@ export default {
     },
     data() {
       return {
+        hasPosition: false,
+        num: 1,
         displayInfo: false,
+        displayReviews: false,
         destinationName: '',
         review: {
           username: auth.getUser().sub,
@@ -94,21 +108,17 @@ export default {
           review: '',
         },
         user: '',
-        reviews: null
+        reviews: null,
+        destinations: null,
+
       }
     },
     props: {
-      coords: Object
+      panel: Boolean
     },
     computed: {
-
       userLoggedIn() {
         return (auth.getToken() != null);
-      },
-
-      // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
-      userHasLocation() {
-        return !(this.coords.lat == 0 || this.coords.lng == 0);
       },
       // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
       filterLocations() {
@@ -130,23 +140,23 @@ export default {
     },
     methods: {
       getReviews() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/reviews`, {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + auth.getToken()
-        }
-      })
-      .then((response) => {
-        if(response.ok) {
-          console.log(response);
-          return response.json();
-        }
-      })
-      .then((reviews) => {
-        console.log(reviews);
-        this.reviews = reviews;
-      })
-      .catch(err => {console.log(err)})
+        fetch(`${process.env.VUE_APP_REMOTE_API}/recent-reviews`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken()
+          }
+        })
+        .then((response) => {
+          if(response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then((reviews) => {
+          console.log(reviews);
+          this.reviews = reviews;
+        })
+        .catch(err => {console.log(err)})
       },
       swipeUpSidebar() {
         let swipeDiv = document.getElementById("swiper");
@@ -188,30 +198,55 @@ export default {
         })
         .then((response) => {
           if(response.ok) {
-            this.$router.push({ path: '/'});
+            this.$router.push({ path: '/reviews'});
             console.log("success! review posted");
           } else {
           console.log("error leaving review");
           }
         })
         .then((err) => console.log(err));
-      }
+      },
+      getDestinations() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken()
+          }
+        })
+        .then((response) => {
+          if(response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then((destinations) => {
+          console.log(destinations);
+          this.destinations = destinations;
+        })
+        .catch(err => {console.log(err)})
+      },
+      reviewButtonClicked() {
+        this.displayReviews = !this.displayReviews;
+      },
     },
     created() {
       this.reviews = this.getReviews();
+      this.destinations = this.getLocations();
     },
     async mounted() {
-      try {
+
+        // Initialization of Maps objects
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
         const map = new google.maps.Map(document.getElementById('map'));
         //const places = new google.maps.places.PlacesService(map);
         const directionsService = new google.maps.DirectionsService(); 
-        const directionsDisplay = new google.maps.DirectionsRenderer();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+      
+        directionsRenderer.setPanel(document.getElementById('right-panel'));
+        directionsRenderer.setMap(map); 
         
-        directionsDisplay.setPanel(document.getElementById('right-panel'));
-        directionsDisplay.setMap(map); 
-
+        // Map icons
         var icons = {
           artcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/arts.png', scaledSize: new google.maps.Size(35, 35)}},
           sightcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/camera.png', scaledSize: new google.maps.Size(28, 28)} },
@@ -222,133 +257,115 @@ export default {
           camdencon: { icon: { url: 'http://maps.google.com/mapfiles/kml/pal3/icon37.png', scaledSize: new google.maps.Size(50, 50) }}
         };
 
+        // Geocoder is grabbing places that match our address search. It returns an array, but given we're specific, it will only be of size one.
+        // We reference our search it with results[0], and declare the map to be centered on the location of our search (Center City)
         geocoder.geocode({ address: `Center City, Philadelphia` }, (results, status) => {
           if (status !== `OK` || !results[0]) {
             throw new Error(status);
           }
           map.setCenter(results[0].geometry.location);
           map.fitBounds(results[0].geometry.viewport);
-        });
+         });
 
+         // This sets the zoom when a marker is clicked on & centers the map on that marker
         const markerClickHandler = (marker) => {
           map.setZoom(17);
           map.setCenter(marker.getPosition());
         };
 
+        // Getting an array of markets to plop on our map
         google.maps.Map.prototype.markers = new Array();
-
         google.maps.Map.prototype.getMarkers = function() {
             return this.markers
         };
 
-        this.filterLocations
-          .map((location) => {
-            let marker = '';
-            marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, animation: google.maps.Animation.DROP, icon: icons[location.category + 'con'].icon});
-            marker.addListener(`dblclick`, () => markerClickHandler(marker));
-            let infowindow = new google.maps.InfoWindow();
-              marker.addListener('click', function() {
-                if (!this.displayInfo) {
-                  infowindow.setContent(location.content);
-                  infowindow.open(map, marker);
-                  this.displayInfo = !this.displayInfo;
+        // The next few lines requests a user's position (I was using Vue's before; this is Google's)
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            // This sets an infowindow on our current location.
+            var infoWindow = new google.maps.InfoWindow;
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Oh, there you are! Haiii');
+            infoWindow.open(map);
+            map.setCenter({lat: 39.9526, lng: -75.1652});
+            map.setZoom(14);
+          
+          // TODO: We shouldn't be calling "locations" like this. In order for this to work, Locations must be declared inside of our script.
+          // That's not ideal, especially for referencing things from our DB.  
+          // It has to do with async mounting -- was reading about it all night.  Not entirely sure of the solution, however, tho I think we may need to fetch in here & have everything else wait on the response.
+
+          // This iterates over our filtered locations (also had to declare the Filter method here rather than in "methods")
+          // On each location, it plants an icon and places an info window on the marker (on click)
+            locations
+            .map((location) => {
+              let marker = '';
+              if (filterEm(location)) {
+
+                marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, icon: icons[location.category + 'con'].icon});
+                marker.addListener(`dblclick`, () => markerClickHandler(marker));
+                let infowindow = new google.maps.InfoWindow({ content: location.content });
+                  marker.addListener('click', function() {
+                    if (!this.displayInfo) {
+                      infowindow.open(map, marker);
+                      this.displayInfo = !this.displayInfo;
+                    } else {
+                      infowindow.close(map, marker);
+                      this.displayInfo = !this.displayInfo;
+                    }
+                  });
+              }
+              return marker;
+            });
+            
+            // Function to display route
+            var onChangeHandler = function() {
+              calculateAndDisplayRoute(directionsService, directionsRenderer);
+            }
+
+            // Adding an on-click to our "Get Directions" button, which runs the above function on click
+            document.getElementById('dir').addEventListener('click', onChangeHandler);
+
+            // Calculates route from user position and that of a destination.
+            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+              directionsService.route({
+                  origin : pos,
+                  destination : locations[2].position,
+                  travelMode : 'WALKING'
+              }, function(response, status) {
+                if (status === 'OK') {
+                  directionsRenderer.setDirections(response);
                 } else {
-                  infowindow.close(map, marker);
-                  this.displayInfo = !this.displayInfo;
+                  window.alert('Directions request failed due to ' + status);
                 }
               });
-            return marker;
-          });
-/*
-          var request1 = {
-            query: 'Philadelphia Museum of Art',
-            fields: ['name', 'place_id'],
-          };
-
-          var service = new google.maps.places.PlacesService(map);
-
-          service.findPlaceFromQuery(request1, function(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              for (var i = 0; i < results.length; i++) {
-              }
-              map.setCenter(results[0].geometry.location);
+            }
+            
+            // Had to move our "filter by distance" method down here. Wouldn't work when calling above.
+            // Also had to put our "toRad()" method inside of it, as it would only return undefined values...more async mount strangeness
+            function filterEm(location) {
+              var R = 6371000;
+              var dLat = Math.PI / 180 * (location.position.lat - pos.lat);
+              var dLon = Math.PI / 180 * (location.position.lng - pos.lng);
+              var lat1 = Math.PI / 180 * (pos.lat);
+              var lat2 = Math.PI / 180 * (pos.lng);
+              var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+              var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+              var d = R * c;
+              return d <= 3500;
             }
           });
-
-        Need to use findPlaceFromQuery(), I think(?), to get placeId, then plug placeId into a request object, then getDetails. Then we're in action.
-
-        var request1 = {
-          placeId: "ChIJT_x1AIOB0IkRhcd1YOHXJXk"
-        };
-        var infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-
-        service.getDetails(request1, function(place, status) {
-          console.log(status)
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place)
-            var marker = new google.maps.Marker({
-              map: map,
-              position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.setContent(place.name);
-              infowindow.open(map, this);
-            });
-          }
-        });
-*/
-        const request = {
-            origin : this.coords,
-            destination : locations[4].name + ', Philadelphia',
-            travelMode : google.maps.TravelMode.WALKING
-        };
-
-        directionsService.route(request, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-            } 
-        });
-        
-        // eslint-disable-next-line no-new
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
+        }
     }
 }
 
-
-/*
-const DirectionRequests = [
-    {
-      origin: 'City Hall, Philadelphia',
-      destination: 'Philadelphia Museum of Art',
-      travelMode: 'WALKING',
-      provideRouteAlternatives: true,
-    },
-    {
-      origin: 'City Hall, Philadelphia',
-      destination: 'Reading Terminal Market',
-      travelMode: 'WALKING',
-      provideRouteAlternatives: true,
-    },
-    {
-      origin: 'City Hall, Philadelphia',
-      destination: 'Liberty Bell, Philadelphia',
-      travelMode: 'WALKING',
-      provideRouteAlternatives: true,
-    },
-    {
-      origin: 'Liberty Bell, Philadelphia',
-      destination: 'City Hall, Philadelphia',
-      travelMode: 'WALKING',
-      provideRouteAlternatives: true,
-    },
-];
-*/
-
 // TODO: Method that fetches these from DB, stores in locations array in data(). Iterate thru that. 
+// These are only able to be referenced when declared inside of the script -- doesn't work when a data() field, even if initialized in the created() method.
 const locations = [
   {
     name: 'Philadelphia Museum of Art',
@@ -487,7 +504,6 @@ const locations = [
     }
   }
 ];
-
 </script>
 
 

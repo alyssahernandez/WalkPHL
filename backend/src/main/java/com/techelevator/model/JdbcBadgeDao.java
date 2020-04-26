@@ -33,13 +33,13 @@ public class JdbcBadgeDao implements BadgeDao {
     @Override
     public List<Badge> getAllBadges() {
     	List<Badge> badges = new ArrayList<>();
-    	String query = "SELECT * FROM badge";
+    	String query = "SELECT * FROM badge, category";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
     	
     	while (results.next()){
     		Badge badge = new Badge();
     		badge.setBadgeId(results.getInt("badge_id"));
-    		badge.setCategory(results.getString("category_id"));
+    		badge.setCategory(results.getString("category_name"));
     		badge.setName(results.getString("name"));
     		badge.setDescription(results.getString("description"));
     		badge.setImgUrl(results.getString("img_url"));

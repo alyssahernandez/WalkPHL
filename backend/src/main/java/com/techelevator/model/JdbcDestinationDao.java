@@ -28,7 +28,8 @@ public class JdbcDestinationDao implements DestinationDao {
     {
     	String query = "SELECT * FROM destination";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
-    	return mapRowSetToDestinations(results);
+    	List<Destination> destinations = mapRowSetToDestinations(results);
+    	return destinations;
     }
     
     // TODO: This likely won't be needed. Pull destinations, filter by name, pull info from Google by name, etc.
@@ -64,7 +65,7 @@ public class JdbcDestinationDao implements DestinationDao {
     	
     	Integer categoryId = getCategoryId(destination.getCategory());
     	
-    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getX_coordinate(), destination.getY_coordinate(), destination.getCity(), destination.getState(), destination.getZip_code());
+    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code());
     }
     
     private Integer getCategoryId(String categoryName)
@@ -84,23 +85,23 @@ public class JdbcDestinationDao implements DestinationDao {
     	List<Destination> destinations = new ArrayList<>();
     	while (results.next())
     	{
-    		Destination d = new Destination();
+    		Destination d = mapRowSetToDestination(results);
     		d.setCity(results.getString("city"));
     		d.setDescription(results.getString("description"));
     		d.setDestinationId(results.getInt("destination_id"));
     		d.setName(results.getString("name"));
     		d.setState(results.getString("state"));
-    		d.setX_coordinate(results.getString("x_coordinate"));
-    		d.setY_coordinate(results.getString("y_coordinate"));
+    		d.setLatitude(results.getString("latitude"));
+    		d.setLongitude(results.getString("longitude"));
     		d.setZip_code(results.getString("zip_code"));
     		d.setCategoryId(results.getString("category_id"));
+    		d.setOpenFrom(results.getString("open_from"));
+    		d.setOpenOnWeekends(results.getString("weekends"));
+    		d.setOpenTo(results.getString("open_to"));
+    		d.setImgUrl(results.getString("img_url"));
+    		destinations.add(d);
     	}
     	return destinations;
-    }
-    
-    private void setCheckedIn()
-    {
-    	
     }
     
     private Destination mapRowSetToDestination(SqlRowSet results)
@@ -113,10 +114,14 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setDestinationId(results.getInt("destination_id"));
     		d.setName(results.getString("name"));
     		d.setState(results.getString("state"));
-    		d.setX_coordinate(results.getString("x_coordinate"));
-    		d.setY_coordinate(results.getString("y_coordinate"));
+    		d.setLatitude(results.getString("latitude"));
+    		d.setLongitude(results.getString("longitude"));
     		d.setZip_code(results.getString("zip_code"));
     		d.setCategoryId(results.getString("category_id"));
+    		d.setOpenFrom(results.getString("open_from"));
+    		d.setOpenOnWeekends(results.getString("open_to"));
+    		d.setOpenTo(results.getString("weekends"));
+    		d.setImgUrl(results.getString("img_url"));
     	}
     	return d;
     }

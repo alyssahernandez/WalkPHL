@@ -162,7 +162,7 @@
 </div>
       <h1>{{user}}</h1>
   </div>
-</template>
+</template> 
 
 <script>
 import auth from '../auth';

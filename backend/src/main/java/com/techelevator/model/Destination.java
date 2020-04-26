@@ -7,23 +7,39 @@ public class Destination {
 	private String category;
 	private String name;
 	private String description;
-	private String x_coordinate;
-	private String y_coordinate;
+	private String latitude;
+	private String longitude;
 	private String city;
 	private String state;
 	private String zip_code;
+	private String imgUrl;
+	private String openFrom;
+	private String openTo;
+	private String openOnWeekends;
 	
+	public String getImgUrl() { return imgUrl; }
+	public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
+	
+	public String getOpenFrom() { return openFrom; }
+	public void setOpenFrom(String openFrom) { this.openFrom = openFrom; }
+	
+	public String getOpenTo() { return openTo; }
+	public void setOpenTo(String openTo) { this.openTo = openTo; }
+	
+	public String getOpenOnWeekends() { return openOnWeekends; }
+	public void setOpenOnWeekends(String openOnWeekends) { this.openOnWeekends = openOnWeekends; }
+
 	public Integer getDestinationId() { return destinationId; }
 	public void setDestinationId(Integer destination_id) { 	this.destinationId = destination_id; }
 	
 	public String getDescription()  {return description; }
 	public void setDescription(String description) { this.description = description; }
 	
-	public String getX_coordinate() { return x_coordinate; }
-	public void setX_coordinate(String x_coordinate) { this.x_coordinate = x_coordinate; }
+	public String getLatitude() { return latitude; }
+	public void setLatitude(String latitude) { this.latitude = latitude; }
 	
-	public String getY_coordinate() { return y_coordinate; }
-	public void setY_coordinate(String y_coordinate) { this.y_coordinate = y_coordinate; }
+	public String getLongitude() { return longitude; }
+	public void setLongitude(String longitude) { this.longitude = longitude; }
 	
 	public String getCity() { return city; }
 	public void setCity(String city) { this.city = city; }

@@ -5,6 +5,7 @@ import java.util.List;
 public interface ReviewDao {
 	
 	public List<Review> getAllReviews();
+	public List<Review> getRecentReviews();
 	public List<Review> getReviewsByUser(User user);
 	public void createReview(Review review);
 
