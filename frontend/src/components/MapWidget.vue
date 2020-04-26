@@ -181,7 +181,8 @@ export default {
     name: 'map-widget',
     data() {
       return {
-        displayInfo: false
+        displayInfo: false,
+        example: ''
       }
     },
     props: {
@@ -206,7 +207,7 @@ export default {
           var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
           var d = R * c;
 
-          if (d <= 3500) return location;
+          if (d <= 5000) return location;
         })
       },
     },
@@ -274,56 +275,51 @@ export default {
               });
             return marker;
           });
-/*
-          var request1 = {
-            query: 'Philadelphia Museum of Art',
-            fields: ['name', 'place_id'],
-          };
-
+        
           var service = new google.maps.places.PlacesService(map);
+          var request1 = {
+            query: 'Philadelphia Museum of Art, Philadelphia',
+            fields: ['name', 'place_id']
+          }
 
           service.findPlaceFromQuery(request1, function(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-              for (var i = 0; i < results.length; i++) {
+                console.log(results[0].name); 
+                console.log(results[0].place_id); 
+
+                let request = {
+                  placeId: results[0].place_id,
+                  type: ['name', 'rating', 'photos', 'reviews']
+                };
+                service.getDetails(request, function(place, status) {
+                  console.log(status)
+                  if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    console.log(place);
+                    var infowindow = new google.maps.InfoWindow();
+                    var marker = new google.maps.Marker({
+                      map: map,
+                      position: place.geometry.location
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                      infowindow.setContent(`<img src="place.photos[0].getUrl({maxWidth: 50, maxHeight: 50})" /img>`);
+                      infowindow.open(map, this);
+                      console.log(this.coords);
+                    });
+                  }
+                });
               }
-              map.setCenter(results[0].geometry.location);
-            }
           });
+          const request = {
+              origin : this.coords,
+              destination : locations[4].name + ', Philadelphia',
+              travelMode : google.maps.TravelMode.WALKING
+          };
 
-        Need to use findPlaceFromQuery(), I think(?), to get placeId, then plug placeId into a request object, then getDetails. Then we're in action.
-
-        var request1 = {
-          placeId: "ChIJT_x1AIOB0IkRhcd1YOHXJXk"
-        };
-        var infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-
-        service.getDetails(request1, function(place, status) {
-          console.log(status)
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place)
-            var marker = new google.maps.Marker({
-              map: map,
-              position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.setContent(place.name);
-              infowindow.open(map, this);
-            });
-          }
-        });
-*/
-        const request = {
-            origin : this.coords,
-            destination : locations[4].name + ', Philadelphia',
-            travelMode : google.maps.TravelMode.WALKING
-        };
-
-        directionsService.route(request, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-            } 
-        });
+          directionsService.route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(response);
+              } 
+          });
         
         // eslint-disable-next-line no-new
       } catch (error) {
