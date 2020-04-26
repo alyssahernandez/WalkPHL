@@ -103,7 +103,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<User>();
-        String sqlSelectAllUsers = "SELECT id, username, role FROM users";
+        String sqlSelectAllUsers = "SELECT id, username, role, img_url, bio FROM users";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {
@@ -116,7 +116,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public User getUserByUsername(String username) {
-        String sqlSelectUserByUsername = "SELECT id, username, role FROM users WHERE username = ?";
+        String sqlSelectUserByUsername = "SELECT id, username, role, img_url, bio FROM users WHERE username = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUserByUsername, username);
 
         if (results.next()) {
@@ -143,6 +143,8 @@ public class JdbcUserDao implements UserDao {
         user.setId(results.getLong("id"));
         user.setUsername(results.getString("username"));
         user.setRole(results.getString("role"));
+        user.setProfilePicture(results.getString("img_url"));
+        user.setBio(results.getString("bio"));
         return user;
     }
 
