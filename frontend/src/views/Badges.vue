@@ -12,6 +12,7 @@
           <p class="title is-4">{{badge.name}}</p>
           <p class="subtitle is-6">{{badge.category}}</p>
             <div class="content">
+              <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
               {{badge.description}}
               <br>
             </div>
