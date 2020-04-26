@@ -18,19 +18,10 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <router-link class="navbar-item" :to="{name: 'badges'}">
-            Badges
-          </router-link>
-
-          <router-link class="navbar-item" :to="{name: 'review'}">
-            Reviews
-          </router-link>
-
+          
           <router-link class="navbar-item" :to="{name: 'about'}">
             About WalkPHL
           </router-link>
-
-           <!-- THIS IS A DROP-DOWN MENU IF WE WANT IT LATER -->
 
         </div>
 
@@ -41,18 +32,18 @@
              <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">
-                About
-              </a>
-              <a class="navbar-item">
-                Jobs
-              </a>
+              <router-link class="navbar-item" :to="{name: 'badges'}">
+                Badges
+              </router-link>
+              <router-link class="navbar-item" :to="{name: 'review'}">
+                Reviews
+              </router-link>
               <a class="navbar-item">
                 Contact
               </a>
               <hr class="navbar-divider">
               <a class="navbar-item">
-                Report an issue
+                Admin Features
               </a>
             </div>
           </div> 
