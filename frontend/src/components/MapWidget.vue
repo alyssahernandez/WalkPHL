@@ -1,12 +1,44 @@
 <template>
       <div id="app" class="map-widget">
-        <div v-if="userHasLocation" id="right-panel"></div>
+        <div v-if="userHasLocation" id="right-panel">
+          <button class="button is-primary">Get Directions</button>
+          <button class="button is-primary">Show Reviews</button>
+          <div id="review-div">
+            <form @submit.prevent="leaveReview" v-bind:class="{'hide-form': !userLoggedIn}">
+              <p><strong>Leave a review?</strong></p>
+              <label for="title">
+                <input 
+                  type="text"
+                  v-model="review.title"
+                  placeholder="Review Title"
+                  id="title"
+                  class="input"
+                  required
+                  autofocus
+                />
+              </label>
+              <label for="review">
+                <input
+                  type="text"
+                  v-model="review.review"
+                  placeholder="Review..."
+                  id="review"
+                  class="input"
+                  required
+                  autofocus
+                />
+              </label>
+              <button class="button" type="submit">Submit Review</button>
+            </form>
+          </div>
+        </div>
         <div id="map" v-bind:class="{'maps': userHasLocation}"></div>
       </div>
 </template>
 
 <script>
 import gmapsInit from './../utils/gmaps';
+import auth from '../auth';
 
 /*
 const DirectionRequests = [
@@ -182,13 +214,24 @@ export default {
     data() {
       return {
         displayInfo: false,
-        example: ''
+        destinationName: '',
+        review: {
+          username: auth.getUser().sub,
+          title: '',
+          review: '',
+        },
+        user: '',
       }
     },
     props: {
       coords: Object
     },
     computed: {
+
+      userLoggedIn() {
+        return (auth.getToken() != null);
+      },
+
       // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
       userHasLocation() {
         return !(this.coords.lat == 0 || this.coords.lng == 0);
@@ -207,13 +250,49 @@ export default {
           var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
           var d = R * c;
 
-          if (d <= 5000) return location;
+          if (d <= 3500) return location;
         })
       },
     },
     methods: {
       toRad(degree) {
         return degree * Math.PI / 180;
+      },
+      showMapView() {
+        let whiteOverlay = document.getElementById("map-static");
+        whiteOverlay.style.opacity = '0';
+        setTimeout(function(){whiteOverlay.parentNode.removeChild(whiteOverlay);}, 2000);
+
+        let mobileMapOverlay = document.getElementById("mobile-map-overlay");
+        mobileMapOverlay.classList.add('fade');
+        setTimeout(function(){mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);}, 2000);
+        
+        let greyscaleMap = document.getElementById("landing-page-map");
+        greyscaleMap.classList.add('greyscale-click');
+
+        let infoBlock = document.getElementById("app-info-block");
+        infoBlock.classList.add('fade');
+        setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
+      },
+      leaveReview() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken(),
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.review)
+        })
+        .then((response) => {
+          if(response.ok) {
+            this.$router.push({ path: '/'});
+            console.log("success! review posted");
+          } else {
+          console.log("error leaving review");
+          }
+        })
+        .then((err) => console.log(err));
       }
     },
     async mounted() {
@@ -275,51 +354,56 @@ export default {
               });
             return marker;
           });
-        
-          var service = new google.maps.places.PlacesService(map);
+/*
           var request1 = {
-            query: 'Philadelphia Museum of Art, Philadelphia',
-            fields: ['name', 'place_id']
-          }
+            query: 'Philadelphia Museum of Art',
+            fields: ['name', 'place_id'],
+          };
+
+          var service = new google.maps.places.PlacesService(map);
 
           service.findPlaceFromQuery(request1, function(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                console.log(results[0].name); 
-                console.log(results[0].place_id); 
-
-                let request = {
-                  placeId: results[0].place_id,
-                  type: ['name', 'rating', 'photos', 'reviews']
-                };
-                service.getDetails(request, function(place, status) {
-                  console.log(status)
-                  if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    console.log(place);
-                    var infowindow = new google.maps.InfoWindow();
-                    var marker = new google.maps.Marker({
-                      map: map,
-                      position: place.geometry.location
-                    });
-                    google.maps.event.addListener(marker, 'click', function() {
-                      infowindow.setContent(`<img src="place.photos[0].getUrl({maxWidth: 50, maxHeight: 50})" /img>`);
-                      infowindow.open(map, this);
-                      console.log(this.coords);
-                    });
-                  }
-                });
+              for (var i = 0; i < results.length; i++) {
               }
+              map.setCenter(results[0].geometry.location);
+            }
           });
-          const request = {
-              origin : this.coords,
-              destination : locations[4].name + ', Philadelphia',
-              travelMode : google.maps.TravelMode.WALKING
-          };
 
-          directionsService.route(request, function(response, status) {
-              if (status == google.maps.DirectionsStatus.OK) {
-                  directionsDisplay.setDirections(response);
-              } 
-          });
+        Need to use findPlaceFromQuery(), I think(?), to get placeId, then plug placeId into a request object, then getDetails. Then we're in action.
+
+        var request1 = {
+          placeId: "ChIJT_x1AIOB0IkRhcd1YOHXJXk"
+        };
+        var infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+
+        service.getDetails(request1, function(place, status) {
+          console.log(status)
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            console.log(place)
+            var marker = new google.maps.Marker({
+              map: map,
+              position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.setContent(place.name);
+              infowindow.open(map, this);
+            });
+          }
+        });
+*/
+        const request = {
+            origin : this.coords,
+            destination : locations[4].name + ', Philadelphia',
+            travelMode : google.maps.TravelMode.WALKING
+        };
+
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+            } 
+        });
         
         // eslint-disable-next-line no-new
       } catch (error) {
@@ -330,12 +414,17 @@ export default {
     created() {
         // TODO: Fetch all locations.  
     }
-};
+}
+
 </script>
 
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Francois+One&display=swap');
+
+.hide-form {
+  display: none;
+}
 
 #app {
   width: 100vw;

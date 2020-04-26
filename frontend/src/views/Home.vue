@@ -37,7 +37,7 @@ export default {
       coordinates: {
         lat: 0,
         lng: 0
-      }
+      },
     }
   },
   props: {
@@ -65,6 +65,23 @@ export default {
       setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
 
     },
+    leaveReview() {
+      fetch('${process.env.VUE_APP_REMOTE_API}/leave-review', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.review)
+      })
+      .then((response) => {
+        if(response.ok) {
+          this.$router.push({ path: '/'});
+        } else {
+        console.log("error leaving review");
+        }
+      })
+    }
   },
   created() {
     this.$getLocation({})

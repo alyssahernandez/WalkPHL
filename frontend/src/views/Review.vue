@@ -1,6 +1,35 @@
 <template>
   <div class="container">
-    <h3>Reviews for {{reviews}}</h3>
+    <div class="box" v-for="review in reviews" :key="review.review_id">
+  <article class="media">
+    <div class="media-left">
+      <figure class="image is-64x64">
+        <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+      </figure>
+    </div>
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>{{review.username}}</strong>
+          <br>
+          <br>
+         <strong>{{review.title}}</strong>
+          <br>
+          {{review.review}}
+        </p>
+      </div>
+      <nav class="level is-mobile">
+        <div class="level-left">
+          <p class="level-item">
+            <span>
+              {{review.review_date}}
+            </span>
+          </p>
+        </div>
+      </nav>
+    </div>
+  </article>
+</div>
   </div>
 </template>
 

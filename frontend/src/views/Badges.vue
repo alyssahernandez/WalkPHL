@@ -1,10 +1,24 @@
 <template>
    <div>
-    
-     <div>
-       <!-- <img v-for="badge in badges" :key="badge.badgeId" v-bind:src="require('@/../assets/images/' + badge.imgUrl)" alt="pictures"> -->
-     </div>
-     
+     <div class="card" v-for="badge in badges" :key="badge.badgeId">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        <figure class="image is-128x128">
+          <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
+        </figure>
+      </div>
+      <div class="media-content">
+        <p class="title is-4">{{badge.name}}</p>
+        <p class="subtitle is-6">Location</p>
+        <div class="content">
+          {{badge.description}}
+      <br>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
    </div>
 </template>
 <!--C:\Users\Student\workspace\java-final-capstone-team-2\frontend\src\assets\images\Art.png-->
@@ -43,6 +57,7 @@ export default {
   },
   created(){
    this.badges = this.getBadges();
+   
   }
 }
 </script>
