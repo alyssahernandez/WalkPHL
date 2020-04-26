@@ -53,14 +53,6 @@ public class ApiController {
     public String checkIn(@RequestBody String username, @RequestBody String destinationName) {
        
     	
-    	
-    	/* if (auth.signIn(user.getUsername(), user.getPassword())) {
-            User currentUser = auth.getCurrentUser();
-            return tokenHandler.createToken(user.getUsername(), currentUser.getRole());
-        } else {
-            throw new UnauthorizedException();
-        } */
-    	
     	return "hi";
     }
     
