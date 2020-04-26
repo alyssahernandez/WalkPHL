@@ -9,7 +9,7 @@
         <div class="alert alert-success" role="alert" v-if="this.$route.query.registration">
           Thank you for registering, please sign in.
         </div>
-        <label for="username" class="label">Username</label>
+        <label for="username" class="label space-below-input">Username</label>
         <div class="control has-icons-left has-icons-right">
           <input
             type="text"
@@ -28,7 +28,7 @@
           </span>
         </div>
         <div class="control has-icons-left has-icons-right">
-        <label for="password" class="label">Password</label>
+        <label for="password" class="label space-below-input">Password</label>
           <input
             type="password"
             id="password"
@@ -44,9 +44,9 @@
             <i class="fas fa-check"></i>
           </span>
         </div>
-        <a class="need-account-link" href="/register">Need an account?</a>
+        <a class="need-account-link space-below-input" href="/register">Need an account?</a>
           <div class="control">
-           <button class="button" type="submit">Submit</button>
+           <button class="button space-below-input" type="submit">Submit</button>
           </div>
       </div>
     </form>
@@ -101,6 +101,7 @@ export default {
 </script>
 
 <style scoped>
+
 .login-form {
   height: 100vh;
   padding: 0;
