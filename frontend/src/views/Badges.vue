@@ -10,7 +10,7 @@
           </div>
           <div class="media-content">
           <p class="title is-4">{{badge.name}}</p>
-          <p class="subtitle is-6">Location</p>
+          <p class="subtitle is-6">{{badge.category}}</p>
             <div class="content">
               {{badge.description}}
               <br>
