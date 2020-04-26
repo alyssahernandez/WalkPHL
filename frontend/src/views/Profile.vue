@@ -2,76 +2,22 @@
   <div class="contanier profile">
     <div class="columns">
   <div class="container profile">
-    <div class="modal" id="edit-preferences-modal" :on="preferences">
+    <div class="modal" id="edit-preferences-modal">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Edit Preferences</p>
-          <button class="delete"></button>
+          <button v-on:click="editPreferences" class="delete"></button>
         </header>
         <section class="modal-card-body">
-          <label class="label">Name</label>
-          <p class="control">
-            <input class="input" placeholder="Text input" type="text">/
-          </p>
-          <label class="label">Username</label>
-          <p class="control has-icon has-icon-right">
-            <input class="input" placeholder="Text input" type="text" value="pmillerk">/
-          </p>
-          <label class="label">Email</label>
-          <p class="control has-icon has-icon-right">
-            <input class="input" placeholder="Email input" type="text" value="hello@">/
-            <i class="fa fa-warning"></i>
-            <span class="help is-danger">This email is invalid</span>
-          </p>
-          <div class="control">
-            <div class="control-label is-pulled-left">
-              <label class="label">Date of Birth</label>
-            </div>
-            <span>
-              <span class="select">
-                <select>
-                  <option>Month</option>
-                  <option>With options</option>
-                </select>
-              </span>
-              <span class="select">
-                <select>
-                  <option>Day</option>
-                  <option>With options</option>
-                </select>
-              </span>
-              <span class="select">
-                <select>
-                  <option>Year</option>
-                  <option>With options</option>
-                </select>
-              </span>
-            </span>
-          </div>
           <label class="label">Description</label>
           <p class="control">
             <textarea class="textarea" placeholder="Describe Yourself!"></textarea>
           </p>
-          <div class="content">
-            <h1>Optional Information</h1>
-          </div>
-          <label class="label">Phone Number</label>
-          <p class="control has-icon has-icon-right">
-            <input class="input" placeholder="Text input" type="text" value="+1 *** *** 0535">
-          </p>
-          <label class="label">Work</label>
-          <p class="control has-icon has-icon-right">
-            <input class="input" placeholder="Text input" type="text" value="Greater Washington Publishing">
-          </p>
-          <label class="label">School</label>
-          <p class="control has-icon has-icon-right">
-            <input class="input" placeholder="Text input" type="text" value="George Mason University">
-          </p>
         </section>
         <footer class="modal-card-foot">
-          <a class="button is-primary modal-save">Save changes</a>
-          <a class="button modal-cancel">Cancel</a>
+          <a v-on:click="editPreferences" class="button is-primary modal-save">Save changes</a>
+          <a v-on:click="editPreferences" class="button modal-cancel">Cancel</a>
         </footer>
       </div>
     </div>
@@ -87,7 +33,7 @@
           <p>
             <span class="title is-bold">{{user.user.username}}</span>
             <br/>
-            <a class="button is-primary is-outlined" href="#" id="edit-preferences" style="margin: 5px 0">
+            <a v-on:click="editPreferences" class="button is-primary is-outlined" href="#" id="edit-preferences" style="margin: 5px 0">
               Edit Preferences
             </a>
             <br/>
@@ -97,7 +43,7 @@
           </p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">30</p>
+          <p class="stat-val">{{badgeCount}}</p>
           <p class="stat-key">Badges</p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
@@ -194,9 +140,22 @@ export default {
       })
       .catch(err => console.log(err))
     },
-    preferences() {
-      let editPreferences = document.getElementById('edit-preferences');
-      editPreferences.classList.add('is-active');
+    editPreferences() {
+      let editPreferencesModal = document.getElementById("edit-preferences-modal");
+
+      if(!editPreferencesModal.classList.contains('is-active')) {
+        editPreferencesModal.classList.add('is-active');
+
+      } else if(editPreferencesModal.classList.contains('is-active')) {
+          editPreferencesModal.classList.remove('is-active');
+      }
+      
+    }
+
+  },
+  computed: {
+    badgeCount() {
+      return this.user.userBadges.length;
     }
   },
   created() {
