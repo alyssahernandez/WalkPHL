@@ -10,8 +10,7 @@
           </div>
           <div class="media-content">
           <p class="title is-4">{{badge.name}}</p>
-          <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
-          <p class="subtitle is-6">Location</p>
+          <p class="subtitle is-6">{{badge.category}}</p>
             <div class="content">
               {{badge.description}}
               <br>
