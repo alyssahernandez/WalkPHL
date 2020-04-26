@@ -33,7 +33,7 @@ public class JdbcBadgeDao implements BadgeDao {
     @Override
     public List<Badge> getAllBadges() {
     	List<Badge> badges = new ArrayList<>();
-    	String query = "SELECT * FROM badge, category";
+    	String query = "SELECT * FROM badge JOIN category ON badge.category_id = category.category_id";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
     	
     	while (results.next()){
