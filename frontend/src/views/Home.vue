@@ -1,19 +1,20 @@
 <template>
   <div class="home">
     <map-widget class="static-map greyscale padding-from-nav" id="landing-page-map" v-bind:coords="this.coordinates"></map-widget>
-    <side-bar class="sidebar" id="sidebar-container"></side-bar>
     <div id="map-static" class="map-overlay"></div>
     <div id="mobile-map-overlay"></div>
     <div class="map-inactive"></div>
+    <div v-if="!userLoggedIn" id="mobile-map-overlay"></div>
     <div class="container landing-text" id="app-info-block">
       <div class="walkphl-wrap">
         <h1 class="app-title-landing mobile-landing-title">WalkPHL</h1>
       </div>
       <p class="browser-view-description push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      <p class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+ 
+      <p v-if="!userLoggedIn" class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <button v-on:click="showMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
       <div class="mobile-buttons-div">
-        <router-link class="have-account-link" :to="{ name: 'login' }">          
+        <router-link class="have-account-link" :to="{ name: 'login' }"> 
           <button class="button is-rounded is-primary mobile-button position-button-mobile-1">Sign In</button>
         </router-link>
         <router-link class="need-account-link" :to="{ name: 'register' }">
@@ -27,7 +28,7 @@
 
 <script>
 import MapWidget from "@/components/MapWidget";
-import SideBar from "@/components/SideBar";
+import auth from '../auth';
 
 export default {
   name: "Home",
@@ -44,8 +45,7 @@ export default {
     login: Boolean
   },
   components: {
-    MapWidget,
-    SideBar 
+    MapWidget
   },
   methods: {
     showMapView() {
@@ -82,6 +82,11 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    userLoggedIn() {
+        return (auth.getToken() != null);
+      }
   },
   created() {
     this.$getLocation({})
@@ -200,10 +205,10 @@ body {
   .landing-text {
     position: fixed;
     z-index: 2;
-    margin-top: 39%;
+    
     display: flex;
     flex-direction: column;
-    justify-items: center;
+    justify-content: center;
     align-items: center;
   }
 
