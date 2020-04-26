@@ -91,8 +91,8 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setDestinationId(results.getInt("destination_id"));
     		d.setName(results.getString("name"));
     		d.setState(results.getString("state"));
-    		d.setLatitude(results.getString("latitude"));
-    		d.setLongitude(results.getString("longitude"));
+    		d.setLatitude(results.getString("lat"));
+    		d.setLongitude(results.getString("long"));
     		d.setZip_code(results.getString("zip_code"));
     		d.setCategoryId(results.getString("category_id"));
     		d.setOpenFrom(results.getString("open_from"));
@@ -114,8 +114,8 @@ public class JdbcDestinationDao implements DestinationDao {
     		d.setDestinationId(results.getInt("destination_id"));
     		d.setName(results.getString("name"));
     		d.setState(results.getString("state"));
-    		d.setLatitude(results.getString("latitude"));
-    		d.setLongitude(results.getString("longitude"));
+    		d.setLatitude(results.getString("lat"));
+    		d.setLongitude(results.getString("long"));
     		d.setZip_code(results.getString("zip_code"));
     		d.setCategoryId(results.getString("category_id"));
     		d.setOpenFrom(results.getString("open_from"));

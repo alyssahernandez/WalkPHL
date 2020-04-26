@@ -3,13 +3,13 @@
         <!-- <div id="swiper" v-touch:swipe.top="swipeUpSidebar" v-touch:swipe.bottom="swipeDownSidebar"> -->
         <div v-show="panel" id="right-panel">
           <div class="location-buttons">
-            <button id="dir" class="button is-primary">Get Directions</button>
+            <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
             <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
             <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
           </div>
             <div id="destination-div">
               <div class="container">
-                <div class="box" v-for="destination in destinations" :key="destination.destinationId">
+                <div class="box" v-for="destination in destinations" :key="destination.destinationId" v-on:click="showDestinationInfo(destination)">
                    <img :src="`${destination.imgUrl}`" />
                    <h4>{{destination.name}}</h4>
                    <p>{{destination.description}}</p>
@@ -101,6 +101,10 @@ export default {
         num: 1,
         displayInfo: false,
         displayReviews: false,
+        destinationPosition: {
+          lat: '',
+          lng: ''
+        },
         destinationName: '',
         review: {
           username: auth.getUser().sub,
@@ -110,7 +114,12 @@ export default {
         user: '',
         reviews: null,
         destinations: null,
-
+        pos: {
+          lat: '',
+          lng: ''
+        },
+        directionsService: '',
+        directionsRenderer: ''
       }
     },
     props: {
@@ -228,10 +237,40 @@ export default {
       reviewButtonClicked() {
         this.displayReviews = !this.displayReviews;
       },
+      showDestinationInfo(destination) {
+        console.log(destination);
+        this.destinationPosition.lat = destination.lat; 
+        this.destinationPosition.long = destination.lng;
+        console.log(this.destinationPosition);
+      },
+      calculateAndDisplayRoute(directionsService, directionsRenderer) {
+        console.log("method reached");
+        directionsService.route({
+            origin : this.pos,
+            destination : this.destinationPosition,
+            travelMode : 'WALKING'
+        }, 
+          
+        function(response, status) {
+          if (status === 'OK') {
+            directionsRenderer.setDirections(response);
+            console.log("directinsRendererer reached");
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      },
+      showDirectionsToDestination() {
+        
+        
+        this.calculateAndDisplayRoute(this.directionsService, this.directionsRenderer);
+      }
     },
+
+
     created() {
       this.reviews = this.getReviews();
-      this.destinations = this.getLocations();
+      this.destinations = this.getDestinations();
     },
     async mounted() {
 
@@ -240,8 +279,12 @@ export default {
         const geocoder = new google.maps.Geocoder();
         const map = new google.maps.Map(document.getElementById('map'));
         //const places = new google.maps.places.PlacesService(map);
-        const directionsService = new google.maps.DirectionsService(); 
+        const directionsService = new google.maps.DirectionsService();
+        this.directionsService = directionsService;
+        console.log(directionsService);
+        console.log(this.directionsService);
         const directionsRenderer = new google.maps.DirectionsRenderer();
+        this.directionsRenderer = directionsRenderer;
       
         directionsRenderer.setPanel(document.getElementById('right-panel'));
         directionsRenderer.setMap(map); 
@@ -282,10 +325,14 @@ export default {
         // The next few lines requests a user's position (I was using Vue's before; this is Google's)
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
+            
             var pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
+
+            // this.pos.lat = pos.lat; // ALLLLLLLLLLLLLLL WEEEEEE NEEEEEEEEEEEEEEEEEEEED IS TO GET THIS IN SCOPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+            // this.pos.lng = pos.lng; // IT'S NOT READING DESTINATION POSITION
 
             // This sets an infowindow on our current location.
             var infoWindow = new google.maps.InfoWindow;
@@ -322,28 +369,28 @@ export default {
               return marker;
             });
             
-            // Function to display route
-            var onChangeHandler = function() {
-              calculateAndDisplayRoute(directionsService, directionsRenderer);
-            }
+            // // Function to display route
+            // var onChangeHandler = function() {
+            //   calculateAndDisplayRoute(directionsService, directionsRenderer);
+            // }
 
-            // Adding an on-click to our "Get Directions" button, which runs the above function on click
-            document.getElementById('dir').addEventListener('click', onChangeHandler);
+            // // Adding an on-click to our "Get Directions" button, which runs the above function on click
+            // document.getElementById('dir').addEventListener('click', onChangeHandler);
 
-            // Calculates route from user position and that of a destination.
-            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-              directionsService.route({
-                  origin : pos,
-                  destination : locations[2].position,
-                  travelMode : 'WALKING'
-              }, function(response, status) {
-                if (status === 'OK') {
-                  directionsRenderer.setDirections(response);
-                } else {
-                  window.alert('Directions request failed due to ' + status);
-                }
-              });
-            }
+            // // Calculates route from user position and that of a destination.
+            // function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+            //   directionsService.route({
+            //       origin : pos,
+            //       destination : this.destinationPosition,
+            //       travelMode : 'WALKING'
+            //   }, function(response, status) {
+            //     if (status === 'OK') {
+            //       directionsRenderer.setDirections(response);
+            //     } else {
+            //       window.alert('Directions request failed due to ' + status);
+            //     }
+            //   });
+            // }
             
             // Had to move our "filter by distance" method down here. Wouldn't work when calling above.
             // Also had to put our "toRad()" method inside of it, as it would only return undefined values...more async mount strangeness
@@ -361,6 +408,7 @@ export default {
             }
           });
         }
+
     }
 }
 
