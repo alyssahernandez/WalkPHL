@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getReviews() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/reviews`, {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/recent-reviews`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + auth.getToken()

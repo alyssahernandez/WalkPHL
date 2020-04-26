@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS user_destination_submission;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS destination;
 DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS badge_category;
+DROP TABLE IF EXISTS destination_category;
 
 
 CREATE TABLE users 
@@ -70,11 +72,15 @@ CREATE TABLE destination
         category_id int not null,
         name varchar(128) not null,
         description varchar(255) not null,
-        x_coordinate varchar (128) not null,
-        y_coordinate varchar(128) not null,
+        latitude varchar (128) not null,
+        longitude varchar(128) not null,
         city varchar(64) not null,
         state varchar(32) not null,
         zip_code varchar(16) not null,
+        open_from varchar(32) not null,
+        open_to varchar(32) not null,
+        weekends boolean not null,
+        img_url varchar(255),
         
         constraint fk_destination_category foreign key (category_id) references category (category_id)
 );

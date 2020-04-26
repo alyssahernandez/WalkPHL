@@ -34,9 +34,15 @@ public class ReviewsController {
 	
 	// We return objects that are Beans
 	// typically POJOs or collections of POJOs
+	
 	@GetMapping("/reviews")
 	public List<Review> listAll() {
-		return reviewDAO.getAllReviews();
+		return reviewDAO.getRecentReviews();
+	}
+	
+	@GetMapping("/recent-reviews")
+	public List<Review> listRecent() {
+		return reviewDAO.getRecentReviews();
 	}
 	
 	/*
