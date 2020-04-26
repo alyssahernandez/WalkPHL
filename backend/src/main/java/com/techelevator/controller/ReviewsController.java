@@ -37,7 +37,7 @@ public class ReviewsController {
 	
 	@GetMapping("/reviews")
 	public List<Review> listAll() {
-		return reviewDAO.getRecentReviews();
+		return reviewDAO.getAllReviews();
 	}
 	
 	@GetMapping("/recent-reviews")

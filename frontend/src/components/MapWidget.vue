@@ -1,73 +1,88 @@
 <template>
       <div id="app" class="map-widget">
+        <!-- <div id="swiper" v-touch:swipe.top="swipeUpSidebar" v-touch:swipe.bottom="swipeDownSidebar"> -->
         <div v-show="panel" id="right-panel">
-        <button id="dir" class="button is-primary">Get Directions</button>
-        <button class="button is-primary">Show Reviews</button>
-          <div id="review-div">
-            <div class="container">
-              <div class="box" v-for="review in reviews" :key="review.review_id">
-                <article class="media">
-                  <div class="media-left">
-                    <figure class="image is-64x64">
-                      <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-                    </figure>
-                  </div>
-                <div class="media-content">
-                  <div class="content">
-                    <p>
-                      <strong>{{review.username}}</strong>
-                      <br>
-                      <br>
-                      <strong>{{review.title}}</strong>
-                      <br>
-                      {{review.review}}
-                    </p>
+          <div class="location-buttons">
+            <button id="dir" class="button is-primary">Get Directions</button>
+            <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
+            <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+          </div>
+            <div id="destination-div">
+              <div class="container">
+                <div class="box" v-for="destination in destinations" :key="destination.destinationId">
+                   <img :src="`${destination.imgUrl}`" />
+                   <h4>{{destination.name}}</h4>
+                   <p>{{destination.description}}</p>
+                   <p>{{destination.openTo}} - {{destination.openFrom}} - Weekends:{{destination.openOnWeekends}}</p>
                 </div>
-                <nav class="level is-mobile">
-                  <div class="level-left">
-                    <p class="level-item">
-                      <span>
-                        {{review.review_date}}
-                      </span>
-                    </p>
-                  </div>
-                </nav>
               </div>
-            </article>
+            </div>
+            <div v-if="this.displayReviews" id="review-div">
+              <div class="container">
+                <div class="box" v-for="review in reviews" :key="review.review_id">
+                  <article class="media">
+                    <div class="media-left">
+                      <figure class="image is-64x64">
+                        <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                      </figure>
+                    </div>
+                  <div class="media-content">
+                    <div class="content">
+                      <p>
+                        <strong>{{review.username}}</strong>
+                        <br>
+                        <br>
+                        <strong>{{review.title}}</strong>
+                        <br>
+                        {{review.review}}
+                      </p>
+                  </div>
+                  <nav class="level is-mobile">
+                    <div class="level-left">
+                      <p class="level-item">
+                        <span>
+                          {{review.review_date}}
+                        </span>
+                      </p>
+                    </div>
+                  </nav>
+                </div>
+              </article>
+            </div>
           </div>
-        </div>
-            <form @submit.prevent="leaveReview" v-if="userLoggedIn">
-              <p><strong>Leave a review?</strong></p>
-              <label for="title">
-                <input 
-                  type="text"
-                  v-model="review.title"
-                  placeholder="Review Title"
-                  id="title"
-                  class="input"
-                  maxlength="40"
-                  required
-                  autofocus
-                />
-              </label>
-              <label for="review">
-                <textarea
-                  type="text"
-                  v-model="review.review"
-                  placeholder="Review..."
-                  id="review" 
-                  class="textarea is-primary"
-                  maxlength="255"
-                  required
-                  autofocus>
-                </textarea>
-              </label>
-              <button class="button" type="submit">Submit Review</button>
-            </form>
+              <form @submit.prevent="leaveReview" v-if="userLoggedIn">
+                <p><strong>Leave a review?</strong></p>
+                <label for="title">
+                  <input 
+                    type="text"
+                    v-model="review.title"
+                    placeholder="Review Title"
+                    id="title"
+                    class="input"
+                    maxlength="40"
+                    required
+                    autofocus
+                  />
+                </label>
+                <label for="review">
+                  <textarea
+                    type="text"
+                    v-model="review.review"
+                    placeholder="Review..."
+                    id="review" 
+                    class="textarea is-primary"
+                    maxlength="255"
+                    required
+                    autofocus>
+                  </textarea>
+                </label>
+                <button class="button" type="submit">Submit Review</button>
+              </form>
+            </div>
           </div>
-        </div>
-        <div id="map" v-bind:class="{'maps': panel}"></div>
+          <div id="map" v-bind:class="{'maps': panel}"></div>
       </div>
+      
 
 </template>
 
@@ -85,6 +100,7 @@ export default {
         hasPosition: false,
         num: 1,
         displayInfo: false,
+        displayReviews: false,
         destinationName: '',
         review: {
           username: auth.getUser().sub,
@@ -93,22 +109,16 @@ export default {
         },
         user: '',
         reviews: null,
-        clickedDirections: true
+        destinations: null,
+
       }
     },
     props: {
       panel: Boolean
     },
     computed: {
-      
-
       userLoggedIn() {
         return (auth.getToken() != null);
-      },
-
-      // TODO: This will eventually be renamed & check for a selected destination -- this is for testing
-      userHasLocation() {
-        return 5;
       },
       // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
       filterLocations() {
@@ -148,6 +158,17 @@ export default {
         })
         .catch(err => {console.log(err)})
       },
+      swipeUpSidebar() {
+        let swipeDiv = document.getElementById("swiper");
+        swipeDiv.classList.add('swipeUp');
+      },
+      swipeDownSidebar() {
+        let swipeDiv = document.getElementById("swiper");
+        swipeDiv.classList.add('swipeDown');
+      },
+      toRad(degree) {
+        return degree * Math.PI / 180;
+      },
       showMapView() {
         let whiteOverlay = document.getElementById("map-static");
         whiteOverlay.style.opacity = '0';
@@ -163,6 +184,7 @@ export default {
         let infoBlock = document.getElementById("app-info-block");
         infoBlock.classList.add('fade');
         setTimeout(function(){infoBlock.parentNode.removeChild(infoBlock);}, 2000);
+
       },
       leaveReview() {
         fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
@@ -184,25 +206,47 @@ export default {
         })
         .then((err) => console.log(err));
       },
-      toRad(degree) {
-        return degree * Math.PI / 180;
+      getDestinations() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken()
+          }
+        })
+        .then((response) => {
+          if(response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then((destinations) => {
+          console.log(destinations);
+          this.destinations = destinations;
+        })
+        .catch(err => {console.log(err)})
+      },
+      reviewButtonClicked() {
+        this.displayReviews = !this.displayReviews;
       },
     },
     created() {
       this.reviews = this.getReviews();
+      this.destinations = this.getLocations();
     },
     async mounted() {
 
+        // Initialization of Maps objects
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
         const map = new google.maps.Map(document.getElementById('map'));
         //const places = new google.maps.places.PlacesService(map);
         const directionsService = new google.maps.DirectionsService(); 
         const directionsRenderer = new google.maps.DirectionsRenderer();
-        
+      
         directionsRenderer.setPanel(document.getElementById('right-panel'));
         directionsRenderer.setMap(map); 
         
+        // Map icons
         var icons = {
           artcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/arts.png', scaledSize: new google.maps.Size(35, 35)}},
           sightcon: { icon: {url: 'http://maps.google.com/mapfiles/kml/shapes/camera.png', scaledSize: new google.maps.Size(28, 28)} },
@@ -479,17 +523,81 @@ const locations = [
   padding-top: 5rem;
 }
 
+.swipeUp {
+  animation-name: swipeUp;
+  animation-duration: 0.5s;
+}
+
+@keyframes swipeUp {
+  0% {
+    bottom:-50px
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+.swipeDown {
+  animation-name: swipeDown;
+  animation-duration: 0.5s;
+}
+
+@keyframes swipeDown {
+  0% {
+    top: 0px;
+  }
+  100% {
+    top: 50px;
+  } 
+}
+
 @media only screen and (max-width: 768px) {
-    #app {
-       
-    }
+   .location-buttons {
+     display: grid;
+     grid-template-columns: 1fr;
+     
+   }
+
+  #right-panel {
+    height: 100%;
+    float: right;
+    width: 100%;
+    overflow: auto;
+  }
 
 }
 
 @media only screen and (min-width: 768px) {
-    #app {
-        
-    }
+
+
+  .location-buttons {
+    display: grid;
+    grid-template-columns: 3fr;
+    grid-gap: 1em;
+  }
+
+  .button-1 {
+    grid-column: 1 / 1;
+    padding: 1em;
+  }
+
+  .button-2 {
+    grid-column: 2 / 2;
+    padding: 1em;
+  }
+
+  .button-3 {
+    grid-column: 3 / 3;
+    padding: 1em;
+  }
+
+  #right-panel {
+    height: 100%;
+    float: right;
+    width: 25%;
+    overflow: auto;
+  }
+
 }
 
 /* Always set the map height explicitly to define the size of the div
@@ -534,12 +642,6 @@ html, body {
 
 #right-panel i {
   font-size: 12px;
-}
-#right-panel {
-  height: 100%;
-  float: right;
-  width: 390px;
-  overflow: auto;
 }
 
 .maps {
