@@ -47,7 +47,7 @@
           <p class="stat-key">Badges</p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">10</p>
+          <p class="stat-val">{{checkinCount}}</p>
           <p class="stat-key">Check-ins</p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
@@ -114,14 +114,19 @@
     </div>
 <!-- Individual User Check-Ins -->
     <div class="columns is-mobile" v-if="checkInsOn">
-      <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
+      <div class="column is-3-tablet is-6-mobile" v-for="visits in user.visited" :key="visits.destinationId">
         <div class="card">
+          <div class="card-image">
+            <figure class="image is-4by3">
+              <img :src="require(`../assets/images/${visits.imgUrl}`)" alt="pictures">
+            </figure>
+          </div>
           <div class="card-content">
             <div class="content">
-              <span class="tag is-dark subtitle"></span>
+              <span class="tag is-dark subtitle">{{visits.destinationId}}</span>
               <br>
-              <strong></strong>
-              <p></p>
+              <strong>{{visits.name}}</strong>
+              <p>{{visits.city}}</p>
             </div>
           </div>
           <footer class="card-footer">
@@ -152,7 +157,6 @@
 
   </div>
 </div>
-      <h1>{{user}}</h1>
   </div>
 </template> 
 
@@ -224,6 +228,9 @@ export default {
     },
     reviewCount() {
       return this.user.reviews.length;
+    },
+    checkinCount() {
+      return this.user.visited.length;
     }
   },
   created() {
