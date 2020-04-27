@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.model.Destination;
+import com.techelevator.model.DestinationDao;
 import com.techelevator.model.Review;
 import com.techelevator.model.ReviewDao;
 import com.techelevator.model.User;
@@ -32,6 +33,9 @@ public class ApiController {
     
     @Autowired
     private ReviewDao reviewDao;
+    
+    @Autowired
+    private DestinationDao destinationDao;
     
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
@@ -63,4 +67,10 @@ public class ApiController {
     	
         	
     }
+    
+    @RequestMapping(path = "/adminfeatures", method = RequestMethod.POST)
+    public Destination createNewDestination(@RequestBody Destination destination) {
+		destinationDao.createDestination(destination);
+		return destination;
+	}
  }

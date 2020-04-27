@@ -33,10 +33,4 @@ public class DestinationController {
 	public void checkIn(@PathVariable String username, @PathVariable Integer destinationId) {
 		userDao.checkIntoDestination(username, destinationId);
 	}
-	
-	@PostMapping(path = "/adminfeatures")
-	public Destination createDestination(@RequestBody Destination destination) {
-		destinationDao.createDestination(destination);
-		return destination;
-	}
 }

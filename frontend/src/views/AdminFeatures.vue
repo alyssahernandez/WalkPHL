@@ -1,12 +1,12 @@
 <template>
     <div id="app" class="admin-features">
-      <form>
+      <form action= "adminfeatures" method="POST">
                 <p><strong>Add a destination</strong></p>
                 <label for="latitude">
                   Latitude
                   <input 
                     type="text"
-                    v-model="addDestination.latitude"
+                    v-model="destination.latitude"
                     placeholder="Latitude"
                     id="latitude"
                     class="input"
@@ -19,7 +19,7 @@
                   Longitude
                   <input 
                     type="text"
-                    v-model="addDestination.longitude"
+                    v-model="destination.longitude"
                     placeholder="longitude"
                     id="longitude"
                     class="input"
@@ -32,7 +32,7 @@
                   City
                   <input 
                     type="text"
-                    v-model="addDestination.city"
+                    v-model="destination.city"
                     placeholder="Philadelphia"
                     id="city"
                     class="input"
@@ -45,7 +45,7 @@
                   State
                   <input 
                     type="text"
-                    v-model="addDestination.state"
+                    v-model="destination.state"
                     placeholder="PA"
                     id="state"
                     class="input"
@@ -54,13 +54,13 @@
                     autofocus
                   />
                 </label>
-                <label for="zipcode">
+                <label for="zip_code">
                  Zipcode
                   <input 
                     type="text"
-                    v-model="addDestination.zipcode"
+                    v-model="destination.zipcode"
                     placeholder="19103"
-                    id="zipcode"
+                    id="zip_code"
                     class="input"
                     maxlength="30"
                     required
@@ -71,7 +71,7 @@
                  OpenFrom time
                   <input 
                     type="text"
-                    v-model="addDestination.openFrom"
+                    v-model="destination.openFrom"
                     placeholder="0000"
                     id="openFrom"
                     class="input"
@@ -84,7 +84,7 @@
                  OpenTo time
                   <input 
                     type="text"
-                    v-model="addDestination.openTo"
+                    v-model="destination.openTo"
                     placeholder="0000"
                     id="openTo"
                     class="input"
@@ -97,7 +97,7 @@
                  Open weekends? True/False
                   <input 
                     type="text"
-                    v-model="addDestination.weekends"
+                    v-model="destination.weekends"
                     placeholder="True"
                     id="weekends"
                     class="input"
@@ -115,28 +115,51 @@
 <script>
 import auth from '../auth';
 export default {
-    name: 'admin-features',
+    name: 'adminfeatures',
     components: {
       
     },
     data() {
       return {
-          addDestination: {
+          destination: {
               latitude: '',
               longitude: '',
               city: '',
               state: '',
-              zipcode: '',
+              zip_code: '',
               openFrom: '',
               openTo: '',
-              weekends: ''
+              openOnWeekends: '',
+              category: '',
+              imgUrl: 'art.png'
 
           },
     computed: {
       userLoggedIn() {
         return (auth.getToken() != null);
       }
-      }}}};
+      },
+      addDestination() {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/api/admindestination`, {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken(),
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.destination)
+        })
+        .then((response) => {
+          if(response.ok) {
+            this.$router.push({ path: '/adminfeatures'});
+            console.log("success! destination added");
+          } else {
+          console.log("error adding destination");
+          }
+        })
+        .then((err) => console.log(err));
+      },
+      }}};
 </script>
 
 <style>
