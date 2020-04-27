@@ -239,23 +239,7 @@ export default {
         .then((err) => console.log(err));
       },
       getDestinations() {
-        fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + auth.getToken()
-          }
-        })
-        .then((response) => {
-          if(response.ok) {
-            console.log(response);
-            return response.json();
-          }
-        })
-        .then((destinations) => {
-          console.log(destinations);
-          this.destinations = destinations;
-        })
-        .catch(err => {console.log(err)})
+
       },
       reviewButtonClicked() {
         this.displayReviews = !this.displayReviews;
@@ -293,7 +277,23 @@ export default {
 
     created() {
       this.reviews = this.getReviews();
-      this.destinations = this.getDestinations();
+      this.destinations = fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken()
+          }
+        })
+        .then((response) => {
+          if(response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then((destinations) => {
+          console.log(destinations);
+          this.destinations = destinations;
+        })
+        .catch(err => {console.log(err)});
     },
     async mounted() {
 
@@ -348,28 +348,27 @@ export default {
 
         // This iterates over our filtered locations (also had to declare the Filter method here rather than in "methods")
         // On each location, it plants an icon and places an info window on the marker (on click)
+        function addMarker(location) {
+          var marker = new google.maps.Marker({position: new google.maps.LatLng(location.latitude, location.longitude), map, title: location.name, draggable: false, icon: icons['artcon'].icon});
+          marker.addListener(`dblclick`, () => markerClickHandler(marker));
+          let infowindow = new google.maps.InfoWindow({ content: name });
+          marker.addListener('click', function() {
+          if (!this.displayInfo) {
+            infowindow.open(map, marker);
+            this.displayInfo = !this.displayInfo;
+          } else {
+            infowindow.close(map, marker);
+            this.displayInfo = !this.displayInfo;
 
-
+            }
+          }); 
+          markers.push(marker);
+        }
         
-        locations
-        .map((location) => {   
-            var marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, icon: icons[location.category + 'con'].icon});
-            marker.addListener(`dblclick`, () => markerClickHandler(marker));
-            let infowindow = new google.maps.InfoWindow({ content: location.content });
-            marker.addListener('click', function() {
-            if (!this.displayInfo) {
-              infowindow.open(map, marker);
-              this.displayInfo = !this.displayInfo;
-            } else {
-              infowindow.close(map, marker);
-              this.displayInfo = !this.displayInfo;
-
-              }
-            }); 
-            markers.push(marker);
+        this.destinations
+        .map((location) => {     
+            addMarker(location);
         });
-
-
         
 
         // The next few lines requests a user's position (I was using Vue's before; this is Google's)
@@ -396,25 +395,8 @@ export default {
               for(var i = 0; i < markers.length; i++){
                   markers[i].setMap(null);
               }
-              locations
+              this.destinations
                 .map((location) => {     
-
-                  function addMarker(location) {
-                    var marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, icon: icons[location.category + 'con'].icon});
-                    marker.addListener('click', function() {
-                    marker.addListener(`dblclick`, () => markerClickHandler(marker));
-                    let infowindow = new google.maps.InfoWindow({ content: location.content });
-                    if (!this.displayInfo) {
-                      infowindow.open(map, marker);
-                      this.displayInfo = !this.displayInfo;
-                    } else {
-                      infowindow.close(map, marker);
-                      this.displayInfo = !this.displayInfo;
-
-                      }
-                    }); 
-                    markers.push(marker);
-                  } 
                   if (filterEm(location) <= document.getElementById('radius').value) {
                     addMarker(location);
                   }
