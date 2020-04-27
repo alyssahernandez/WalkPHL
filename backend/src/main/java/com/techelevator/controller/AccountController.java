@@ -76,6 +76,7 @@ public class AccountController {
 		userInfo.put("user", user.getUserByUsername(username));
 		userInfo.put("userBadges", badge.getEarnedBadges(username));
 		userInfo.put("reviews", review.getReviewsByUser(username));
+		userInfo.put("visited", user.getVisitedDestinations(username));
 		return userInfo;
 	}	
 }
