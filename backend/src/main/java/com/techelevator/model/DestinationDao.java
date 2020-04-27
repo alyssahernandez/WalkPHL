@@ -7,8 +7,6 @@ public interface DestinationDao {
 	
 	public List<Destination> getDestinationsByCategory(Integer category_id);
 	
-	public List<Destination> getVisitedDestinations(User user);
-	
 	public Destination getDestination(Integer destination_id);
 	
 	public List<Destination> getAllDestinations();

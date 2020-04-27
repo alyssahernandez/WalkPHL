@@ -6,9 +6,28 @@
             <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
             <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
             <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
-            <select id="end">
-              <option v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
+            
+            <select id="type">
+              <option disabled selected value> -- select -- </option>
+              <option value="WALKING">Walk PHL!</option>
+              <option value="BICYCLING">Bicycle</option>
+              <option value="DRIVING">Drive</option>
+              <option value="TRANSIT">Public Transit</option>
+            </select >
+            <select id="radius">
+              <option disabled selected value> -- select -- </option>
+              <option value="250">250 Meters</option>
+              <option value="804">Half Mile</option>
+              <option value="1607">One Mile</option>
+              <option value="3214">Two Miles</option>
+              <option value="8046">Five Miles</option>
+              <option value="16093">Ten Miles</option>
             </select>
+            <select id="end">
+              <option disabled selected value> -- select -- </option>
+              <option v-for="destination in destinations" v-bind:id="destination.destinationId" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
+            </select>
+
           </div>
             <div id="destination-div">
               <div class="container">
@@ -16,7 +35,7 @@
                    <img :src="`${destination.imgUrl}`" />
                    <h4>{{destination.name}}</h4>
                    <p>{{destination.description}}</p>
-                   <p>{{destination.openTo}} - {{destination.openFrom}} - Weekends:{{destination.openOnWeekends}}</p>
+                   <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
                 </div>
               </div>
             </div>
@@ -121,8 +140,6 @@ export default {
           lat: '',
           lng: ''
         },
-        directionsService: '',
-        directionsRenderer: ''
       }
     },
     props: {
@@ -134,6 +151,9 @@ export default {
       },
       // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
       filterLocations() {
+        document.getElementById('radius').addEventListener('change', function() {
+
+        })
         return locations.filter( (location) => {
           var R = 6371000;
           var dLat = this.toRad(location.position.lat-this.coords.lat);
@@ -219,23 +239,7 @@ export default {
         .then((err) => console.log(err));
       },
       getDestinations() {
-        fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + auth.getToken()
-          }
-        })
-        .then((response) => {
-          if(response.ok) {
-            console.log(response);
-            return response.json();
-          }
-        })
-        .then((destinations) => {
-          console.log(destinations);
-          this.destinations = destinations;
-        })
-        .catch(err => {console.log(err)})
+
       },
       reviewButtonClicked() {
         this.displayReviews = !this.displayReviews;
@@ -273,7 +277,23 @@ export default {
 
     created() {
       this.reviews = this.getReviews();
-      this.destinations = this.getDestinations();
+      this.destinations = fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + auth.getToken()
+          }
+        })
+        .then((response) => {
+          if(response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then((destinations) => {
+          console.log(destinations);
+          this.destinations = destinations;
+        })
+        .catch(err => {console.log(err)});
     },
     async mounted() {
 
@@ -286,7 +306,7 @@ export default {
         this.directionsService = directionsService;
         console.log(directionsService);
         console.log(this.directionsService);
-        const directionsRenderer = new google.maps.DirectionsRenderer();
+        var directionsRenderer = new google.maps.DirectionsRenderer();
         this.directionsRenderer = directionsRenderer;
       
         directionsRenderer.setPanel(document.getElementById('right-panel'));
@@ -320,10 +340,36 @@ export default {
         };
 
         // Getting an array of markets to plop on our map
-        google.maps.Map.prototype.markers = new Array();
-        google.maps.Map.prototype.getMarkers = function() {
-            return this.markers
-        };
+        var markers = [];
+
+        // TODO: We shouldn't be calling "locations" like this. In order for this to work, Locations must be declared inside of our script.
+        // That's not ideal, especially for referencing things from our DB.  
+        // It has to do with async mounting -- was reading about it all night.  Not entirely sure of the solution, however, tho I think we may need to fetch in here & have everything else wait on the response.
+
+        // This iterates over our filtered locations (also had to declare the Filter method here rather than in "methods")
+        // On each location, it plants an icon and places an info window on the marker (on click)
+        function addMarker(location) {
+          var marker = new google.maps.Marker({position: new google.maps.LatLng(location.latitude, location.longitude), map, title: location.name, draggable: false, icon: icons['artcon'].icon});
+          marker.addListener(`dblclick`, () => markerClickHandler(marker));
+          let infowindow = new google.maps.InfoWindow({ content: name });
+          marker.addListener('click', function() {
+          if (!this.displayInfo) {
+            infowindow.open(map, marker);
+            this.displayInfo = !this.displayInfo;
+          } else {
+            infowindow.close(map, marker);
+            this.displayInfo = !this.displayInfo;
+
+            }
+          }); 
+          markers.push(marker);
+        }
+        
+        this.destinations
+        .map((location) => {     
+            addMarker(location);
+        });
+        
 
         // The next few lines requests a user's position (I was using Vue's before; this is Google's)
         if (navigator.geolocation) {
@@ -344,58 +390,56 @@ export default {
             infoWindow.open(map);
             map.setCenter({lat: 39.9526, lng: -75.1652});
             map.setZoom(14);
-          
-          // TODO: We shouldn't be calling "locations" like this. In order for this to work, Locations must be declared inside of our script.
-          // That's not ideal, especially for referencing things from our DB.  
-          // It has to do with async mounting -- was reading about it all night.  Not entirely sure of the solution, however, tho I think we may need to fetch in here & have everything else wait on the response.
 
-          // This iterates over our filtered locations (also had to declare the Filter method here rather than in "methods")
-          // On each location, it plants an icon and places an info window on the marker (on click)
-            locations
-            .map((location) => {
-              let marker = '';
-              if (filterEm(location)) {
-
-                marker = new google.maps.Marker({position: new google.maps.LatLng(location.position.lat, location.position.lng), map, title: location.name, draggable: false, icon: icons[location.category + 'con'].icon});
-                marker.addListener(`dblclick`, () => markerClickHandler(marker));
-                let infowindow = new google.maps.InfoWindow({ content: location.content });
-                  marker.addListener('click', function() {
-                    if (!this.displayInfo) {
-                      infowindow.open(map, marker);
-                      this.displayInfo = !this.displayInfo;
-                    } else {
-                      infowindow.close(map, marker);
-                      this.displayInfo = !this.displayInfo;
-                    }
-                  });
+            document.getElementById('radius').addEventListener('change', function() {
+              for(var i = 0; i < markers.length; i++){
+                  markers[i].setMap(null);
               }
-              return marker;
-            });
-            
+              this.destinations
+                .map((location) => {     
+                  if (filterEm(location) <= document.getElementById('radius').value) {
+                    addMarker(location);
+                  }
+              });
+            })
+
             // // Function to display route
-             var onChangeHandler = function() {
+             var onChangeHandlerDirections = function() {
                calculateAndDisplayRoute(directionsService, directionsRenderer);
              }
 
-            // // Adding an on-click to our "Get Directions" button, which runs the above function on click
-             document.getElementById('dir').addEventListener('click', onChangeHandler);
-             document.getElementById('end').addEventListener('change', onChangeHandler);
+            // // Adding an on-click to our "Get Directions" button, which runs the above function on click & removes directions upon re-clicking
+             document.getElementById('dir').addEventListener('click', function() {
+                   if (directionsRenderer.map != null) {
+                    directionsRenderer.setMap(null);
+                    directionsRenderer.setPanel(null);
+                   } else {
+                      directionsRenderer.setPanel(document.getElementById('right-panel'));
+                      directionsRenderer.setMap(map); 
+                      onChangeHandlerDirections;
+                   }
+             });
 
+             // Event listeners for menu selections (destination/endpoint, mode of transportation, and radius from user)
+             document.getElementById('end').addEventListener('change', onChangeHandlerDirections);
+             document.getElementById('type').addEventListener('change', onChangeHandlerDirections);
+             
              // Calculates route from user position and that of a destination.
              function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-               var end = document.getElementById('end').value;
 
+               var end = document.getElementById('end').value;
+               var type = document.getElementById('type').value;
+              
                directionsService.route({
-                   origin : pos,
-                   destination : end,
-                   travelMode : 'WALKING'
-              }, function(response, status) {
-                 if (status === 'OK') {
-                   directionsRenderer.setDirections(response);
-                 } else {
-                   window.alert('Directions request failed due to ' + status);
-                 }
-               });
+                    origin : pos,
+                    destination : end,
+                    travelMode : type
+                }, function(response, status) {
+                  if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                  } 
+                });
+              
              }
             
             // Had to move our "filter by distance" method down here. Wouldn't work when calling above.
@@ -410,7 +454,7 @@ export default {
                       Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
               var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
               var d = R * c;
-              return d <= 3500;
+              return d;
             }
           });
         }
@@ -721,4 +765,3 @@ html, body {
   }
 }
 </style>
-

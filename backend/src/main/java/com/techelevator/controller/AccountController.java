@@ -10,6 +10,7 @@ import com.techelevator.authentication.JwtTokenHandler;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.authentication.UserCreationException;
 import com.techelevator.model.BadgeDao;
+import com.techelevator.model.ReviewDao;
 import com.techelevator.model.User;
 import com.techelevator.model.UserDao;
 
@@ -36,6 +37,9 @@ public class AccountController {
     
     @Autowired
     private BadgeDao badge;
+    
+    @Autowired
+    private ReviewDao review;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(@RequestBody User user, RedirectAttributes flash) throws UnauthorizedException {
@@ -60,7 +64,6 @@ public class AccountController {
         return "{\"success\":true}";
     }
     
-	
 	@RequestMapping(path = "/logout", method = RequestMethod.POST) 
 	public void logout(RedirectAttributes flash) {
 		auth.logOff();
@@ -72,9 +75,8 @@ public class AccountController {
 		
 		userInfo.put("user", user.getUserByUsername(username));
 		userInfo.put("userBadges", badge.getEarnedBadges(username));
+		userInfo.put("reviews", review.getReviewsByUser(username));
+		userInfo.put("visited", user.getVisitedDestinations(username));
 		return userInfo;
-		
 	}	
-	
-	
 }
