@@ -43,6 +43,7 @@ INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('a
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 3, '2018-05-04');
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 1, '2020-09-09');
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 3, '2020-12-12');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 3, '2020-11-12');
 
 INSERT INTO destination_badge (destination_id, badge_id) VALUES (1, 1);
 INSERT INTO destination_badge (destination_id, badge_id) VALUES (2, 2);

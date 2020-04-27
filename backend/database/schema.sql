@@ -34,7 +34,7 @@ CREATE TABLE user_reviews
         review varchar(255) not null,
         review_date date not null,
         
-        
+                
         constraint fk_user_reviews_users foreign key (username) references users (username)
 );
 
@@ -44,6 +44,7 @@ CREATE TABLE category
         category_id serial PRIMARY KEY,
         category_name varchar(64) not null
 );
+
 
 CREATE TABLE badge
 (
