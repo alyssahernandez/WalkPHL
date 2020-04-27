@@ -59,7 +59,7 @@
     <div class="profile-options is-fullwidth">
       <div class="tabs is-fullwidth is-medium">
         <ul id="tabs">
-          <li id="badge" class="link is-active">
+          <li id="badge" class="link">
             <a v-on:click="displayBadges">
               <span class="icon">
                 <i class="fa fa-list"></i>
@@ -203,42 +203,18 @@ export default {
       this.checkInsOn = false;
       this.reviewsOn = false;
       
-      let activeTab = document.getElementById('tabs').getElementsByClassName('is-active');
-      activeTab.classList.remove('is-active');
-
-      let activeBadges = document.getElementById('badge');
-
-      if(!activeBadges.classList.contains('is-active')) {
-        activeBadges.classList.add('is-active');
-      }
     },
     dispalyCheckIns() {
       this.badgesOn = false;
       this.checkInsOn = true;
       this.reviewsOn = false;
 
-      let activeTab = document.getElementById('tabs').getElementsByClassName('is-active');
-      activeTab.classList.remove('is-active');
-
-      let activeCheckIns = document.getElementById('badge');
-
-      if(!activeCheckIns.classList.contains('is-active')) {
-        activeCheckIns.classList.add('is-active');
-      }
     },
     displayReviews() {
       this.badgesOn = false;
       this.checkInsOn = false;
       this.reviewsOn = true;
 
-      let activeTab = document.getElementById('tabs').getElementsByClassName('is-active');
-      activeTab.classList.remove('is-active');
-
-      let activeReviews = document.getElementById('badge');
-
-      if(!activeReviews.classList.contains('is-active')) {
-        activeReviews.classList.add('is-active');
-      }
     }
   },
   computed: {
