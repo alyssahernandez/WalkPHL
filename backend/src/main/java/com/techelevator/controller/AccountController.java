@@ -64,7 +64,6 @@ public class AccountController {
         return "{\"success\":true}";
     }
     
-	
 	@RequestMapping(path = "/logout", method = RequestMethod.POST) 
 	public void logout(RedirectAttributes flash) {
 		auth.logOff();
@@ -78,8 +77,5 @@ public class AccountController {
 		userInfo.put("userBadges", badge.getEarnedBadges(username));
 		userInfo.put("reviews", review.getReviewsByUser(username));
 		return userInfo;
-		
 	}	
-	
-	
 }

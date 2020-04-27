@@ -6,9 +6,16 @@
             <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
             <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
             <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+            
+            <select id="type">
+              <option value="WALKING">Walk PHL!</option>
+              <option value="DRIVING">Drive</option>
+            </select>
+            <br>
             <select id="end">
               <option v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
             </select>
+
           </div>
             <div id="destination-div">
               <div class="container">
@@ -16,7 +23,7 @@
                    <img :src="`${destination.imgUrl}`" />
                    <h4>{{destination.name}}</h4>
                    <p>{{destination.description}}</p>
-                   <p>{{destination.openTo}} - {{destination.openFrom}} - Weekends:{{destination.openOnWeekends}}</p>
+                   <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
                 </div>
               </div>
             </div>
@@ -380,15 +387,18 @@ export default {
             // // Adding an on-click to our "Get Directions" button, which runs the above function on click
              document.getElementById('dir').addEventListener('click', onChangeHandler);
              document.getElementById('end').addEventListener('change', onChangeHandler);
+             document.getElementById('type').addEventListener('change', onChangeHandler);
 
              // Calculates route from user position and that of a destination.
              function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+
                var end = document.getElementById('end').value;
+               var type = document.getElementById('type').value;
 
                directionsService.route({
                    origin : pos,
                    destination : end,
-                   travelMode : 'WALKING'
+                   travelMode : type
               }, function(response, status) {
                  if (status === 'OK') {
                    directionsRenderer.setDirections(response);
