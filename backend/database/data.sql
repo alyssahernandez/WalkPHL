@@ -18,9 +18,15 @@ INSERT INTO category (category_name) VALUES ('Arts');
 INSERT INTO category (category_name) VALUES ('Historical');
 INSERT INTO category (category_name) VALUES ('Food');
 
-INSERT INTO badge (category_id, name, description, img_url) VALUES (1, 'Sky Badge', 'You''re sky high!', 'sky.png');
-INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'X Park Badge', 'Look! A squirrel smoking a cigar!', 'harborpark.png');
-INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Art Museum / Rocky Badge', 'So cultured, you are!', 'art.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (1, 'Sky Badge', 'Visit Liberty One Observation Deck', 'sky.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'Harbor Park Badge', 'Visit Spruce Street Harbor Park', 'harborpark.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Art Museum Badge', 'Visit Philadelphia Museum of Art', 'art.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (4, 'Liberty Badge', 'Visit Liberty Bell', 'libertybell.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Franklin Institute Badge', 'Visit The Franklin Institute', 'franklininst.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (4, 'City Hall Badge', 'Visit City Hall', 'cityhall.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'Independence Park Badge', 'Visit Independence National Historical Park', 'doi.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (5, 'Reading Terminal Badge', 'Visit Reading Terminal Market', 'readingterminal.png');
+
 
 INSERT INTO user_badge (username, badge_id) VALUES ('admin', 1);
 INSERT INTO user_badge (username, badge_id) VALUES ('admin', 2);
