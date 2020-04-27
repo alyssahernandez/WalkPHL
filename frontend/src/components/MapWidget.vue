@@ -6,6 +6,9 @@
             <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
             <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
             <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+            <select id="end">
+              <option v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
+            </select>
           </div>
             <div id="destination-div">
               <div class="container">
@@ -370,27 +373,30 @@ export default {
             });
             
             // // Function to display route
-            // var onChangeHandler = function() {
-            //   calculateAndDisplayRoute(directionsService, directionsRenderer);
-            // }
+             var onChangeHandler = function() {
+               calculateAndDisplayRoute(directionsService, directionsRenderer);
+             }
 
             // // Adding an on-click to our "Get Directions" button, which runs the above function on click
-            // document.getElementById('dir').addEventListener('click', onChangeHandler);
+             document.getElementById('dir').addEventListener('click', onChangeHandler);
+             document.getElementById('end').addEventListener('change', onChangeHandler);
 
-            // // Calculates route from user position and that of a destination.
-            // function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-            //   directionsService.route({
-            //       origin : pos,
-            //       destination : this.destinationPosition,
-            //       travelMode : 'WALKING'
-            //   }, function(response, status) {
-            //     if (status === 'OK') {
-            //       directionsRenderer.setDirections(response);
-            //     } else {
-            //       window.alert('Directions request failed due to ' + status);
-            //     }
-            //   });
-            // }
+             // Calculates route from user position and that of a destination.
+             function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+               var end = document.getElementById('end').value;
+
+               directionsService.route({
+                   origin : pos,
+                   destination : end,
+                   travelMode : 'WALKING'
+              }, function(response, status) {
+                 if (status === 'OK') {
+                   directionsRenderer.setDirections(response);
+                 } else {
+                   window.alert('Directions request failed due to ' + status);
+                 }
+               });
+             }
             
             // Had to move our "filter by distance" method down here. Wouldn't work when calling above.
             // Also had to put our "toRad()" method inside of it, as it would only return undefined values...more async mount strangeness
