@@ -50,21 +50,12 @@ public class JdbcDestinationDao implements DestinationDao {
     }
     
     @Override
-    public List<Destination> getVisitedDestinations(User user)
-    {
-    	String query = "SELECT * FROM destination INNER JOIN user_destination ON destination.destination_id = user_destination.destination_id WHERE user_destination.username = ?";
-    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, user.getId());
-    	return mapRowSetToDestinations(results);
-    }
-    
-    @Override
     public void createDestination(Destination destination)
     {
     	String query = "INSERT INTO destination (category_id, name, description, x_coordinate, y_coordinate, city, state, zip_code) "
     			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     	
     	Integer categoryId = getCategoryId(destination.getCategory());
-    	
     	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code());
     }
     

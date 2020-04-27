@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import com.techelevator.model.Destination;
 import com.techelevator.model.DestinationDao;
+import com.techelevator.model.UserDao;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,22 @@ public class DestinationController {
     
     
     @Autowired
-    private DestinationDao destinationDao;
+    private UserDao userDao;
+    
+    @Autowired DestinationDao destinationDao;
     
 	@GetMapping("/destinations")
 	public List<Destination> getDestinations() {
 		return destinationDao.getAllDestinations();
+	}
+	
+	@GetMapping("/profile/{username}/checkins")
+	public List<Destination> getCheckins(@PathVariable String username) {
+		return userDao.getVisitedDestinations(username);
+	}
+	
+	@PostMapping("/profile/{username}/{destinationId}") 
+	public void checkIn(@PathVariable String username, @PathVariable Integer destinationId) {
+		userDao.checkIntoDestination(username, destinationId);
 	}
 }

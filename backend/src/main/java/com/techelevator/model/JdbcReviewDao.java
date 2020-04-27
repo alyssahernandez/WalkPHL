@@ -70,11 +70,11 @@ public class JdbcReviewDao implements ReviewDao {
     	return reviews;
     }
     
-    public List<Review> getReviewsByUser(User user)
+    public List<Review> getReviewsByUser(String username)
     {
     	List<Review> reviews = new ArrayList<>();
     	String query = "SELECT * FROM user_reviews WHERE username = ?";
-    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, user.getUsername());
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, username);
     	
     	while (results.next())
     	{

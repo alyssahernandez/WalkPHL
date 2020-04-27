@@ -29,14 +29,13 @@ public interface UserDao {
      */
     public User getValidUserWithPassword(String userName, String password);
 
-    /**
-     * Get all of the users from the database.
-     * @return a List of user objects
-     */
     public List<User> getAllUsers();
 
     public User getUserByUsername(String username);
     
     public void setAdmin(String username);
-
+    
+    public void checkIntoDestination(String username, Integer destinationId);
+    
+    public List<Destination> getVisitedDestinations(String username);
 }
