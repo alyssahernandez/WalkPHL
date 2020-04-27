@@ -9,6 +9,7 @@ import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
 import Review from './views/Review.vue'
 import About from './views/About.vue'
+import AdminFeatures from './views/AdminFeatures.vue'
 
 
 Vue.use(Router)
@@ -85,6 +86,14 @@ const router = new Router({
       component: Map,
       meta: {
         requiresAuth: false
+      }
+    },
+    {
+      path: "/adminfeatures",
+      name: "adminfeatures",
+      component: AdminFeatures,
+      meta: {
+        requiresAuth: true
       }
     }
   ]
