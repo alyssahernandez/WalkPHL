@@ -60,19 +60,27 @@
       <div class="tabs is-fullwidth is-medium">
         <ul>
           <li class="link is-active">
-            <a>
+            <a v-on:click="displayBadges">
               <span class="icon">
                 <i class="fa fa-list"></i>
               </span>
               <span>My Badges</span>
             </a>
           </li>
-          <li class="link ">
-            <a>
+          <li class="link">
+            <a v-on:click="dispalyCheckIns">
               <span class="icon">
                 <i class="fa fa-thumbs-up"></i>
               </span>
               <span>Check-Ins</span>
+            </a>
+          </li>
+          <li class="link">
+            <a v-on:click="displayReviews">
+              <span class="icon">
+                <i class="fa fa-thumbs-up"></i>
+              </span>
+              <span>My Reviews</span>
             </a>
           </li>
         </ul>
@@ -82,7 +90,7 @@
       <!-- Main container
       -->
       
-    <div class="columns is-mobile">
+    <div class="columns is-mobile" v-if="badgesOn">
       <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
         <div class="card">
           <div class="card-image">
@@ -104,6 +112,43 @@
         <br/>
       </div>
     </div>
+<!-- Individual User Check-Ins -->
+    <div class="columns is-mobile" v-if="checkInsOn">
+      <div class="column is-3-tablet is-6-mobile">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <span class="tag is-dark subtitle"></span>
+              <br>
+              <strong></strong>
+              <p></p>
+            </div>
+          </div>
+          <footer class="card-footer">
+          </footer>
+        </div>
+        <br/>
+      </div>
+    </div>
+<!-- Individual User Reviews -->
+    <div class="columns is-mobile" v-if="reviewsOn">
+      <div class="column is-3-tablet is-6-mobile">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <span class="tag is-dark subtitle"></span>
+              <br>
+              <strong></strong>
+              <p></p>
+            </div>
+          </div>
+          <footer class="card-footer">
+          </footer>
+        </div>
+        <br/>
+      </div>
+    </div>
+
   </div>
 </div>
       <h1>{{user}}</h1>
@@ -117,7 +162,10 @@ export default {
   data() {
     return {
       username: null,
-      user: null
+      user: null,
+      badgesOn: true,
+      checkInsOn: false,
+      reviewsOn: false
     }
   },
   methods: {
@@ -148,10 +196,23 @@ export default {
 
       } else if(editPreferencesModal.classList.contains('is-active')) {
           editPreferencesModal.classList.remove('is-active');
-      }
-      
+      }  
+    },
+    displayBadges() {
+      this.badgesOn = true;
+      this.checkInsOn = false;
+      this.reviewsOn = false;
+    },
+    dispalyCheckIns() {
+      this.badgesOn = false;
+      this.checkInsOn = true;
+      this.reviewsOn = false;
+    },
+    displayReviews() {
+      this.badgesOn = false;
+      this.checkInsOn = false;
+      this.reviewsOn = true;
     }
-
   },
   computed: {
     badgeCount() {
@@ -164,18 +225,6 @@ export default {
     this.user = this.User(this.username);
   }
 }
-/*
-$(() => {
-  $("#edit-preferences").click(function () {
-    $("#edit-preferences-modal").addClass("is-active");
-  });
-  $(".modal-card-head button.delete, .modal-save, .modal-cancel").click(
-    function () {
-      $("#edit-preferences-modal").removeClass("is-active");
-    }
-  );
-});
-*/
 </script>
   
 
