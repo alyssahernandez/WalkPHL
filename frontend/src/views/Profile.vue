@@ -25,7 +25,7 @@
       <div class="columns is-mobile is-multiline">
         <div class="column is-2">
           <span class="header-icon user-profile-image">
-            <img src="http://placehold.it/300x225"/>
+            <img :src="require(`../assets/images/${user.user.profilePicture}`)" alt="Profile Picture">
           </span>
         </div>
         <!-- Start of user profile -->
