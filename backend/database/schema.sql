@@ -21,7 +21,8 @@ CREATE TABLE users
           salt varchar(256) NOT NULL,          -- Password Salt
           role varchar(255) NOT NULL default('City Vistor'),
           img_url varchar(255),
-          bio varchar(255)
+          bio varchar(255),
+          profile_pic varchar(100) NOT NULL default('boat.png')
 );
 
 
