@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,6 +135,39 @@ public class JdbcUserDao implements UserDao {
     	jdbcTemplate.update(query, admin, username);
     }
     
+    @Override
+    public List<Destination> getVisitedDestinations(String username)
+    {
+    	String query = "SELECT * FROM destination INNER JOIN user_destination ON destination.destination_id = user_destination.destination_id WHERE user_destination.username = ?";
+    	SqlRowSet results = jdbcTemplate.queryForRowSet(query, username);
+    	List<Destination> destinations = new ArrayList<>();
+    	while (results.next())
+    	{
+    		Destination d = new Destination();
+    		d.setCity(results.getString("city"));
+    		d.setDescription(results.getString("description"));
+    		d.setDestinationId(results.getInt("destination_id"));
+    		d.setName(results.getString("name"));
+    		d.setState(results.getString("state"));
+    		d.setLatitude(results.getString("lat"));
+    		d.setLongitude(results.getString("long"));
+    		d.setZip_code(results.getString("zip_code"));
+    		d.setCategoryId(results.getString("category_id"));
+    		d.setOpenFrom(results.getString("open_from"));
+    		d.setOpenOnWeekends(results.getString("weekends"));
+    		d.setOpenTo(results.getString("open_to"));
+    		d.setImgUrl(results.getString("img_url"));
+    		destinations.add(d);
+    	}
+    	return destinations;
+    }
+    
+    @Override
+    public void checkIntoDestination(String username, Integer destinationId)
+    {
+    	String query = "INSERT INTO user_destination (username, destination_id, date_visited) VALUES (?, ?, ?)";
+    	jdbcTemplate.update(query, username, destinationId, LocalDate.now());
+    }
 	/*
 	 * public void checkIn(User user, Destination destination) { String query =
 	 * "UPDATE user_destination SET checked_in" }
