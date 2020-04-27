@@ -51,8 +51,8 @@
           <p class="stat-key">Check-ins</p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">3</p>
-          <p class="stat-key">Friends</p>
+          <p class="stat-val">{{reviewCount}}</p>
+          <p class="stat-key">Reviews</p>
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@
     </div>
 <!-- Individual User Check-Ins -->
     <div class="columns is-mobile" v-if="checkInsOn">
-      <div class="column is-3-tablet is-6-mobile">
+      <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
         <div class="card">
           <div class="card-content">
             <div class="content">
@@ -132,17 +132,18 @@
     </div>
 <!-- Individual User Reviews -->
     <div class="columns is-mobile" v-if="reviewsOn">
-      <div class="column is-3-tablet is-6-mobile">
+      <div class="column is-3-tablet is-6-mobile" v-for="review in user.reviews" :key="review.review_id">
         <div class="card">
           <div class="card-content">
             <div class="content">
-              <span class="tag is-dark subtitle"></span>
+              <span class="tag is-dark subtitle">{{review.review_id}}</span>
               <br>
-              <strong></strong>
-              <p></p>
+              <strong>{{review.title}}</strong>
+              <p>{{review.review}}</p>
             </div>
           </div>
           <footer class="card-footer">
+            <p>{{review.review_date}}</p>
           </footer>
         </div>
         <br/>
@@ -220,6 +221,9 @@ export default {
   computed: {
     badgeCount() {
       return this.user.userBadges.length;
+    },
+    reviewCount() {
+      return this.user.reviews.length;
     }
   },
   created() {
