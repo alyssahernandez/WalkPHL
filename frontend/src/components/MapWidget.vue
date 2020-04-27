@@ -10,8 +10,13 @@
             <select id="type">
               <option value="WALKING">Walk PHL!</option>
               <option value="DRIVING">Drive</option>
+            </select >
+            <select id="radius">
+              <option value="91">100 yards</option>
+              <option value="804">Half Mile</option>
+              <option value="1607">One Mile</option>
+              <option value="8046">Five Miles</option>
             </select>
-            <br>
             <select id="end">
               <option v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
             </select>
@@ -378,6 +383,9 @@ export default {
               }
               return marker;
             });
+
+              //var radius = document.getElementById('radius').value;
+              document.getElementById('radius').addEventListener('change', onChangeHandler);
             
             // // Function to display route
              var onChangeHandler = function() {
