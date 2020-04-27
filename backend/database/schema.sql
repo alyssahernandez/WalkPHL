@@ -89,6 +89,7 @@ CREATE TABLE user_destination
 (
         username varchar(128) not null,
         destination_id int not null,
+        date_visited date not null,
         
         constraint pk_user_destination primary key (username, destination_id),
         constraint fk_user_destination_users foreign key (username) references users (username),
