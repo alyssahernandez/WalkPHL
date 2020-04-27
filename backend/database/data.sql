@@ -38,11 +38,11 @@ INSERT INTO destination (category_id, name, description, lat, long, city, state,
 INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, img_url, open_from, open_to, weekends) VALUES (2, 'Spruce Street Harbor Park', '', '39.943729', '-75.142029', 'Philadelphia', 'PA', '19103', 'art.png', '0', '2400', true);
 INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, img_url, open_from, open_to, weekends) VALUES (3, 'Philadelphia Museum of Art', '', '39.9656', '-75.1810', 'Philadelphia', 'PA', '19103', 'art.png', '800', '1700', true);
 
-INSERT INTO user_destination (username, destination_id) VALUES ('admin', 1);
-INSERT INTO user_destination (username, destination_id) VALUES ('admin', 2);
-INSERT INTO user_destination (username, destination_id) VALUES ('admin', 3);
-INSERT INTO user_destination (username, destination_id) VALUES ('frog', 1);
-INSERT INTO user_destination (username, destination_id) VALUES ('frog', 3);
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 1, '2019-02-09');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 2, '2020-09-20');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 3, '2018-05-04');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 1, '2020-09-09');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 3, '2020-12-12');
 
 INSERT INTO destination_badge (destination_id, badge_id) VALUES (1, 1);
 INSERT INTO destination_badge (destination_id, badge_id) VALUES (2, 2);

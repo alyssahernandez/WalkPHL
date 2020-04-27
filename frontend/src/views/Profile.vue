@@ -25,7 +25,7 @@
       <div class="columns is-mobile is-multiline">
         <div class="column is-2">
           <span class="header-icon user-profile-image">
-            <img src="http://placehold.it/300x225"/>
+            <img :src="require(`../assets/images/${user.user.profilePicture}`)" alt="Profile Picture">
           </span>
         </div>
         <!-- Start of user profile -->
@@ -51,28 +51,36 @@
           <p class="stat-key">Check-ins</p>
         </div>
         <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">3</p>
-          <p class="stat-key">Friends</p>
+          <p class="stat-val">{{reviewCount}}</p>
+          <p class="stat-key">Reviews</p>
         </div>
       </div>
     </div>
     <div class="profile-options is-fullwidth">
       <div class="tabs is-fullwidth is-medium">
-        <ul>
-          <li class="link is-active">
-            <a>
+        <ul id="tabs">
+          <li id="badge" class="link">
+            <a v-on:click="displayBadges">
               <span class="icon">
                 <i class="fa fa-list"></i>
               </span>
               <span>My Badges</span>
             </a>
           </li>
-          <li class="link ">
-            <a>
+          <li id="checkIn" class="link">
+            <a v-on:click="dispalyCheckIns">
               <span class="icon">
                 <i class="fa fa-thumbs-up"></i>
               </span>
               <span>Check-Ins</span>
+            </a>
+          </li>
+          <li id="review" class="link">
+            <a v-on:click="displayReviews">
+              <span class="icon">
+                <i class="fa fa-thumbs-up"></i>
+              </span>
+              <span>My Reviews</span>
             </a>
           </li>
         </ul>
@@ -82,7 +90,7 @@
       <!-- Main container
       -->
       
-    <div class="columns is-mobile">
+    <div class="columns is-mobile" v-if="badgesOn">
       <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
         <div class="card">
           <div class="card-image">
@@ -104,6 +112,44 @@
         <br/>
       </div>
     </div>
+<!-- Individual User Check-Ins -->
+    <div class="columns is-mobile" v-if="checkInsOn">
+      <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <span class="tag is-dark subtitle"></span>
+              <br>
+              <strong></strong>
+              <p></p>
+            </div>
+          </div>
+          <footer class="card-footer">
+          </footer>
+        </div>
+        <br/>
+      </div>
+    </div>
+<!-- Individual User Reviews -->
+    <div class="columns is-mobile" v-if="reviewsOn">
+      <div class="column is-3-tablet is-6-mobile" v-for="review in user.reviews" :key="review.review_id">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <span class="tag is-dark subtitle">{{review.review_id}}</span>
+              <br>
+              <strong>{{review.title}}</strong>
+              <p>{{review.review}}</p>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <p>{{review.review_date}}</p>
+          </footer>
+        </div>
+        <br/>
+      </div>
+    </div>
+
   </div>
 </div>
       <h1>{{user}}</h1>
@@ -117,7 +163,10 @@ export default {
   data() {
     return {
       username: null,
-      user: null
+      user: null,
+      badgesOn: true,
+      checkInsOn: false,
+      reviewsOn: false
     }
   },
   methods: {
@@ -148,14 +197,33 @@ export default {
 
       } else if(editPreferencesModal.classList.contains('is-active')) {
           editPreferencesModal.classList.remove('is-active');
-      }
+      }  
+    },
+    displayBadges() {
+      this.badgesOn = true;
+      this.checkInsOn = false;
+      this.reviewsOn = false;
       
-    }
+    },
+    dispalyCheckIns() {
+      this.badgesOn = false;
+      this.checkInsOn = true;
+      this.reviewsOn = false;
 
+    },
+    displayReviews() {
+      this.badgesOn = false;
+      this.checkInsOn = false;
+      this.reviewsOn = true;
+
+    }
   },
   computed: {
     badgeCount() {
       return this.user.userBadges.length;
+    },
+    reviewCount() {
+      return this.user.reviews.length;
     }
   },
   created() {
@@ -164,18 +232,6 @@ export default {
     this.user = this.User(this.username);
   }
 }
-/*
-$(() => {
-  $("#edit-preferences").click(function () {
-    $("#edit-preferences-modal").addClass("is-active");
-  });
-  $(".modal-card-head button.delete, .modal-save, .modal-cancel").click(
-    function () {
-      $("#edit-preferences-modal").removeClass("is-active");
-    }
-  );
-});
-*/
 </script>
   
 

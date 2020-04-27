@@ -21,7 +21,8 @@ CREATE TABLE users
           salt varchar(256) NOT NULL,          -- Password Salt
           role varchar(255) NOT NULL default('City Vistor'),
           img_url varchar(255),
-          bio varchar(255)
+          bio varchar(255),
+          profile_pic varchar(100) NOT NULL default('boat.png')
 );
 
 
@@ -89,6 +90,7 @@ CREATE TABLE user_destination
 (
         username varchar(128) not null,
         destination_id int not null,
+        date_visited date not null,
         
         constraint pk_user_destination primary key (username, destination_id),
         constraint fk_user_destination_users foreign key (username) references users (username),
