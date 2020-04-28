@@ -45,12 +45,13 @@
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
+        <input type="text" class="input" placeholder="Search Destination" v-model="searchText">
         <div class="container" v-show="!choseDestination">
           <div
             class="box destination-list hover-mouse"
             v-bind:id="destination.destinationId"
             v-on:click="chooseDestination(destination)"
-            v-for="destination in destinations"
+            v-for="destination in filterSearch()"
             :key="destination.destinationId"
             v-bind:value="destination.name"
           >
