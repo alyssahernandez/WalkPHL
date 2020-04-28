@@ -38,7 +38,7 @@
 
       <!-- user selects transportation type -->
       <div>
-        <select id="type" v-show="!choseDestination" v-on:change="directionsChange">
+        <select id="type" v-show="!choseDestination" v-model="currentTravelMode">
           <option disabled selected value>-- select --</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -51,7 +51,7 @@
       <div id="destination-div">
         <div class="container" v-show="!choseDestination">
           <div
-            class="box destination-list"
+            class="box destination-list hover-mouse"
             v-bind:id="destination.destinationId"
             v-on:click="chooseDestination(destination)"
             v-for="destination in destinations"
@@ -163,65 +163,23 @@ import auth from "../auth";
 let google = null;
 let geocoder = null;
 let map = null;
-let icons = null;
+//let icons = null;
 let directionsService = null;
 let directionsRenderer = null
 
-const markerClickHandler = marker => {
-map.setZoom(17);
-map.setCenter(marker.getPosition());
-};
-
-// Map icons
-function declareIcons() {
-  icons = {
-  artcon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/shapes/arts.png",
-      scaledSize: new google.maps.Size(35, 35)
-    }
-  },
-  sightcon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/shapes/camera.png",
-      scaledSize: new google.maps.Size(28, 28)
-    }
-  },
-  foodcon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/pal2/icon37.png",
-      scaledSize: new google.maps.Size(28, 28)
-    }
-  },
-  infocon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/shapes/info.png",
-      scaledSize: new google.maps.Size(28, 28)
-    }
-  },
-  secretcon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/shapes/info_circle.png",
-      scaledSize: new google.maps.Size(28, 28)
-    }
-  },
-  parkcon: {
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/pal2/icon4.png",
-      scaledSize: new google.maps.Size(28, 28)
-    }
-  },
-  camdencon: {
+const camden =   {
+    name: 'Camden, NJ',
+    category: 'camden',
+    description: '...Nope',
+    latitude: 39.9259, 
+    longitude: -75.1196,
     icon: {
       url: "http://maps.google.com/mapfiles/kml/pal3/icon37.png",
-      scaledSize: new google.maps.Size(50, 50)
+      //scaledSize: new google.maps.Size(50, 50)
     }
-  }
-};}
+};
 
-    // Had to move our "filter by distance" method down here. Wouldn't work when calling above.
-    // Also had to put our "toRad()" method inside of it, as it would only return undefined values...more async mount strangeness
-function filterEm(location, pos) {
+function filterByRadius(location, pos) {
   var R = 6371000;
   var dLat = (Math.PI / 180) * (parseFloat(location.latitude) - pos.lat);
   var dLon = (Math.PI / 180) * (parseFloat(location.longitude) - pos.lng);
@@ -243,6 +201,7 @@ export default {
   components: {},
   data() {
     return {
+      searchText:'',
       choseDestination: false,
       hasPosition: false,
       showDestination: false,
@@ -268,6 +227,7 @@ export default {
       radiusFilter: '',
       markers: [],
       currentDestination: '',
+      currentTravelMode: '',
 
     };
   },
@@ -278,9 +238,15 @@ export default {
     userLoggedIn() {
       return auth.getToken() != null;
     },
-    // Filters locations by radius (meters). Markers are only shown within a certain distance of user.
   },
   methods: {
+    filterSearch() {
+      const filter = new RegExp(this.searchText, 'i');
+      return this.destinations.filter((destination) => {
+        return destination.name.match(filter);
+
+      })
+    },
     getReviews() {
       fetch(`${process.env.VUE_APP_REMOTE_API}/recent-reviews`, {
         method: "GET",
@@ -422,22 +388,16 @@ export default {
         })
         .then(err => console.log(err));
     },
-        // TODO: We shouldn't be calling "locations" like this. In order for this to work, Locations must be declared inside of our script.
-    // That's not ideal, especially for referencing things from our DB.
-    // It has to do with async mounting -- was reading about it all night.  Not entirely sure of the solution, however, tho I think we may need to fetch in here & have everything else wait on the response.
-
-    // This iterates over our filtered locations (also had to declare the Filter method here rather than in "methods")
-    // On each location, it plants an icon and places an info window on the marker (on click)
     addMarker(location) {
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(location.latitude, location.longitude),
         map,
         title: location.name,
         draggable: false,
-        icon: icons["artcon"].icon
+        icon: location.icon
       });
-      marker.addListener(`dblclick`, () => markerClickHandler(marker));
-      let infowindow = new google.maps.InfoWindow({ content: name });
+      marker.addListener(`dblclick`, () => this.markerClickHandler(marker));
+      let infowindow = new google.maps.InfoWindow({ content: '<h1>' + location.name + '</h1> <p>' + location.description + '</p>'});
       marker.addListener("click", function() {
         if (!this.displayInfo) {
           infowindow.open(map, marker);
@@ -449,6 +409,14 @@ export default {
       });
       this.markers.push(marker);
     },
+    markerClickHandler(marker) {
+      if (map.getZoom() == 17)
+        map.setZoom(14);
+      else
+        map.setZoom(17);
+
+      map.setCenter(marker.getPosition());
+    },
     filterDestinations() {
       for (var i = 0; i < this.markers.length; i++) {
         this.markers[i].setMap(null);
@@ -456,9 +424,7 @@ export default {
       const currentUserPosition = this.userPosition;
       const currentRadiusFilter = this.radiusFilter;
       this.destinations.map(location => {
-        if (
-          filterEm(location, currentUserPosition) <= currentRadiusFilter
-        ) {
+        if (filterByRadius(location, currentUserPosition) <= currentRadiusFilter) {
           this.addMarker(location);
         }
       })
@@ -480,9 +446,6 @@ export default {
         }
       );
     },
-    directionsChange() {
-       this.calculateAndDisplayRoute();
-    },
     renderDirections() {
       if (directionsRenderer.map != null) {
         directionsRenderer.setMap(null);
@@ -494,9 +457,7 @@ export default {
         this.calculateAndDisplayRoute();
         document.getElementById("dir").innerText = "Hide Directions";
       }
-    },
-
-    
+    },    
   },
   created() {
     this.reviews = this.getReviews();
@@ -507,8 +468,6 @@ export default {
     google = await gmapsInit();
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById("map"));
-
-    declareIcons();
 
     //const places = new google.maps.places.PlacesService(map);
     directionsService = new google.maps.DirectionsService();
@@ -530,16 +489,7 @@ export default {
       }
     );
 
-    // This sets the zoom when a marker is clicked on & centers the map on that marker
-
-
-    // Getting an array of markets to plop on our map
-
-    this.destinations.map(location => {
-      this.addMarker(location);
-    });
-
-    // Default: Center City, PHILADELPHIA
+        // Default: Center City, PHILADELPHIA
     this.userPosition.lat = 39.9509;
     this.userPosition.lng = -75.1575;
 
@@ -552,6 +502,17 @@ export default {
       this.userPosition.lat = position.coords.latitude;
       this.userPosition.lng = position.coords.longitude;
     }
+
+    // This sets the zoom when a marker is clicked on & centers the map on that marker
+
+
+    // Getting an array of markets to plop on our map
+
+    this.destinations.map(location => {
+      this.addMarker(location);
+    });
+    this.addMarker(camden);
+
 
     // This sets an infowindow on our current location.
     var infoWindow = new google.maps.InfoWindow();
@@ -727,6 +688,10 @@ body {
   border: 1px solid #ccc;
   box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
   display: none;
+}
+
+.hover-mouse:hover {
+  cursor: pointer;
 }
 @media print {
   #map {
