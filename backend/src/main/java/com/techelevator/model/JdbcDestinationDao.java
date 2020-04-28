@@ -70,7 +70,7 @@ public List<Destination> getAllDestinations()
     	}
     	return i;
     }
-    
+   
 private List<Destination> mapRowSetToDestinations(SqlRowSet results)
 {
 	List<Destination> destinations = new ArrayList<>();
@@ -98,22 +98,21 @@ private List<Destination> mapRowSetToDestinations(SqlRowSet results)
     private Destination mapRowSetToDestination(SqlRowSet results)
     {
     	Destination d = new Destination();
-    	if (results.next())
-    	{
-    		d.setCity(results.getString("city"));
-    		d.setDescription(results.getString("description"));
-    		d.setDestinationId(results.getInt("destination_id"));
-    		d.setName(results.getString("name"));
-    		d.setState(results.getString("state"));
-    		d.setLatitude(results.getString("lat"));
-    		d.setLongitude(results.getString("long"));
-    		d.setZip_code(results.getString("zip_code"));
-    		d.setCategoryId(results.getString("category_id"));
-    		d.setOpenFrom(results.getString("open_from"));
-    		d.setOpenOnWeekends(results.getString("open_to"));
-    		d.setOpenTo(results.getString("weekends"));
-    		d.setImgUrl(results.getString("img_url"));
-    	}
+    	
+		d.setCity(results.getString("city"));
+		d.setDescription(results.getString("description"));
+		d.setDestinationId(results.getInt("destination_id"));
+		d.setName(results.getString("name"));
+		d.setState(results.getString("state"));
+		d.setLatitude(results.getString("lat"));
+		d.setLongitude(results.getString("long"));
+		d.setZip_code(results.getString("zip_code"));
+		d.setCategoryId(results.getString("category_id"));
+		d.setOpenFrom(results.getString("open_from"));
+		d.setOpenOnWeekends(results.getString("open_to"));
+		d.setOpenTo(results.getString("weekends"));
+		d.setImgUrl(results.getString("img_url"));
+	
     	return d;
     }
 
