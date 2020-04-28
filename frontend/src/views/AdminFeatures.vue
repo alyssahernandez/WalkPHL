@@ -15,6 +15,19 @@
                     autofocus
                   />
                 </label>
+                <label for="description">
+                  Name
+                  <input 
+                    type="text"
+                    v-model="destination.description"
+                    placeholder="description"
+                    id="description"
+                    class="input"
+                    maxlength="30"
+                    required
+                    autofocus
+                  />
+                </label>
                 <label for="latitude">
                   Latitude
                   <input 
@@ -150,7 +163,7 @@ export default {
               
           destination: {
               name: '',
-              description: 'test',
+              description: '',
               latitude: '',
               longitude: '',
               city: '',
