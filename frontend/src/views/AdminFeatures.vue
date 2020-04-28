@@ -71,7 +71,7 @@
                  Zipcode
                   <input 
                     type="text"
-                    v-model="destination.zipcode"
+                    v-model="destination.zip_code"
                     placeholder="19103"
                     id="zip_code"
                     class="input"
@@ -100,6 +100,19 @@
                     v-model="destination.openTo"
                     placeholder="0000"
                     id="openTo"
+                    class="input"
+                    maxlength="30"
+                    required
+                    autofocus
+                  />
+                </label>
+                <label for="category">
+                 Category
+                  <input 
+                    type="text"
+                    v-model="destination.category"
+                    placeholder="category"
+                    id="category"
                     class="input"
                     maxlength="30"
                     required
@@ -137,6 +150,7 @@ export default {
               
           destination: {
               name: '',
+              description: 'test',
               latitude: '',
               longitude: '',
               city: '',

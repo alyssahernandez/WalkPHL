@@ -52,17 +52,17 @@ public class JdbcDestinationDao implements DestinationDao {
     @Override
     public void createDestination(Destination destination)
     {
-    	String query = "INSERT INTO destination (category_id, name, description, x_coordinate, y_coordinate, city, state, zip_code) "
-    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query = "INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, open_from, open_to, weekends, img_url) "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     	
     	Integer categoryId = getCategoryId(destination.getCategory());
-    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code());
+    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code(), destination.getOpenFrom(), destination.getOpenTo(), Boolean.parseBoolean(destination.getOpenOnWeekends()), destination.getImgUrl());
     }
     
     private Integer getCategoryId(String categoryName)
     {
     	Integer i = null;
-    	String query = "SELECT * FROM destination_category WHERE name = ?";
+    	String query = "SELECT category_id FROM category WHERE category_name = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, categoryName);
     	if (results.next())
     	{

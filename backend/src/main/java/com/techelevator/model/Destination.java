@@ -48,7 +48,7 @@ public class Destination {
 	public void setState(String state) { this.state = state; }
 	
 	public String getZip_code() { return zip_code; }
-	public 	void setZip_code(String zip_code) { this.zip_code = zip_code; }
+	public void setZip_code(String zip_code) { this.zip_code = zip_code; }
 
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
