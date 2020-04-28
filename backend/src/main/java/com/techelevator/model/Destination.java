@@ -13,9 +13,27 @@ public class Destination {
 	private String state;
 	private String zip_code;
 	private String imgUrl;
+	private String iconUrl;
 	private String openFrom;
 	private String openTo;
 	private String openOnWeekends;
+	private String wiki;
+	
+	public String getWiki() {
+		return wiki;
+	}
+
+	public void setWiki(String wiki) {
+		this.wiki = wiki;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
 	
 	public String getImgUrl() {
 		return imgUrl;
