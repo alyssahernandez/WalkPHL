@@ -14,7 +14,7 @@
     </section>
     <br>
     <div class="container">
-      <div class="card" v-for="badge in badges" :key="badge.badgeId">
+      <div class="card box" v-for="badge in badges" :key="badge.badgeId">
         <div class="card-content">
           <div class="media">
             <div class="media-left">
