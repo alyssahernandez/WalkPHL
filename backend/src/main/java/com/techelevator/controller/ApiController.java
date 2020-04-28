@@ -69,8 +69,7 @@ public class ApiController {
     }
     
     @RequestMapping(path = "/admin-submit", method = RequestMethod.POST)
-    public Destination createNewDestination(@RequestBody Destination destination) {
+    public void createNewDestination(@RequestBody Destination destination) {
 		destinationDao.createDestination(destination);
-		return destination;
 	}
  }

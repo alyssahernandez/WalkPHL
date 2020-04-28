@@ -147,8 +147,9 @@ export default {
               openOnWeekends: '',
               category: '',
               imgUrl: 'art.png'
-
-          },
+          }
+      };
+    },
     computed: {
       userLoggedIn() {
         return (auth.getToken() != null);
@@ -159,7 +160,7 @@ export default {
         fetch(`${process.env.VUE_APP_REMOTE_API}/api/admin-submit`, {
           method: 'POST',
           headers: {
-            Authorization: 'Bearer ' + auth.getToken(),
+             Authorization: 'Bearer ' + auth.getToken(),
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
@@ -177,7 +178,7 @@ export default {
         })
         .then((err) => console.log(err));
       },
-      }}}};
+      }};
 </script>
 
 <style>

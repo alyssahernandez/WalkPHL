@@ -42,9 +42,9 @@
                 Contact
               </a>
               <hr class="navbar-divider">
-              <a class="navbar-item">
+              <router-link class="navbar-item" :to="{name: 'adminfeatures'}">
                 Admin Features
-              </a>
+              </router-link>
             </div>
           </div> 
 
