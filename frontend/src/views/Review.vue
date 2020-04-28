@@ -1,7 +1,20 @@
 <template>
-  <div class="container">
-    <div class="box" v-for="review in reviews" :key="review.review_id">
-  <article class="media">
+  <div>
+    <section class="hero is-info">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Reviews
+          </h1>
+          <h2 class="subtitle">
+            Write about your experience!
+          </h2>
+        </div>
+      </div>
+    </section>
+    <br>
+    <div class="container box" v-for="review in reviews" :key="review.review_id">
+    <article class="media">
     <div class="media-left">
       <figure class="image is-64x64">
         <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
@@ -28,8 +41,8 @@
         </div>
       </nav>
     </div>
-  </article>
-</div>
+    </article>
+    </div>
   </div>
 </template>
 
@@ -64,7 +77,7 @@ export default {
       .catch(err => {console.log(err)})
     }
   },
-  created(){
+  created() {
    this.reviews = this.getReviews();
   }
 
