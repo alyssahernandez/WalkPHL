@@ -23,15 +23,15 @@ public class JdbcDestinationDao implements DestinationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
-@Override
-public List<Destination> getAllDestinations()
-{
-	String query = "SELECT * FROM destination";
-	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
-	List<Destination> destinations = mapRowSetToDestinations(results);
-	return destinations;
-}
-    
+	@Override
+	public List<Destination> getAllDestinations()
+	{
+		String query = "SELECT * FROM destination";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+		List<Destination> destinations = mapRowSetToDestinations(results);
+		return destinations;
+	}
+
     // TODO: This likely won't be needed. Pull destinations, filter by name, pull info from Google by name, etc.
     @Override
     public Destination getDestination(Integer destination_id)
