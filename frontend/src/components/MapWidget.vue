@@ -30,7 +30,7 @@
 
        <!-- user selects transportation type -->
       <div>
-        <select id="type" v-show="choseDestination">
+        <select id="type" v-show="!choseDestination">
           <option disabled selected value> -- select -- </option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -44,15 +44,15 @@
 
         <div class="container" v-show="!choseDestination">
           <div class="box destination-list" v-bind:id="destination.destinationId" v-on:click="chooseDestination(destination)" v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">
-            <img :src="`${destination.imgUrl}`" />
+            <img :src="require(`../assets/images/${destination.imgUrl}`)"/>
             <h4>{{destination.name}}</h4>
             <p>{{destination.description}}</p>
             <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
           </div>
         </div>
 
-        <div v-show="choseDestination">
-
+        <div v-if="choseDestination">
+          <p>{{destinationChoice.name}}</p>
         </div>
 
       </div>
@@ -164,7 +164,7 @@ export default {
           lat: '',
           lng: ''
         },
-        destinationName: '',
+        destinationChoice: null,
         review: {
           username: auth.getUser().sub,
           title: '',
@@ -231,11 +231,11 @@ export default {
         this.choseDestination = true;
         console.log("hi chosedestination is now " + this.choseDestination);
         console.log(destination);
+        this.destinationChoice = destination;
+        console.log(this.destinationChoice);
       },
       showDestinationDivs() {
-        this.choseDestination = false;
-        document.getElementById('type').value = '';
-        
+        this.choseDestination = false;        
       },
       swipeUpSidebar() {
         let swipeDiv = document.getElementById("swiper");
