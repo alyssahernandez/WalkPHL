@@ -5,6 +5,9 @@
     <!-- entire side bar -->
     <div v-show="panel" id="right-panel">
 
+      <!-- back button to go back to destination choice list -->
+      <button v-show="choseDestination" class="button" id="back-button" v-on:click="showDestinationDivs">&#10229; Back</button>
+
       <!-- buttons at the top -->
       <div class="location-buttons" v-show="choseDestination">
         <button id="dir" class="button is-primary">Get Directions</button>
@@ -12,19 +15,8 @@
         <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
       </div>
 
-      <!-- div for get directions form -->
-      <div>
-        
-        <!-- user selects transportation type -->
-        <select id="type">
-          <option disabled selected value> -- select -- </option>
-          <option value="WALKING">Walk PHL!</option>
-          <option value="BICYCLING">Bicycle</option>
-          <option value="DRIVING">Drive</option>
-          <option value="TRANSIT">Public Transit</option>
-        </select >
-
-        <!-- user selects radius -->
+      <!-- user selects radius -->
+      <div class="location-buttons" v-show="!choseDestination">
         <select id="radius">
           <option disabled selected value> -- select -- </option>
           <option value="250">250 Meters</option>
@@ -34,25 +26,35 @@
           <option value="8046">Five Miles</option>
           <option value="16093">Ten Miles</option>
         </select>
+      </div>
 
-        <!-- user selects end point
-        <select id="end">
+       <!-- user selects transportation type -->
+      <div>
+        <select id="type" v-show="choseDestination">
           <option disabled selected value> -- select -- </option>
-          <option v-for="destination in destinations" v-bind:id="destination.destinationId" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
-        </select> -->
-
+          <option value="WALKING">Walk PHL!</option>
+          <option value="BICYCLING">Bicycle</option>
+          <option value="DRIVING">Drive</option>
+          <option value="TRANSIT">Public Transit</option>
+        </select>
       </div>
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
-        <div class="container">
-          <div class="box destination-list" v-bind:id="destination.destinationId" v-on:click="chooseDestination" v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">
+
+        <div class="container" v-show="!choseDestination">
+          <div class="box destination-list" v-bind:id="destination.destinationId" v-on:click="chooseDestination(destination)" v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">
             <img :src="`${destination.imgUrl}`" />
             <h4>{{destination.name}}</h4>
             <p>{{destination.description}}</p>
             <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
           </div>
         </div>
+
+        <div v-show="choseDestination">
+
+        </div>
+
       </div>
 
       <!-- displays all reviews (not a particular location yet) -->
@@ -137,118 +139,6 @@
     <!-- displays the map -->
     <div id="map" v-bind:class="{'maps': panel}"></div>
 
-
-
-<!-- ORIGINAL CODE BY BROOKS
-        <div v-show="panel" id="right-panel">
-          <div class="location-buttons">
-            <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
-            <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
-            <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
-          </div>
-
-          <div>
-            <select id="type">
-              <option disabled selected value> -- select -- </option>
-              <option value="WALKING">Walk PHL!</option>
-              <option value="BICYCLING">Bicycle</option>
-              <option value="DRIVING">Drive</option>
-              <option value="TRANSIT">Public Transit</option>
-            </select >
-
-            <select id="radius">
-              <option disabled selected value> -- select -- </option>
-              <option value="250">250 Meters</option>
-              <option value="804">Half Mile</option>
-              <option value="1607">One Mile</option>
-              <option value="3214">Two Miles</option>
-              <option value="8046">Five Miles</option>
-              <option value="16093">Ten Miles</option>
-            </select>
-
-            <select id="end">
-              <option disabled selected value> -- select -- </option>
-              <option v-for="destination in destinations" v-bind:id="destination.destinationId" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
-            </select>
-          </div>
-
-            <div id="destination-div">
-              <div class="container">
-                <div class="box" v-for="destination in destinations" :key="destination.destinationId" v-on:click="showDestinationInfo(destination)">
-                   <img :src="`${destination.imgUrl}`" />
-                   <h4>{{destination.name}}</h4>
-                   <p>{{destination.description}}</p>
-                   <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="this.displayReviews" id="review-div">
-              <div class="container">
-                <div class="box" v-for="review in reviews" :key="review.review_id">
-                  <article class="media">
-                    <div class="media-left">
-                      <figure class="image is-64x64">
-                        <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-                      </figure>
-                    </div>
-                  <div class="media-content">
-                    <div class="content">
-                      <p>
-                        <strong>{{review.username}}</strong>
-                        <br>
-                        <br>
-                        <strong>{{review.title}}</strong>
-                        <br>
-                        {{review.review}}
-                      </p>
-                  </div>
-                  <nav class="level is-mobile">
-                    <div class="level-left">
-                      <p class="level-item">
-                        <span>
-                          {{review.review_date}}
-                        </span>
-                      </p>
-                    </div>
-                  </nav>
-                </div>
-              </article>
-            </div>
-          </div>
-              <form @submit.prevent="leaveReview" v-if="userLoggedIn">
-                <p><strong>Leave a review?</strong></p>
-                <label for="title">
-                  <input 
-                    type="text"
-                    v-model="review.title"
-                    placeholder="Review Title"
-                    id="title"
-                    class="input"
-                    maxlength="40"
-                    required
-                    autofocus
-                  />
-                </label>
-                <label for="review">
-                  <textarea
-                    type="text"
-                    v-model="review.review"
-                    placeholder="Review..."
-                    id="review" 
-                    class="textarea is-primary"
-                    maxlength="255"
-                    required
-                    autofocus>
-                  </textarea>
-                </label>
-                <button class="button" type="submit">Submit Review</button>
-              </form>
-            </div>
-          </div>
-          <div id="map" v-bind:class="{'maps': panel}"></div>
-
--->         
   </div>    
 </template>
 
@@ -337,9 +227,15 @@ export default {
         })
         .catch(err => {console.log(err)})
       },
-      chooseDestination() {
+      chooseDestination(destination) {
         this.choseDestination = true;
         console.log("hi chosedestination is now " + this.choseDestination);
+        console.log(destination);
+      },
+      showDestinationDivs() {
+        this.choseDestination = false;
+        document.getElementById('type').value = '';
+        
       },
       swipeUpSidebar() {
         let swipeDiv = document.getElementById("swiper");
@@ -553,34 +449,39 @@ export default {
                calculateAndDisplayRoute(directionsService, directionsRenderer);
              }
 
+            document.getElementById('back-button').addEventListener('click', function() {
+              if (directionsRenderer.map != null) {
+                  directionsRenderer.setMap(null);
+                  directionsRenderer.setPanel(null);
+                  document.getElementById('dir').innerText = "Get Directions";
+              }
+            });
+
             // // Adding an on-click to our "Get Directions" button, which runs the above function on click & removes directions upon re-clicking
              document.getElementById('dir').addEventListener('click', function() {
                    if (directionsRenderer.map != null) {
                     directionsRenderer.setMap(null);
                     directionsRenderer.setPanel(null);
+                    document.getElementById('dir').innerText = "Get Directions";
                    } else {
                       directionsRenderer.setPanel(document.getElementById('right-panel'));
                       directionsRenderer.setMap(map); 
                       onChangeHandlerDirections;
+                      document.getElementById('dir').innerText = "Hide Directions";
                    }
              });
 
              // Event listeners for menu selections (destination/endpoint, mode of transportation, and radius from user)
-
-            var end = '';
-              
+            var end = '';              
             const destinationList = document.querySelectorAll('.destination-list');
             destinationList.forEach( (destination) => {
                 destination.addEventListener('click', () => {
                   onChangeHandlerDirections;
                   end = destination.innerText;
                   console.log(end);
-                }); 
-                       
+                });                        
             });
             
-
-
              //document.getElementById('end').addEventListener('click', onChangeHandlerDirections);
              document.getElementById('type').addEventListener('change', onChangeHandlerDirections);
           
