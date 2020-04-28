@@ -1,7 +1,20 @@
 <template>
     <div id="app" class="admin-features">
-      <form action= "adminfeatures" method="POST">
+      <form @submit.prevent="addDestination">
                 <p><strong>Add a destination</strong></p>
+                <label for="name">
+                  Name
+                  <input 
+                    type="text"
+                    v-model="destination.name"
+                    placeholder="Name"
+                    id="name"
+                    class="input"
+                    maxlength="30"
+                    required
+                    autofocus
+                  />
+                </label>
                 <label for="latitude">
                   Latitude
                   <input 
@@ -93,13 +106,13 @@
                     autofocus
                   />
                 </label>
-                <label for="weekends">
+                <label for="openOnWeekends">
                  Open weekends? True/False
                   <input 
                     type="text"
-                    v-model="destination.weekends"
+                    v-model="destination.openOnWeekends"
                     placeholder="True"
-                    id="weekends"
+                    id="openOnWeekends"
                     class="input"
                     maxlength="100"
                     required
@@ -121,7 +134,9 @@ export default {
     },
     data() {
       return {
+              
           destination: {
+              name: '',
               latitude: '',
               longitude: '',
               city: '',
@@ -139,8 +154,9 @@ export default {
         return (auth.getToken() != null);
       }
       },
+      methods: {
       addDestination() {
-        fetch(`${process.env.VUE_APP_REMOTE_API}/api/admindestination`, {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/api/admin-submit`, {
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + auth.getToken(),
@@ -148,8 +164,10 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(this.destination)
+          
         })
         .then((response) => {
+          console.log("test output");
           if(response.ok) {
             this.$router.push({ path: '/adminfeatures'});
             console.log("success! destination added");
@@ -159,7 +177,7 @@ export default {
         })
         .then((err) => console.log(err));
       },
-      }}};
+      }}}};
 </script>
 
 <style>
