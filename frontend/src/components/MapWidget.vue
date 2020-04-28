@@ -4,42 +4,38 @@
 
     <!-- entire side bar -->
     <div v-show="panel" id="right-panel">
+      
       <!-- back button to go back to destination choice list -->
-      <button
-        v-show="choseDestination"
-        class="button"
-        id="back-button"
-        v-on:click="showDestinationDivs"
-      >&#10229; Back</button>
+      <button v-show="choseDestination" class="button" id="back-button" v-on:click="showDestinationDivs">&#10229; Back</button>
 
       <!-- buttons at the top -->
       <div class="location-buttons" v-show="choseDestination">
-        <button id="dir" v-on:click="renderDirections" class="button is-primary">Get Directions</button>
+        <button id="dir" v-on:click="renderDirections" class="button is-primary" >Get Directions</button>
         <button
           class="button is-primary button-2"
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
-        <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn(currentDestination.destinationId)">Check-In</button>
       </div>
 
       <!-- user selects radius -->
       <div class="location-buttons" v-show="!choseDestination">
         <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
-          <option disabled selected value>-- select --</option>
+          <option disabled selected value>Limit search radius to:</option>
           <option value="250">250 Meters</option>
           <option value="804">Half Mile</option>
           <option value="1607">One Mile</option>
-          <option value="3214">Two Miles</option>
-          <option value="8046">Five Miles</option>
-          <option value="16093">Ten Miles</option>
+          <option value="4821">Three Miles</option>
+          <option value="16092">Ten Miles</option>
+          <option value="100000000000000">I'm down to travel</option>
         </select>
       </div>
 
       <!-- user selects transportation type -->
       <div>
         <select id="type" v-show="!choseDestination" v-model="currentTravelMode">
-          <option disabled selected value>-- select --</option>
+          <option disabled selected value>Select a travel mode:</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
           <option value="DRIVING">Drive</option>
@@ -59,17 +55,17 @@
             v-bind:value="destination.name"
           >
             <img :src="require(`../assets/images/${destination.imgUrl}`)" />
-            <h4>{{destination.name}}</h4>
+            <h4><b>{{destination.name}}</b></h4>
             <p>{{destination.description}}</p>
             <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
           </div>
         </div>
 
-        <div v-if="choseDestination" class="box">
+        <div v-if="choseDestination" class="box center-text">
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)"/>
-          <h4>{{currentDestination.name}}</h4>
+          <h4><b>{{currentDestination.name}}</b></h4>
           <!-- we need to put the category of the location here when we have it returned from the backend
-          <p>{{destionationChoice.category}}</p> -->
+          <p>{{destinationChoice.category}}</p> -->
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
         </div>
@@ -157,13 +153,13 @@
 </template>
 
 <script>
+
 import gmapsInit from "./../utils/gmaps";
 import auth from "../auth";
 
 let google = null;
 let geocoder = null;
 let map = null;
-//let icons = null;
 let directionsService = null;
 let directionsRenderer = null
 
@@ -173,10 +169,17 @@ const camden =   {
     description: '...Nope',
     latitude: 39.9259, 
     longitude: -75.1196,
-    icon: {
-      url: "http://maps.google.com/mapfiles/kml/pal3/icon37.png",
-      //scaledSize: new google.maps.Size(50, 50)
-    }
+    iconUrl: 'danger.png'
+};
+
+const techelevator = {
+  name: 'What\'s this?',
+  category: 'secret',
+  description: 'Like our app? Find your way here to learn how to make your own',
+  latitude: 39.94939,
+  longitude: -75.169212,
+  iconUrl: 'question.png',
+  imgUrl: 'dmp.jpg'
 };
 
 function filterByRadius(location, pos) {
@@ -244,7 +247,6 @@ export default {
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
         return destination.name.match(filter);
-
       })
     },
     getReviews() {
@@ -364,40 +366,54 @@ export default {
         });
     },
     checkIn(destinationId) {
-      fetch(
-        `${process.env.VUE_APP_REMOTE_API}/profile/` +
-          this.username +
-          destinationId,
-        {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/api/check-in`, {
           method: "POST",
           headers: {
             Authorization: "Bearer " + auth.getToken(),
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(this.review)
+          body: JSON.stringify(this.username, destinationId)
         }
       )
         .then(response => {
           if (response.ok) {
             this.$router.push({ path: "/" });
-            console.log("success! review posted");
+            console.log("Successful login");
           } else {
-            console.log("error leaving review");
+            console.log(this.username);
+            console.log(destinationId);
+            console.log("Error logging in");
           }
         })
         .then(err => console.log(err));
     },
+
     addMarker(location) {
+
+      var scales = null;
+      if (location.category === 'camden') {
+        scales = new google.maps.Size(60, 60);
+      } else if (location.iconUrl === 'arts.png') {
+        scales = new google.maps.Size(35, 35);
+      } else {
+        scales = new google.maps.Size(30, 30);
+      }
+
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(location.latitude, location.longitude),
         map,
         title: location.name,
         draggable: false,
-        icon: location.icon
+        icon: {url: require(`../assets/images/${location.iconUrl}`), scaledSize: scales},
       });
+      let infowindow = null;
       marker.addListener(`dblclick`, () => this.markerClickHandler(marker));
-      let infowindow = new google.maps.InfoWindow({ content: '<h1>' + location.name + '</h1> <p>' + location.description + '</p>'});
+      if (location.category === 'secret') {
+        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <img src="' + require(`../assets/images/${location.imgUrl}`) + '" alt="a secret" height="150" width="150"/>'});
+      } else {
+        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + require(`../assets/images/${location.imgUrl}`) + '">View on Wikipedia</a></p>'});
+      }
       marker.addListener("click", function() {
         if (!this.displayInfo) {
           infowindow.open(map, marker);
@@ -407,8 +423,10 @@ export default {
           this.displayInfo = !this.displayInfo;
         }
       });
+
       this.markers.push(marker);
     },
+
     markerClickHandler(marker) {
       if (map.getZoom() == 17)
         map.setZoom(14);
@@ -461,6 +479,7 @@ export default {
   },
   created() {
     this.reviews = this.getReviews();
+    this.username = auth.getUser().sub;
   },
   async mounted() {
     await this.fetchDestinations();
@@ -512,6 +531,7 @@ export default {
       this.addMarker(location);
     });
     this.addMarker(camden);
+    this.addMarker(techelevator);
 
 
     // This sets an infowindow on our current location.
@@ -531,14 +551,8 @@ export default {
           document.getElementById("dir").innerText = "Get Directions";
         }
       });
-
-
-    // Calculates route from user position and that of a destination
   }
 };
-
-// TODO: Method that fetches these from DB, stores in locations array in data(). Iterate thru that.
-// These are only able to be referenced when declared inside of the script -- doesn't work when a data() field, even if initialized in the created() method.
 
 </script>
 
@@ -692,6 +706,15 @@ body {
 
 .hover-mouse:hover {
   cursor: pointer;
+}
+
+h4 {
+  text-align: center;
+  font-weight: bold;
+}
+
+.center-text {
+  text-align: center;
 }
 @media print {
   #map {
