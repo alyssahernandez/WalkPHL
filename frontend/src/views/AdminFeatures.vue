@@ -142,6 +142,7 @@
           <option value="false">False</option>
         </select>
       </label>
+
       <button class="button" type="submit">Submit Location</button>
     </form>
   </div>
@@ -191,7 +192,6 @@ export default {
         body: JSON.stringify(this.destination)
       })
         .then(response => {
-          console.log("test output");
           if (response.ok) {
             this.$router.push({ path: "/adminfeatures" });
             console.log("success! destination added");
