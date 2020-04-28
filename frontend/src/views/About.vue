@@ -15,9 +15,6 @@
                 <h1 class="title">
                     Earn Badges!
                 </h1>
-                <h2 class="subtitle">
-                    Hero subtitle
-                </h2>
                 <div class="container content is-medium">
                     <p> 
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
@@ -34,9 +31,6 @@
                 <h1 class="title">
                     Get Directions
                 </h1>
-                <h2 class="subtitle">
-                    Hero subtitle
-                </h2>
                 <div class="container content is-medium">
                     <p> 
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
@@ -53,9 +47,6 @@
                 <h1 class="title">
                     Write a Review
                 </h1>
-                <h2 class="subtitle">
-                    Hero subtitle
-                </h2>
                 <div class="container content is-medium">
                     <p> 
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
@@ -63,7 +54,10 @@
                         Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
                     </p>
                 </div>
-                <button class="button">Get Started!</button>
+                <br>
+                <router-link :to="{name: 'login'}" class="button" tag="button" v-if="notSignedIn">
+                    Get Started!
+                </router-link>
             </div>
         </div>
     </section>
@@ -71,9 +65,30 @@
 </template>
 
 <script>
-export default {
+import auth from '../auth'
 
+export default {
+   data() {
+       return {
+        notSignedIn: true
+       }
+   },
+   methods: {
+       
+       isSignedIn() {
+           if(auth.getToken()) {
+               this.notSignedIn = false;
+           } else {
+               this.notSignedIn = true;
+           }
+       }
+   },
+   created() {
+       this.notSignedIn = this.isSignedIn();
+   }
+   
 }
+
 </script>
 
 <style>

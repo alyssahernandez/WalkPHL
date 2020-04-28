@@ -24,11 +24,17 @@ public class JdbcDestinationDao implements DestinationDao {
     }
     
     @Override
-    public List<Destination> getAllDestinations()
-    {
+    public List<Destination> getAllDestinations() {
+    	List<Destination> destinations = new ArrayList<>();
+    	
     	String query = "SELECT * FROM destination";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
-    	List<Destination> destinations = mapRowSetToDestinations(results);
+    	while(results.next()) {
+    		Destination destination = mapRowSetToDestination(results);
+    		
+    		destinations.add(destination);
+    	}
+    
     	return destinations;
     }
     

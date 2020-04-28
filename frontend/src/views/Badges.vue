@@ -1,20 +1,35 @@
 <template>
-  <div class="container">
-    <div class="card" v-for="badge in badges" :key="badge.badgeId">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <figure class="image is-128x128">
-              <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
-            </figure>
-          </div>
-          <div class="media-content">
-          <p class="title is-4">{{badge.name}}</p>
-          <p class="subtitle is-6">{{badge.category}}</p>
-            <div class="content">
-              <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
-              {{badge.description}}
-              <br>
+  <div>
+    <section class="hero is-info">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Badges
+          </h1>
+          <h2 class="subtitle">
+            Ooooo shiny
+          </h2>
+        </div>
+      </div>
+    </section>
+    <br>
+    <div class="container">
+      <div class="card" v-for="badge in badges" :key="badge.badgeId">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-128x128">
+                <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures" >
+              </figure>
+            </div>
+            <div class="media-content">
+            <p class="title is-4">{{badge.name}}</p>
+            <p class="subtitle is-6">{{badge.category}}</p>
+              <div class="content">
+                <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
+                {{badge.description}}
+                <br>
+              </div>
             </div>
           </div>
         </div>
