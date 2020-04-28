@@ -56,6 +56,7 @@
           >
             <img :src="require(`../assets/images/${destination.imgUrl}`)" />
             <h4><b>{{destination.name}}</b></h4>
+            <p>{{destination.category}}</p>
             <p>{{destination.description}}</p>
             <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
           </div>
@@ -64,8 +65,7 @@
         <div v-if="choseDestination" class="box center-text">
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)"/>
           <h4><b>{{currentDestination.name}}</b></h4>
-          <!-- we need to put the category of the location here when we have it returned from the backend
-          <p>{{destinationChoice.category}}</p> -->
+          <p>{{currentDestination.category}}</p>
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
         </div>
@@ -545,11 +545,11 @@ export default {
     document
       .getElementById("back-button")
       .addEventListener("click", function() {
-        if (directionsRenderer.map != null) {
-          directionsRenderer.setMap(null);
-          directionsRenderer.setPanel(null);
-          document.getElementById("dir").innerText = "Get Directions";
-        }
+        directionsRenderer.setMap(null);
+        directionsRenderer.setPanel(null);
+        document.getElementById("dir").innerText = "Get Directions";
+        document.getElementById("dir").innerText = "Get Directions";
+        this.choseDestination = false;
       });
   }
 };

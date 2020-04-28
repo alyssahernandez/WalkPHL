@@ -30,7 +30,7 @@ public class DestinationController {
 	}
 	
 	@PostMapping("/profile/{username}/{destinationId}") 
-	public void checkIn(@PathVariable String username, @PathVariable Integer destinationId) {
+	public void checkIn(@PathVariable String username, @PathVariable Long destinationId) {
 		userDao.checkIntoDestination(username, destinationId);
 	}
 }
