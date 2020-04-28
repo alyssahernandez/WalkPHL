@@ -23,14 +23,14 @@ public class JdbcDestinationDao implements DestinationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
-    @Override
-    public List<Destination> getAllDestinations()
-    {
-    	String query = "SELECT * FROM destination";
-    	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
-    	List<Destination> destinations = mapRowSetToDestinations(results);
-    	return destinations;
-    }
+@Override
+public List<Destination> getAllDestinations()
+{
+	String query = "SELECT * FROM destination";
+	SqlRowSet results = jdbcTemplate.queryForRowSet(query);
+	List<Destination> destinations = mapRowSetToDestinations(results);
+	return destinations;
+}
     
     // TODO: This likely won't be needed. Pull destinations, filter by name, pull info from Google by name, etc.
     @Override
@@ -71,29 +71,29 @@ public class JdbcDestinationDao implements DestinationDao {
     	return i;
     }
     
-    private List<Destination> mapRowSetToDestinations(SqlRowSet results)
-    {
-    	List<Destination> destinations = new ArrayList<>();
-    	while (results.next())
-    	{
-    		Destination d = mapRowSetToDestination(results);
-    		d.setCity(results.getString("city"));
-    		d.setDescription(results.getString("description"));
-    		d.setDestinationId(results.getInt("destination_id"));
-    		d.setName(results.getString("name"));
-    		d.setState(results.getString("state"));
-    		d.setLatitude(results.getString("lat"));
-    		d.setLongitude(results.getString("long"));
-    		d.setZip_code(results.getString("zip_code"));
-    		d.setCategoryId(results.getString("category_id"));
-    		d.setOpenFrom(results.getString("open_from"));
-    		d.setOpenOnWeekends(results.getString("weekends"));
-    		d.setOpenTo(results.getString("open_to"));
-    		d.setImgUrl(results.getString("img_url"));
-    		destinations.add(d);
-    	}
-    	return destinations;
-    }
+private List<Destination> mapRowSetToDestinations(SqlRowSet results)
+{
+	List<Destination> destinations = new ArrayList<>();
+	while (results.next())
+	{
+		Destination d = mapRowSetToDestination(results);
+		d.setCity(results.getString("city"));
+		d.setDescription(results.getString("description"));
+		d.setDestinationId(results.getInt("destination_id"));
+		d.setName(results.getString("name"));
+		d.setState(results.getString("state"));
+		d.setLatitude(results.getString("lat"));
+		d.setLongitude(results.getString("long"));
+		d.setZip_code(results.getString("zip_code"));
+		d.setCategoryId(results.getString("category_id"));
+		d.setOpenFrom(results.getString("open_from"));
+		d.setOpenOnWeekends(results.getString("weekends"));
+		d.setOpenTo(results.getString("open_to"));
+		d.setImgUrl(results.getString("img_url"));
+		destinations.add(d);
+	}
+	return destinations;
+}
     
     private Destination mapRowSetToDestination(SqlRowSet results)
     {

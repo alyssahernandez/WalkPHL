@@ -1,12 +1,153 @@
 <template>
-      <div id="app" class="map-widget">
-        <!-- <div id="swiper" v-touch:swipe.top="swipeUpSidebar" v-touch:swipe.bottom="swipeDownSidebar"> -->
+  <div id="app" class="map-widget">
+    <!-- <div id="swiper" v-touch:swipe.top="swipeUpSidebar" v-touch:swipe.bottom="swipeDownSidebar"> -->
+
+    <!-- entire side bar -->
+    <div v-show="panel" id="right-panel">
+
+      <!-- buttons at the top -->
+      <div class="location-buttons" v-show="choseDestination">
+        <button id="dir" class="button is-primary">Get Directions</button>
+        <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
+        <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
+      </div>
+
+      <!-- div for get directions form -->
+      <div>
+        
+        <!-- user selects transportation type -->
+        <select id="type">
+          <option disabled selected value> -- select -- </option>
+          <option value="WALKING">Walk PHL!</option>
+          <option value="BICYCLING">Bicycle</option>
+          <option value="DRIVING">Drive</option>
+          <option value="TRANSIT">Public Transit</option>
+        </select >
+
+        <!-- user selects radius -->
+        <select id="radius">
+          <option disabled selected value> -- select -- </option>
+          <option value="250">250 Meters</option>
+          <option value="804">Half Mile</option>
+          <option value="1607">One Mile</option>
+          <option value="3214">Two Miles</option>
+          <option value="8046">Five Miles</option>
+          <option value="16093">Ten Miles</option>
+        </select>
+
+        <!-- user selects end point
+        <select id="end">
+          <option disabled selected value> -- select -- </option>
+          <option v-for="destination in destinations" v-bind:id="destination.destinationId" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
+        </select> -->
+
+      </div>
+
+      <!-- displays and loops through all of the locations -->
+      <div id="destination-div">
+        <div class="container">
+          <div class="box destination-list" v-bind:id="destination.destinationId" v-on:click="chooseDestination" v-for="destination in destinations" :key="destination.destinationId" v-bind:value="destination.name">
+            <img :src="`${destination.imgUrl}`" />
+            <h4>{{destination.name}}</h4>
+            <p>{{destination.description}}</p>
+            <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- displays all reviews (not a particular location yet) -->
+      <div v-if="this.displayReviews" id="review-div">
+        <div class="container">
+          <div class="box" v-for="review in reviews" :key="review.review_id">
+            <article class="media">
+
+              <!-- placeholder for review image -->
+              <div class="media-left">
+                <figure class="image is-64x64">
+                  <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                </figure>
+              </div>
+
+              <div class="media-content">
+
+                <!-- review info -->
+                <div class="content">
+                  <p>
+                  <strong>{{review.username}}</strong>
+                  <br>
+                  <br>
+                  <strong>{{review.title}}</strong>
+                  <br>
+                  {{review.review}}
+                  </p>
+                </div>
+
+                <!-- review date which isn't showing? -->
+                <nav class="level is-mobile">
+                  <div class="level-left">
+                    <p class="level-item">
+                      <span>
+                        {{review.review_date}}
+                      </span>
+                    </p>
+                  </div>
+                </nav>
+
+              </div>
+
+            </article>
+          </div>
+        </div>
+
+        <!-- user can leave a review if they're logged in -->
+        <form @submit.prevent="leaveReview" v-if="userLoggedIn">
+          <p><strong>Leave a review?</strong></p>
+
+          <label for="title">
+            <input 
+              type="text"
+              v-model="review.title"
+              placeholder="Review Title"
+              id="title"
+              class="input"
+              maxlength="40"
+              required
+              autofocus
+            />
+          </label>
+
+          <label for="review">
+            <textarea
+              type="text"
+              v-model="review.review"
+              placeholder="Review..."
+              id="review" 
+              class="textarea is-primary"
+              maxlength="255"
+              required
+              autofocus>
+            </textarea>
+          </label>
+
+          <button class="button" type="submit">Submit Review</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- displays the map -->
+    <div id="map" v-bind:class="{'maps': panel}"></div>
+
+
+
+<!-- ORIGINAL CODE BY BROOKS
         <div v-show="panel" id="right-panel">
           <div class="location-buttons">
             <button id="dir" class="button is-primary" v-on:click="showDirectionsToDestination">Get Directions</button>
             <button class="button is-primary button-2" v-if="userLoggedIn" v-on:click="reviewButtonClicked">Show Reviews</button>
             <button class="button is-primary button-3" v-if="userLoggedIn">Check-In</button>
-            
+          </div>
+
+          <div>
             <select id="type">
               <option disabled selected value> -- select -- </option>
               <option value="WALKING">Walk PHL!</option>
@@ -14,6 +155,7 @@
               <option value="DRIVING">Drive</option>
               <option value="TRANSIT">Public Transit</option>
             </select >
+
             <select id="radius">
               <option disabled selected value> -- select -- </option>
               <option value="250">250 Meters</option>
@@ -23,12 +165,13 @@
               <option value="8046">Five Miles</option>
               <option value="16093">Ten Miles</option>
             </select>
+
             <select id="end">
               <option disabled selected value> -- select -- </option>
               <option v-for="destination in destinations" v-bind:id="destination.destinationId" :key="destination.destinationId" v-bind:value="destination.name">{{destination.name}}</option>
             </select>
-
           </div>
+
             <div id="destination-div">
               <div class="container">
                 <div class="box" v-for="destination in destinations" :key="destination.destinationId" v-on:click="showDestinationInfo(destination)">
@@ -39,6 +182,7 @@
                 </div>
               </div>
             </div>
+
             <div v-if="this.displayReviews" id="review-div">
               <div class="container">
                 <div class="box" v-for="review in reviews" :key="review.review_id">
@@ -103,9 +247,9 @@
             </div>
           </div>
           <div id="map" v-bind:class="{'maps': panel}"></div>
-      </div>
-      
 
+-->         
+  </div>    
 </template>
 
 <script>
@@ -119,7 +263,10 @@ export default {
     },
     data() {
       return {
+        choseDestination: false,
+        end: 'end',
         hasPosition: false,
+        showDestination: false,
         num: 1,
         displayInfo: false,
         displayReviews: false,
@@ -190,6 +337,10 @@ export default {
         })
         .catch(err => {console.log(err)})
       },
+      chooseDestination() {
+        this.choseDestination = true;
+        console.log("hi chosedestination is now " + this.choseDestination);
+      },
       swipeUpSidebar() {
         let swipeDiv = document.getElementById("swiper");
         swipeDiv.classList.add('swipeUp');
@@ -244,12 +395,13 @@ export default {
       reviewButtonClicked() {
         this.displayReviews = !this.displayReviews;
       },
+      /* removed this from a v-on:click event on the loop through destinations list
       showDestinationInfo(destination) {
         console.log(destination);
         this.destinationPosition.lat = destination.lat; 
         this.destinationPosition.long = destination.lng;
         console.log(this.destinationPosition);
-      },
+      }, */
       calculateAndDisplayRoute(directionsService, directionsRenderer) {
         console.log("method reached");
         directionsService.route({
@@ -266,14 +418,8 @@ export default {
             window.alert('Directions request failed due to ' + status);
           }
         });
-      },
-      showDirectionsToDestination() {
-        
-        
-        this.calculateAndDisplayRoute(this.directionsService, this.directionsRenderer);
       }
     },
-
 
     created() {
       this.reviews = this.getReviews();
@@ -364,12 +510,12 @@ export default {
           }); 
           markers.push(marker);
         }
-        
+
+
         this.destinations
         .map((location) => {     
             addMarker(location);
-        });
-        
+        });        
 
         // The next few lines requests a user's position (I was using Vue's before; this is Google's)
         if (navigator.geolocation) {
@@ -395,8 +541,7 @@ export default {
               for(var i = 0; i < markers.length; i++){
                   markers[i].setMap(null);
               }
-              this.destinations
-                .map((location) => {     
+              this.destinations.map((location) => {     
                   if (filterEm(location) <= document.getElementById('radius').value) {
                     addMarker(location);
                   }
@@ -421,13 +566,28 @@ export default {
              });
 
              // Event listeners for menu selections (destination/endpoint, mode of transportation, and radius from user)
-             document.getElementById('end').addEventListener('change', onChangeHandlerDirections);
-             document.getElementById('type').addEventListener('change', onChangeHandlerDirections);
-             
-             // Calculates route from user position and that of a destination.
-             function calculateAndDisplayRoute(directionsService, directionsRenderer) {
 
-               var end = document.getElementById('end').value;
+            var end = '';
+              
+            const destinationList = document.querySelectorAll('.destination-list');
+            destinationList.forEach( (destination) => {
+                destination.addEventListener('click', () => {
+                  onChangeHandlerDirections;
+                  end = destination.innerText;
+                  console.log(end);
+                }); 
+                       
+            });
+            
+
+
+             //document.getElementById('end').addEventListener('click', onChangeHandlerDirections);
+             document.getElementById('type').addEventListener('change', onChangeHandlerDirections);
+          
+             // Calculates route from user position and that of a destination.
+            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+
+               // var end = document.getElementById('end').value;
                var type = document.getElementById('type').value;
               
                directionsService.route({

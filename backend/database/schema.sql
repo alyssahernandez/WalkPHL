@@ -92,7 +92,6 @@ CREATE TABLE user_destination
         destination_id int not null,
         date_visited date not null,
         
-        constraint pk_user_destination primary key (username, destination_id),
         constraint fk_user_destination_users foreign key (username) references users (username),
         constraint fk_user_destination_destination foreign key (destination_id) references destination (destination_id)
 );
