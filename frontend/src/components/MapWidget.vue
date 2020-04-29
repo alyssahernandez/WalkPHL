@@ -76,7 +76,7 @@
       <!-- displays all reviews (not a particular location yet) -->
       <div v-if="this.displayReviews" id="review-div">
         <div class="container">
-          <div class="box" v-for="review in reviews" :key="review.review_id">
+          <div class="box" v-for="review in filterReviews()" :key="review.review_id">
             <article class="media">
               <!-- placeholder for review image -->
               <div class="media-left">
@@ -262,6 +262,11 @@ export default {
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
         return (destination.name.match(filter) || destination.category.match(filter));
+      })
+    },
+    filterReviews() {
+      return this.reviews.filter((review) => {
+        return (review.destinationId == this.currentDestination.destinationId);
       })
     },
     getReviews() {
