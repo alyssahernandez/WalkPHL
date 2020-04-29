@@ -45,6 +45,11 @@ public class ReviewsController {
 		return reviewDAO.getRecentReviews();
 	}
 	
+    @RequestMapping(path = "/leave-review", method = RequestMethod.POST)
+    public void leaveReview(@RequestBody Review review) {	
+    	reviewDAO.createReview(review);   	
+    }
+	
 	/*
 	@PostMapping(path = "/profile/{username}/{destination}")
 	@ResponseStatus(HttpStatus.CREATED)

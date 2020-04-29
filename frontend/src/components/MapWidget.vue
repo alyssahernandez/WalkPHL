@@ -16,11 +16,11 @@
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
-        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn(currentDestination.destinationId)">Check-In</button>
+        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
       </div>
 
       <!-- user selects radius -->
-      <div class="location-buttons" v-show="!choseDestination">
+      <div class="location-buttons select" v-show="!choseDestination">
         <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
           <option disabled selected value>Limit search radius to:</option>
           <option value="250">250 Meters</option>
@@ -33,8 +33,8 @@
       </div>
 
       <!-- user selects transportation type -->
-      <div>
-        <select id="type" v-show="!choseDestination" v-model="currentTravelMode">
+      <div class="location-buttons select" v-show="!choseDestination">
+        <select id="type" v-model="currentTravelMode">
           <option disabled selected value>Select a travel mode:</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -45,7 +45,7 @@
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
-        <input type="text" class="input" placeholder="Search Destination" v-model="searchText">
+        <input type="text" class="input location-buttons" placeholder="Search Destination" v-show="!choseDestination" v-model="searchText">
         <div class="container" v-show="!choseDestination">
           <div
             class="box destination-list hover-mouse"
@@ -200,6 +200,15 @@ function filterByRadius(location, pos) {
   return d;
 }
 
+/* for the life of me i cannot get this to work - just trying to
+add a class to the drop-down buttons to make them more visible
+let filterButtons = document.querySelectorAll('.location-buttons');
+filterButtons.forEach(button => {
+  button.addEventListener("hover", () =>
+    button.classList.add("is-primary")
+  );
+}); */
+
 export default {
   name: "map-widget",
   components: {},
@@ -223,9 +232,10 @@ export default {
       review: {
         username: auth.getUser().sub,
         title: "",
-        review: ""
+        review: "",
+        destinationId: "",
       },
-      username: null,
+      username: auth.getUser().sub,
       reviews: null,
       destinations: null,
       radiusFilter: '',
@@ -247,7 +257,7 @@ export default {
     filterSearch() {
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
-        return destination.name.match(filter);
+        return (destination.name.match(filter) || destination.category.match(filter));
       })
     },
     getReviews() {
@@ -315,7 +325,8 @@ export default {
       }, 2000);
     },
     leaveReview() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
+      this.review.destinationId = this.currentDestination.destinationId;
+      fetch(`${process.env.VUE_APP_REMOTE_API}/leave-review`, {
         method: "POST",
         headers: {
           Authorization: "Bearer " + auth.getToken(),
@@ -366,7 +377,7 @@ export default {
           console.log(err);
         });
     },
-    checkIn(destinationId) {
+    checkIn() {
       fetch(`${process.env.VUE_APP_REMOTE_API}/api/check-in`, {
           method: "POST",
           headers: {
@@ -374,17 +385,19 @@ export default {
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(this.username, destinationId)
+          body: JSON.stringify(this.username, this.currentDestination.destinationId)
         }
       )
         .then(response => {
+          console.log("username: " + this.username);
+          console.log("destinationId: " + this.currentDestination.destinationId);
           if (response.ok) {
-            this.$router.push({ path: "/" });
-            console.log("Successful login");
+            // this.$router.push({ path: "/" });
+            console.log("Successful check-in");
           } else {
             console.log(this.username);
-            console.log(destinationId);
-            console.log("Error logging in");
+            console.log(this.currentDestination);
+            console.log("Error checking in");
           }
         })
         .then(err => console.log(err));
@@ -677,6 +690,10 @@ body {
   font-family: "Roboto", "sans-serif";
   line-height: 30px;
   padding-left: 10px;
+}
+
+.location-buttons {
+  width: 100%;
 }
 
 #right-panel select,

@@ -50,12 +50,8 @@ public class ApiController {
     }
     
     @RequestMapping(path = "/check-in", method = RequestMethod.POST)
-    public void checkIn(@RequestBody String username, @RequestBody Integer destinationId) {
+    public void checkIn(@RequestBody String username, @RequestBody Long destinationId) {
     	userDao.checkIntoDestination(username, destinationId);
     }
     
-    @RequestMapping(path = "/leave-review", method = RequestMethod.POST)
-    public void leaveReview(@RequestBody Review review) {	
-    	reviewDao.createReview(review);   	
-    }
  }
