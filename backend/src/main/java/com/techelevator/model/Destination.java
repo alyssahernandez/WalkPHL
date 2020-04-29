@@ -18,6 +18,7 @@ public class Destination {
 	private String openTo;
 	private String openOnWeekends;
 	private String wiki;
+	private String twitterHandle;
 	
 	public String getWiki() {
 		return wiki;
@@ -146,5 +147,13 @@ public class Destination {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	public String getTwitterHandle() {
+        return twitterHandle;
+    }
+
+    public void setTwitterHandle(String twitterHandle) {
+        this.twitterHandle = twitterHandle;
+    }
 
 }

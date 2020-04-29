@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="admin-features">
     <form @submit.prevent="addDestination">
-      <p>
+      <h1>
         <strong>Add a destination</strong>
-      </p>
+      </h1>
       <label for="name">
         Name
         <input
@@ -18,7 +18,7 @@
         />
       </label>
       <label for="description">
-        Name
+        Description
         <input
           type="text"
           v-model="destination.description"
@@ -152,12 +152,42 @@
           autofocus
         />
       </label>
+      <label for="twitterHandle">
+        Twitter Handle
+        <input
+          type="text"
+          v-model="destination.twitterHandle"
+          placeholder="twitterHandle"
+          id="wiki"
+          class="input"
+          maxlength="30"
+          autofocus
+        />
+      </label>
+
 
       <button class="button" type="submit">Submit Location</button>
     </form>
+    <br>
+    <br>
+    <h1> 
+      Current Requests:
+    </h1>
 
     <div class="user-requests">
-        
+     <div class="container">
+          <div class="box" v-for="request in requests" :key="request.name">
+            <div class="content">
+                  <p>
+                    <strong>Location: </strong> {{request.name}}
+                    <br />
+                    <br />
+                    <strong>Requested by: </strong> {{request.username}}
+                    <br />
+                  </p>
+                </div>
+          </div>
+    </div>
       </div>
 
   </div>
@@ -185,6 +215,7 @@ export default {
         imgUrl: "park.jpg",
         iconUrl: "arts.jpg",
         wiki: "",
+        twitterHandle: "",
       },
       request: {
         name: "",
@@ -237,7 +268,6 @@ export default {
         .then(requests => {
           console.log(requests);
           this.requests = requests;
-          console.log(auth.getUser());
         })
         .catch(err => {
           console.log(err);
