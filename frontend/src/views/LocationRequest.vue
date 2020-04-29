@@ -33,7 +33,6 @@ export default {
       destination: {
         name: ""
       },
-      user: "",
     };
   },
   computed: {
@@ -42,8 +41,8 @@ export default {
     }
   },
   methods: {
-    addRequest(user) {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/location-submit/` + user, {
+    addRequest() {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/api/location-submit`, {
         method: "POST",
         headers: {
           Authorization: "Bearer " + auth.getToken(),

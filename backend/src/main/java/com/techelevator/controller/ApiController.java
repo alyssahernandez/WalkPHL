@@ -59,9 +59,10 @@ public class ApiController {
 		destinationDao.createDestination(destination);
 	}
     
-    @RequestMapping(path = "/location-submit/{username}", method = RequestMethod.POST)
-    public void newDestinationRequest(@RequestBody Destination destination, @PathVariable String username) {
-		destinationDao.createRequest(destination, username);
+    @RequestMapping(path = "/location-submit", method = RequestMethod.POST)
+    public void newDestinationRequest(@RequestBody Destination destination) {
+    	User current = authProvider.getCurrentUser();
+		destinationDao.createRequest(destination, current.getUsername());
 	}
     
     @RequestMapping(path = "/role-check", method = RequestMethod.GET)

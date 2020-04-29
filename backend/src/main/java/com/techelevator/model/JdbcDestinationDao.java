@@ -62,7 +62,7 @@ public class JdbcDestinationDao implements DestinationDao {
     @Override
     public void createRequest(Destination destination, String username)
     {
-    	String query = "INSERT INTO user_destination_submission (destination_name, submitted_by) "
+    	String query = "INSERT INTO user_destination_submission (destination_name, submitted_By) "
     			+ "VALUES (?, ?)";
     	
     	jdbcTemplate.update(query, destination.getName(), username);
