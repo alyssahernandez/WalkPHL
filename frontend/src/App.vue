@@ -42,8 +42,11 @@
                 Contact
               </a>
               <hr class="navbar-divider">
-              <router-link class="navbar-item" v-if="isAdmin" :to="{name: 'adminfeatures'}">
+              <router-link class="navbar-item" v-if="userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
                 Admin Features
+              </router-link>
+              <router-link class="navbar-item" v-else :to="{name: 'locationrequest'}">
+                Location Request
               </router-link>
             </div>
           </div> 
@@ -80,7 +83,7 @@ export default {
     return {
       loggedIn: false,
       user: "",
-      isAdmin: false,
+      userRole: "",
     }
   },
   methods: {
@@ -105,32 +108,14 @@ export default {
       this.user = auth.getUser().sub;
     },
     adminCheck() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/role-check`, {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + auth.getToken()
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log(response);
-            return response.json();
-          }
-        })
-        .then(isAdmin => {
-          console.log(isAdmin);
-          this.isAdmin = isAdmin;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      
     }
 
   },
   created() {
     this.loggedIn = auth.loggedIn();
     this.user = auth.getUser().sub;
-    this.isAdmin = this.adminCheck;
+    this.userRole = auth.getUser().rol;
     
   }
 };

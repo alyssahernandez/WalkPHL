@@ -186,6 +186,10 @@ export default {
         iconUrl: "arts.jpg",
         wiki: "",
       },
+      request: {
+        name: "",
+        username: "",
+      },
       requests: null,
     };
   },
@@ -233,6 +237,7 @@ export default {
         .then(requests => {
           console.log(requests);
           this.requests = requests;
+          console.log(auth.getUser());
         })
         .catch(err => {
           console.log(err);
