@@ -15,7 +15,7 @@
             </p>
           </section>
           <footer class="modal-card-foot">
-            <a v-on:click="editPreferences(); description()" class="button is-primary modal-save">Save changes</a>
+            <a v-on:click="editPreferences(); changeInfo()" class="button is-primary modal-save">Save changes</a>
             <a v-on:click="editPreferences" class="button modal-cancel">Cancel</a>
           </footer>
         </div>
@@ -195,7 +195,7 @@ export default {
       })
       .catch(err => console.log(err))
     },
-    description(username) {
+    changeInfo(username) {
       fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username + '/description', {
         method: 'POST',
         headers: {
