@@ -118,6 +118,7 @@ public class JdbcDestinationDao implements DestinationDao {
 		d.setImgUrl(results.getString("img_url"));
 		d.setIconUrl(results.getString("icon_url"));
 		d.setWiki(results.getString("wiki"));
+		d.setTwitterHandle(results.getString("twitter_handle"));
 	
     	return d;
     }
