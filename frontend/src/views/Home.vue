@@ -12,7 +12,7 @@
       <p class="browser-view-description push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
  
       <p v-if="!userLoggedIn" class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <button v-on:click="showMapView(), startedExploring()" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
+      <button v-on:click="initializeMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
       <div class="mobile-buttons-div">
         <router-link class="have-account-link" :to="{ name: 'login' }"> 
           <button class="button is-rounded is-primary mobile-button position-button-mobile-1">Sign In</button>
@@ -49,6 +49,10 @@ export default {
     MapWidget
   },
   methods: {
+    initializeMapView() {
+      this.showMapView(); 
+      this.startedExploring();
+    },
     startedExploring() {
       this.exploring = true;
     },
