@@ -175,8 +175,8 @@ export default {
         openTo: "",
         openOnWeekends: "",
         category: "",
-        imgUrl: "art.png",
-        iconUrl: "art.png",
+        imgUrl: "",
+        iconUrl: "",
         wiki: "",
       },
       options: [
