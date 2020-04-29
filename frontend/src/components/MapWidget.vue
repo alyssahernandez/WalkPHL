@@ -388,6 +388,12 @@ export default {
       this.checkInObject.destinationId = this.currentDestination.destinationId;
       console.log("dfgadfg: " + this.checkInObject.destinationId);
 
+      let bodyyy = JSON.stringify(this.checkInObject);
+      console.log("hellllo before body");
+      console.log(bodyyy);
+      console.log("helllo after body");
+
+
       fetch(`${process.env.VUE_APP_REMOTE_API}/check-in`, {
           method: "POST",
           headers: {
