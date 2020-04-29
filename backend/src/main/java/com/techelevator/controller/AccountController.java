@@ -78,5 +78,10 @@ public class AccountController {
 		userInfo.put("reviews", review.getReviewsByUser(username));
 		userInfo.put("visited", user.getVisitedDestinations(username));
 		return userInfo;
-	}	
+	}
+	
+	@RequestMapping(path = "/profile/{username}/description", method=RequestMethod.POST)
+	public void writeBio(@RequestBody User userSub) {
+		user.setBio(userSub.getUsername(), userSub.getBio());
+	}
 }

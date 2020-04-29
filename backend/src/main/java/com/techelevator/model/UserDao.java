@@ -36,4 +36,6 @@ public interface UserDao {
     public void setAdmin(String username);
     
     public List<Destination> getVisitedDestinations(String username);
+    
+    public void setBio(String username, String bio);
 }

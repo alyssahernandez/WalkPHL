@@ -11,11 +11,11 @@
           <section class="modal-card-body">
             <label class="label">Description</label>
             <p class="control">
-              <textarea class="textarea" placeholder="Describe Yourself!"></textarea>
+              <textarea class="textarea" placeholder="Describe Yourself!" v-model="userSub.bio"></textarea>
             </p>
           </section>
           <footer class="modal-card-foot">
-            <a v-on:click="editPreferences" class="button is-primary modal-save">Save changes</a>
+            <a v-on:click="editPreferences(); description()" class="button is-primary modal-save">Save changes</a>
             <a v-on:click="editPreferences" class="button modal-cancel">Cancel</a>
           </footer>
         </div>
@@ -166,6 +166,10 @@ export default {
     return {
       username: null,
       user: null,
+      userSub: {
+        username: auth.getUser().sub,
+        bio: ''
+      },
       badgesOn: true,
       checkInsOn: false,
       reviewsOn: false
@@ -176,7 +180,7 @@ export default {
       fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username, {
         method: 'GET',
         headers: {
-          Authorization: 'Bearer ' + auth.getToken(),
+          Authorization: 'Bearer ' + auth.getToken()
         }
       })
       .then((response) => {
@@ -188,6 +192,23 @@ export default {
       .then((user) => {
         this.user = user;
         console.log(user);
+      })
+      .catch(err => console.log(err))
+    },
+    description(username) {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username + '/description', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken(),
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.userSub)
+      })
+      .then(response => {
+        if(response.ok) {
+          return response.json()
+        }
       })
       .catch(err => console.log(err))
     },
