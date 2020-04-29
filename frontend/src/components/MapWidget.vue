@@ -200,14 +200,6 @@ function filterByRadius(location, pos) {
   return d;
 }
 
-/* for the life of me i cannot get this to work - just trying to
-add a class to the drop-down buttons to make them more visible
-let filterButtons = document.querySelectorAll('.location-buttons');
-filterButtons.forEach(button => {
-  button.addEventListener("hover", () =>
-    button.classList.add("is-primary")
-  );
-}); */
 
 export default {
   name: "map-widget",
@@ -299,6 +291,8 @@ export default {
     showDestinationDivs() {
       this.choseDestination = false;
       document.getElementById("type").value = "";
+      this.displayReviews = false;
+      document.getElementById("dir").innerText = "Get Directions";
     },
     swipeUpSidebar() {
       let swipeDiv = document.getElementById("swiper");
@@ -583,9 +577,6 @@ export default {
       .addEventListener("click", function() {
         directionsRenderer.setMap(null);
         directionsRenderer.setPanel(null);
-        document.getElementById("dir").innerText = "Get Directions";
-        document.getElementById("dir").innerText = "Get Directions";
-        this.choseDestination = false;
       });
   }
 };
