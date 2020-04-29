@@ -29,6 +29,10 @@
 						<!-- Every url in the app must be authenticated except /login -->
 						<value>/login</value>
 						<value>/register</value>
+						<value>/badges</value>
+						<value>/reviews</value>
+						<value>/recent-reviews</value>
+						<value>/destinations</value>
 					</list>
 				</property>
 			</bean>
