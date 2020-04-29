@@ -138,21 +138,31 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<Destination> getVisitedDestinations(String username)
     {
+    	
     	String query = "SELECT * FROM destination INNER JOIN user_destination ON destination.destination_id = user_destination.destination_id WHERE user_destination.username = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, username);
     	List<Destination> destinations = new ArrayList<>();
+    	String catName = null;
     	while (results.next())
     	{
+    		
+    		String queryCatName = "SELECT category_name FROM category WHERE category_id = ?";
+    		SqlRowSet result = jdbcTemplate.queryForRowSet(queryCatName, results.getLong("category_id"));
+    		if (result.next()) {
+    			catName = result.getString("category_name");    			
+    		}   		
+    		
     		Destination d = new Destination();
     		d.setCity(results.getString("city"));
     		d.setDescription(results.getString("description"));
-    		d.setDestinationId(results.getInt("destination_id"));
+    		d.setDestinationId(results.getLong("destination_id"));
     		d.setName(results.getString("name"));
     		d.setState(results.getString("state"));
     		d.setLatitude(results.getString("lat"));
     		d.setLongitude(results.getString("long"));
     		d.setZip_code(results.getString("zip_code"));
-    		d.setCategoryId(results.getString("category_id"));
+    		d.setCategoryId(results.getLong("category_id"));
+    		d.setCategory(catName);
     		d.setOpenFrom(results.getString("open_from"));
     		d.setOpenOnWeekends(results.getString("weekends"));
     		d.setOpenTo(results.getString("open_to"));
@@ -162,12 +172,6 @@ public class JdbcUserDao implements UserDao {
     	return destinations;
     }
     
-    @Override
-    public void checkIntoDestination(String username, Integer destinationId)
-    {
-    	String query = "INSERT INTO user_destination (username, destination_id, date_visited) VALUES (?, ?, ?)";
-    	jdbcTemplate.update(query, username, destinationId, LocalDate.now());
-    }
 	/*
 	 * public void checkIn(User user, Destination destination) { String query =
 	 * "UPDATE user_destination SET checked_in" }
