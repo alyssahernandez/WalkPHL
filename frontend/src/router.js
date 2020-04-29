@@ -10,6 +10,7 @@ import Profile from './views/Profile.vue'
 import Review from './views/Review.vue'
 import About from './views/About.vue'
 import AdminFeatures from './views/AdminFeatures.vue'
+import LocationRequest from './views/LocationRequest.vue'
 
 
 Vue.use(Router)
@@ -94,6 +95,14 @@ const router = new Router({
       component: AdminFeatures,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: "/locationrequest",
+      name: "locationrequest",
+      component: LocationRequest,
+      meta: {
+        requiresAuth: false
       }
     }
   ]

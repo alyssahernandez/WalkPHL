@@ -130,6 +130,7 @@ export default {
   created() {
     this.loggedIn = auth.loggedIn();
     this.user = auth.getUser().sub;
+    this.isAdmin = this.adminCheck;
     
   }
 };

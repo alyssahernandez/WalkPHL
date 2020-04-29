@@ -68,6 +68,11 @@ public class ApiController {
 		destinationDao.createDestination(destination);
 	}
     
+    @RequestMapping(path = "/location-submit", method = RequestMethod.POST)
+    public void newDestinationRequest(@RequestBody Destination destination) {
+		destinationDao.createDestination(destination);
+	}
+    
     @RequestMapping(path = "/role-check", method = RequestMethod.GET)
     public boolean roleCheck() {
         
