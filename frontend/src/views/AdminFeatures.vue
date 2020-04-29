@@ -123,24 +123,32 @@
       </label>
       <label for="category">
         Category
-        <input
-          type="text"
-          v-model="destination.category"
-          placeholder="category"
-          id="category"
-          class="input"
-          maxlength="30"
-          required
-          autofocus
-        />
+        <select id= "category" v-model="destination.category">
+          <option value="Sights">Sights</option>
+          <option value="Parks">Parks</option>
+          <option value="Arts">Arts</option>
+          <option value="Historical">Historical</option>
+          <option value="Food">Food</option>
+        </select>
       </label>
       <label for="openOnWeekends">
-        Open weekends? True/False
-       
+        Open weekends?
         <select id= "openOnWeekends" v-model="destination.openOnWeekends">
-          <option value="true">True</option>
-          <option value="false">False</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
         </select>
+      </label>
+      <label for="wiki">
+        Wikipedia Link
+        <input
+          type="text"
+          v-model="destination.wiki"
+          placeholder="wiki"
+          id="wiki"
+          class="input"
+          maxlength="30"
+          autofocus
+        />
       </label>
 
       <button class="button" type="submit">Submit Location</button>
@@ -167,7 +175,9 @@ export default {
         openTo: "",
         openOnWeekends: "",
         category: "",
-        imgUrl: "art.png"
+        imgUrl: "art.png",
+        iconUrl: "art.png",
+        wiki: "",
       },
       options: [
         { value: "true", text: "True" },

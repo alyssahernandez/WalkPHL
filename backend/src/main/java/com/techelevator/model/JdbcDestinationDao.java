@@ -52,11 +52,11 @@ public class JdbcDestinationDao implements DestinationDao {
     @Override
     public void createDestination(Destination destination)
     {
-    	String query = "INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, open_from, open_to, weekends, img_url) "
-    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query = "INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, open_from, open_to, weekends, img_url, icon_url, wiki) "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     	
     	Integer categoryId = getCategoryId(destination.getCategory());
-    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code(), destination.getOpenFrom(), destination.getOpenTo(), Boolean.parseBoolean(destination.getOpenOnWeekends()), destination.getImgUrl());
+    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code(), destination.getOpenFrom(), destination.getOpenTo(), destination.getOpenOnWeekends(), destination.getImgUrl(), destination.getIconUrl(), destination.getWiki());
     }
     
     private Integer getCategoryId(String categoryName)
