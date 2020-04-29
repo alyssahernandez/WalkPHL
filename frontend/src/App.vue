@@ -26,7 +26,6 @@
 
         
         <div class="navbar-end">
-<<<<<<< HEAD
 
 
           <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
@@ -49,27 +48,6 @@
               <router-link class="navbar-item" v-else :to="{name: 'locationrequest'}">
                 Location Request
               </router-link>
-=======
-          <div class="navbar-item">
-            <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
-              <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
-
-              <div class="navbar-dropdown">
-                <router-link class="navbar-item" :to="{name: 'badges'}">
-                  Badges
-                </router-link>
-                <router-link class="navbar-item" :to="{name: 'review'}">
-                  Reviews
-                </router-link>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider">
-                <a class="navbar-item">
-                  Admin Features
-                </a>
-              </div>
->>>>>>> 4662a52f42ebf2de992556b5a9dbfbd397dc2714
             </div>
             <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
             <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
