@@ -1,162 +1,160 @@
 <template>
-  <div class="contanier profile">
-    <div class="columns">
-  <div class="container profile">
-    <div class="modal" id="edit-preferences-modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Edit Preferences</p>
-          <button v-on:click="editPreferences" class="delete"></button>
-        </header>
-        <section class="modal-card-body">
-          <label class="label">Description</label>
-          <p class="control">
-            <textarea class="textarea" placeholder="Describe Yourself!"></textarea>
-          </p>
-        </section>
-        <footer class="modal-card-foot">
-          <a v-on:click="editPreferences" class="button is-primary modal-save">Save changes</a>
-          <a v-on:click="editPreferences" class="button modal-cancel">Cancel</a>
-        </footer>
-      </div>
-    </div>
-    <div class="section profile-heading">
-      <div class="columns is-mobile is-multiline">
-        <div class="column is-2">
-          <span class="header-icon user-profile-image">
-            <img :src="require(`../assets/images/${user.user.profilePicture}`)" alt="Profile Picture">
-          </span>
-        </div>
-        <!-- Start of user profile -->
-        <div class="column is-4-tablet is-10-mobile name">
-          <p>
-            <span class="title is-bold">{{user.user.username}}</span>
-            <br/>
-            <a v-on:click="editPreferences" class="button is-primary is-outlined" href="#" id="edit-preferences" style="margin: 5px 0">
-              Edit Preferences
-            </a>
-            <br/>
-          </p>
-          <p class="tagline">
-            {{user.user.bio}}
-          </p>
-        </div>
-        <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">{{badgeCount}}</p>
-          <p class="stat-key">Badges</p>
-        </div>
-        <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">{{checkinCount}}</p>
-          <p class="stat-key">Check-ins</p>
-        </div>
-        <div class="column is-2-tablet is-4-mobile has-text-centered">
-          <p class="stat-val">{{reviewCount}}</p>
-          <p class="stat-key">Reviews</p>
+  <div class="columns">
+    <div class="container profile">
+      <div class="modal" id="edit-preferences-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Edit Preferences</p>
+            <button v-on:click="editPreferences" class="delete"></button>
+          </header>
+          <section class="modal-card-body">
+            <label class="label">Description</label>
+            <p class="control">
+              <textarea class="textarea" placeholder="Describe Yourself!" v-model="userSub.bio"></textarea>
+            </p>
+          </section>
+          <footer class="modal-card-foot">
+            <a v-on:click="editPreferences(); changeInfo()" class="button is-primary modal-save">Save changes</a>
+            <a v-on:click="editPreferences" class="button modal-cancel">Cancel</a>
+          </footer>
         </div>
       </div>
-    </div>
-    <div class="profile-options is-fullwidth">
-      <div class="tabs is-fullwidth is-medium">
-        <ul id="tabs">
-          <li id="badge" class="link">
-            <a v-on:click="displayBadges">
-              <span class="icon">
-                <i class="fa fa-list"></i>
-              </span>
-              <span>My Badges</span>
-            </a>
-          </li>
-          <li id="checkIn" class="link">
-            <a v-on:click="dispalyCheckIns">
-              <span class="icon">
-                <i class="fa fa-thumbs-up"></i>
-              </span>
-              <span>Check-Ins</span>
-            </a>
-          </li>
-          <li id="review" class="link">
-            <a v-on:click="displayReviews">
-              <span class="icon">
-                <i class="fa fa-thumbs-up"></i>
-              </span>
-              <span>My Reviews</span>
-            </a>
-          </li>
-        </ul>
+      <div class="section profile-heading">
+        <div class="columns is-mobile is-multiline">
+          <div class="column is-2">
+            <span class="header-icon user-profile-image">
+              <img :src="require(`../assets/images/${user.user.profilePicture}`)" alt="Profile Picture">
+            </span>
+          </div>
+          <!-- Start of user profile -->
+          <div class="column is-4-tablet is-10-mobile name">
+            <p>
+              <span class="title is-bold">{{user.user.username}}</span>
+              <br/>
+              <a v-on:click="editPreferences" class="button is-primary is-outlined" href="#" id="edit-preferences" style="margin: 5px 0">
+                Edit Preferences
+              </a>
+              <br/>
+            </p>
+            <p class="tagline">
+              {{user.user.bio}}
+            </p>
+          </div>
+          <div class="column is-2-tablet is-4-mobile has-text-centered">
+            <p class="stat-val">{{badgeCount}}</p>
+            <p class="stat-key">Badges</p>
+          </div>
+          <div class="column is-2-tablet is-4-mobile has-text-centered">
+            <p class="stat-val">{{checkinCount}}</p>
+            <p class="stat-key">Check-ins</p>
+          </div>
+          <div class="column is-2-tablet is-4-mobile has-text-centered">
+            <p class="stat-val">{{reviewCount}}</p>
+            <p class="stat-key">Reviews</p>
+          </div>
+        </div>
       </div>
-    </div>
-    
-      <!-- Main container
-      -->
+      <div class="profile-options is-fullwidth">
+        <div class="tabs is-fullwidth is-medium">
+          <ul id="tabs">
+            <li id="badge" class="link">
+              <a v-on:click="displayBadges">
+                <span class="icon">
+                  <i class="fa fa-list"></i>
+                </span>
+                <span>My Badges</span>
+              </a>
+            </li>
+            <li id="checkIn" class="link">
+              <a v-on:click="dispalyCheckIns">
+                <span class="icon">
+                  <i class="fa fa-thumbs-up"></i>
+                </span>
+                <span>Check-In History</span>
+              </a>
+            </li>
+            <li id="review" class="link">
+              <a v-on:click="displayReviews">
+                <span class="icon">
+                  <i class="fa fa-thumbs-up"></i>
+                </span>
+                <span>My Reviews</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
       
-    <div class="columns is-mobile" v-if="badgesOn">
-      <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures">
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="content">
-              <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
-              <br>
-              <strong>{{badge.name}}</strong>
-              <p>{{badge.description}}</p>
+        <!-- Main container
+        -->
+        
+      <div class="columns is-multiline is-mobile" v-if="badgesOn">
+        <div class="column is-3-tablet is-6-mobile" v-for="badge in user.userBadges" :key="badge.badgeId">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img :src="require(`../assets/images/${badge.imgUrl}`)" alt="pictures">
+              </figure>
             </div>
-          </div>
-          <footer class="card-footer">
-          </footer>
-        </div>
-        <br/>
-      </div>
-    </div>
-<!-- Individual User Check-Ins -->
-    <div class="columns is-mobile" v-if="checkInsOn">
-      <div class="column is-3-tablet is-6-mobile" v-for="visits in user.visited" :key="visits.destinationId">
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img :src="require(`../assets/images/${visits.imgUrl}`)" alt="pictures">
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="content">
-              <span class="tag is-dark subtitle">{{visits.destinationId}}</span>
-              <br>
-              <strong>{{visits.name}}</strong>
-              <p>{{visits.city}}</p>
+            <div class="card-content">
+              <div class="content">
+                <span class="tag is-dark subtitle">Badge #{{badge.badgeId}}</span>
+                <br>
+                <strong>{{badge.name}}</strong>
+                <p>{{badge.description}}</p>
+              </div>
             </div>
+            <footer class="card-footer">
+            </footer>
           </div>
-          <footer class="card-footer">
-          </footer>
+          <br/>
         </div>
-        <br/>
       </div>
-    </div>
-<!-- Individual User Reviews -->
-    <div class="columns is-mobile" v-if="reviewsOn">
-      <div class="column is-3-tablet is-6-mobile" v-for="review in user.reviews" :key="review.review_id">
-        <div class="card">
-          <div class="card-content">
-            <div class="content">
-              <span class="tag is-dark subtitle">{{review.review_id}}</span>
-              <br>
-              <strong>{{review.title}}</strong>
-              <p>{{review.review}}</p>
+      <!-- Individual User Check-Ins -->
+      <div class="columns is-multiline is-mobile" v-if="checkInsOn">
+        <div class="column is-3-tablet is-6-mobile" v-for="visits in user.visited" :key="visits.destinationId">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img :src="require(`../assets/images/${visits.imgUrl}`)" alt="pictures">
+              </figure>
             </div>
+            <div class="card-content">
+              <div class="content">
+                <span class="tag is-dark subtitle">{{visits.destinationId}}</span>
+                <br>
+                <strong>{{visits.name}}</strong>
+                <p>{{visits.city}}</p>
+              </div>
+            </div>
+            <footer class="card-footer">
+            </footer>
           </div>
-          <footer class="card-footer">
-            <p>{{review.review_date}}</p>
-          </footer>
+          <br/>
         </div>
-        <br/>
       </div>
-    </div>
+      <!-- Individual User Reviews -->
+      <div class="columns is-mobile" v-if="reviewsOn">
+        <div class="column is-3-tablet is-6-mobile" v-for="review in user.reviews" :key="review.review_id">
+          <div class="card">
+            <div class="card-content">
+              <div class="content">
+                <span class="tag is-dark subtitle">{{review.review_id}}</span>
+                <br>
+                <strong>{{review.title}}</strong>
+                <p>{{review.review}}</p>
+              </div>
+            </div>
+            <footer class="card-footer">
+              <p>{{review.review_date}}</p>
+            </footer>
+          </div>
+          <br/>
+        </div>
+      </div>
 
-  </div>
-</div>
+    </div>
   </div>
 </template> 
 
@@ -168,6 +166,10 @@ export default {
     return {
       username: null,
       user: null,
+      userSub: {
+        username: auth.getUser().sub,
+        bio: ''
+      },
       badgesOn: true,
       checkInsOn: false,
       reviewsOn: false
@@ -178,7 +180,7 @@ export default {
       fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username, {
         method: 'GET',
         headers: {
-          Authorization: 'Bearer ' + auth.getToken(),
+          Authorization: 'Bearer ' + auth.getToken()
         }
       })
       .then((response) => {
@@ -190,6 +192,23 @@ export default {
       .then((user) => {
         this.user = user;
         console.log(user);
+      })
+      .catch(err => console.log(err))
+    },
+    changeInfo(username) {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/profile/` + username + '/description', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + auth.getToken(),
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.userSub)
+      })
+      .then(response => {
+        if(response.ok) {
+          return response.json()
+        }
       })
       .catch(err => console.log(err))
     },
