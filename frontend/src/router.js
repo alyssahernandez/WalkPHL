@@ -9,6 +9,8 @@ import Map from './views/Map.vue'
 import Profile from './views/Profile.vue'
 import Review from './views/Review.vue'
 import About from './views/About.vue'
+import AdminFeatures from './views/AdminFeatures.vue'
+import LocationRequest from './views/LocationRequest.vue'
 
 
 Vue.use(Router)
@@ -83,6 +85,22 @@ const router = new Router({
       path: "/map",
       name: "map",
       component: Map,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/adminfeatures",
+      name: "adminfeatures",
+      component: AdminFeatures,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/locationrequest",
+      name: "locationrequest",
+      component: LocationRequest,
       meta: {
         requiresAuth: false
       }

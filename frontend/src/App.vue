@@ -26,25 +26,28 @@
 
         
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
-              <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
 
-              <div class="navbar-dropdown">
-                <router-link class="navbar-item" :to="{name: 'badges'}">
-                  Badges
-                </router-link>
-                <router-link class="navbar-item" :to="{name: 'review'}">
-                  Reviews
-                </router-link>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider">
-                <a class="navbar-item">
-                  Admin Features
-                </a>
-              </div>
+
+          <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
+             <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
+
+            <div class="navbar-dropdown">
+              <router-link class="navbar-item" :to="{name: 'badges'}">
+                Badges
+              </router-link>
+              <router-link class="navbar-item" :to="{name: 'review'}">
+                Reviews
+              </router-link>
+              <a class="navbar-item">
+                Contact
+              </a>
+              <hr class="navbar-divider">
+              <router-link class="navbar-item" v-if="userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
+                Admin Features
+              </router-link>
+              <router-link class="navbar-item" v-else :to="{name: 'locationrequest'}">
+                Location Request
+              </router-link>
             </div>
             <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
             <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
@@ -75,6 +78,7 @@ export default {
     return {
       loggedIn: false,
       user: "",
+      userRole: "",
     }
   },
   methods: {
@@ -97,11 +101,17 @@ export default {
     setLoggedIn() {
       this.loggedIn = auth.loggedIn();
       this.user = auth.getUser().sub;
+    },
+    adminCheck() {
+      
     }
+
   },
   created() {
     this.loggedIn = auth.loggedIn();
     this.user = auth.getUser().sub;
+    this.userRole = auth.getUser().rol;
+    
   }
 };
 

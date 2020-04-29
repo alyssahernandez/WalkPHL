@@ -52,17 +52,26 @@ public class JdbcDestinationDao implements DestinationDao {
     @Override
     public void createDestination(Destination destination)
     {
-    	String query = "INSERT INTO destination (category_id, name, description, x_coordinate, y_coordinate, city, state, zip_code) "
-    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query = "INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, open_from, open_to, weekends, img_url, icon_url, wiki, twitter_handle) "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     	
     	Integer categoryId = getCategoryId(destination.getCategory());
-    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code());
+    	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code(), destination.getOpenFrom(), destination.getOpenTo(), destination.getOpenOnWeekends(), destination.getImgUrl(), destination.getIconUrl(), destination.getWiki(), destination.getTwitterHandle());
+    }
+    
+    @Override
+    public void createRequest(Destination destination, String username)
+    {
+    	String query = "INSERT INTO user_destination_submission (destination_name, submitted_By) "
+    			+ "VALUES (?, ?)";
+    	
+    	jdbcTemplate.update(query, destination.getName(), username);
     }
     
     private Integer getCategoryId(String categoryName)
     {
     	Integer i = null;
-    	String query = "SELECT * FROM destination_category WHERE name = ?";
+    	String query = "SELECT category_id FROM category WHERE category_name = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, categoryName);
     	if (results.next())
     	{
@@ -109,6 +118,7 @@ public class JdbcDestinationDao implements DestinationDao {
 		d.setImgUrl(results.getString("img_url"));
 		d.setIconUrl(results.getString("icon_url"));
 		d.setWiki(results.getString("wiki"));
+		d.setTwitterHandle(results.getString("twitter_handle"));
 	
     	return d;
     }

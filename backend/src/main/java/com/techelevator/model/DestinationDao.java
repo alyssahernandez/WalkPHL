@@ -12,4 +12,6 @@ public interface DestinationDao {
 	public List<Destination> getAllDestinations();
 	
 	public void createDestination(Destination destination);
+	
+	public void createRequest(Destination destination, String username);
 }
