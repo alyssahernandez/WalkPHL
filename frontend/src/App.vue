@@ -15,45 +15,40 @@
           <span aria-hidden="true"></span>  
         </a>
       </div>
-
-      <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
+      
+      <div class="navbar-menu">
+        
+        
           
-          <router-link class="navbar-item" :to="{name: 'about'}">
-            About WalkPHL
-          </router-link>
+        <router-link class="navbar-item" :to="{name: 'about'}">
+          About WalkPHL
+        </router-link>
 
-        </div>
-
+        
         <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
+              <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
 
-
-          <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
-             <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
-
-            <div class="navbar-dropdown">
-              <router-link class="navbar-item" :to="{name: 'badges'}">
-                Badges
-              </router-link>
-              <router-link class="navbar-item" :to="{name: 'review'}">
-                Reviews
-              </router-link>
-              <a class="navbar-item">
-                Contact
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Admin Features
-              </a>
+              <div class="navbar-dropdown">
+                <router-link class="navbar-item" :to="{name: 'badges'}">
+                  Badges
+                </router-link>
+                <router-link class="navbar-item" :to="{name: 'review'}">
+                  Reviews
+                </router-link>
+                <a class="navbar-item">
+                  Contact
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                  Admin Features
+                </a>
+              </div>
             </div>
-          </div> 
-
-
-
-
-          
-          <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
-          <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+            <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
+            <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
+          </div>
         </div>
       </div>
     </nav>
