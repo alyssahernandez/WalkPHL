@@ -11,6 +11,7 @@ import com.techelevator.model.UserDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,9 +59,9 @@ public class ApiController {
 		destinationDao.createDestination(destination);
 	}
     
-    @RequestMapping(path = "/location-submit", method = RequestMethod.POST)
-    public void newDestinationRequest(@RequestBody Destination destination) {
-		destinationDao.createDestination(destination);
+    @RequestMapping(path = "/location-submit/{username}", method = RequestMethod.POST)
+    public void newDestinationRequest(@RequestBody Destination destination, @PathVariable String username) {
+		destinationDao.createRequest(destination, username);
 	}
     
     @RequestMapping(path = "/role-check", method = RequestMethod.GET)

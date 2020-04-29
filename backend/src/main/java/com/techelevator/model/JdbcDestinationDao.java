@@ -59,6 +59,15 @@ public class JdbcDestinationDao implements DestinationDao {
     	jdbcTemplate.update(query, categoryId, destination.getName(), destination.getDescription(), destination.getLatitude(), destination.getLongitude(), destination.getCity(), destination.getState(), destination.getZip_code(), destination.getOpenFrom(), destination.getOpenTo(), destination.getOpenOnWeekends(), destination.getImgUrl(), destination.getIconUrl(), destination.getWiki());
     }
     
+    @Override
+    public void createRequest(Destination destination, String username)
+    {
+    	String query = "INSERT INTO user_destination_submission (destination_name, submitted_by) "
+    			+ "VALUES (?, ?)";
+    	
+    	jdbcTemplate.update(query, destination.getName(), username);
+    }
+    
     private Integer getCategoryId(String categoryName)
     {
     	Integer i = null;

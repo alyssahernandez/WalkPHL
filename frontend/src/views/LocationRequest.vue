@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="location-request">
-    <form @submit.prevent="addDestination">
+    <form @submit.prevent="addRequest">
       <p>
         <strong>Recommend a destination!</strong>
       </p>
@@ -26,13 +26,14 @@
 <script>
 import auth from "../auth";
 export default {
-  name: "adminfeatures",
+  name: "locationrequest",
   components: {},
   data() {
     return {
       destination: {
         name: ""
       },
+      user: "",
     };
   },
   computed: {
@@ -41,8 +42,8 @@ export default {
     }
   },
   methods: {
-    addDestination() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/location-submit`, {
+    addRequest(user) {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/api/location-submit/` + user, {
         method: "POST",
         headers: {
           Authorization: "Bearer " + auth.getToken(),
@@ -61,6 +62,9 @@ export default {
         })
         .then(err => console.log(err));
     }
+  }, 
+  created() {
+    this.user = auth.getUser().sub;
   }
 };
 </script>
