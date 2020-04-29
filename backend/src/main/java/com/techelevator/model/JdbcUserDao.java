@@ -172,12 +172,6 @@ public class JdbcUserDao implements UserDao {
     	return destinations;
     }
     
-    @Override
-    public void checkIntoDestination(String username, Long destinationId)
-    {
-    	String query = "INSERT INTO user_destination (username, destination_id, date_visited) VALUES (?, ?, ?)";
-    	jdbcTemplate.update(query, username, destinationId, LocalDate.now());
-    }
 	/*
 	 * public void checkIn(User user, Destination destination) { String query =
 	 * "UPDATE user_destination SET checked_in" }

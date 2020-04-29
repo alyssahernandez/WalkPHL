@@ -49,9 +49,5 @@ public class ApiController {
         return "Success";
     }
     
-    @RequestMapping(path = "/check-in", method = RequestMethod.POST)
-    public void checkIn(@RequestBody String username, @RequestBody Long destinationId) {
-    	userDao.checkIntoDestination(username, destinationId);
-    }
     
  }

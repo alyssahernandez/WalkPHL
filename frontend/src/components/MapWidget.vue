@@ -235,6 +235,10 @@ export default {
         review: "",
         destinationId: "",
       },
+      checkInObject: {
+        username: '',
+        destinationId: ''
+      },
       username: auth.getUser().sub,
       reviews: null,
       destinations: null,
@@ -378,14 +382,20 @@ export default {
         });
     },
     checkIn() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/check-in`, {
+
+      this.checkInObject.username = this.username;
+      console.log("ugh: " + this.checkInObject.username);
+      this.checkInObject.destinationId = this.currentDestination.destinationId;
+      console.log("dfgadfg: " + this.checkInObject.destinationId);
+
+      fetch(`${process.env.VUE_APP_REMOTE_API}/check-in`, {
           method: "POST",
           headers: {
             Authorization: "Bearer " + auth.getToken(),
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(this.username, this.currentDestination.destinationId)
+          body: JSON.stringify(this.checkInObject)
         }
       )
         .then(response => {
@@ -398,6 +408,7 @@ export default {
             console.log(this.username);
             console.log(this.currentDestination);
             console.log("Error checking in");
+            console.log(this.checkInObject);
           }
         })
         .then(err => console.log(err));
