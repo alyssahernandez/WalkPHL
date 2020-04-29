@@ -17,7 +17,7 @@
     <article class="media">
     <div class="media-left">
       <figure class="image is-64x64">
-        <img :src="require(`../assets/images/plane.png`)" alt="Image">
+        <img :src="require(`../assets/images/plane.png`)" alt="user icon image">
       </figure>
     </div>
     <div class="media-content">

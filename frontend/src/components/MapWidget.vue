@@ -16,7 +16,8 @@
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
-        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
+        <button id="check-in-button" :disabled="checkedIn" class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
+        <p v-show="checkedIn">Hope you enjoy your visit!</p>
       </div>
 
       <!-- user selects radius -->
@@ -55,7 +56,7 @@
             :key="destination.destinationId"
             v-bind:value="destination.name"
           >
-            <img :src="require(`../assets/images/${destination.imgUrl}`)" />
+            <img :src="require(`../assets/images/${destination.imgUrl}`)" alt="image of a destination in this list"/>
             <h4><b>{{destination.name}}</b></h4>
             <p>{{destination.category}}</p>
             <p>{{destination.description}}</p>
@@ -64,15 +65,19 @@
         </div>
 
         <div v-if="choseDestination" class="box center-text">
-          <img :src="require(`../assets/images/${currentDestination.imgUrl}`)"/>
+          <img :src="require(`../assets/images/${currentDestination.imgUrl}`)" alt="image of current destination"/>
           <h4><b>{{currentDestination.name}}</b></h4>
           <p>{{currentDestination.category}}</p>
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
-          <!-- twitter handle link
-          <a href="https://twitter.com/PhiladelphiaGov?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
-            Follow {{currentDestination.twitterHandle}}</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-          -->
+          <a class="icon" v-if="currentDestination.twitterHandle" v-bind:href="'https://twitter.com/' + currentDestination.twitterHandle">
+            <img class="fas fa-home" :src="require(`../assets/images/twitter.png`)" alt="twitter icon"/>
+          </a>    
+          <!-- commented out because we don't have a fb column in the db yet with their respective urls
+          do a null check if the url exists, see above twitter link for an example
+          <a class="icon" v-bind:href="'https://facebook.com/' + currentDestination.facebookPage">
+            <img class="fas fa-home" src="/assets/images/facebook.png" alt="facebook icon"/>
+          </a>   -->     
        </div>
 
       </div>
@@ -85,7 +90,7 @@
               <!-- placeholder for review image -->
               <div class="media-left">
                 <figure class="image is-64x64">
-                  <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image" />
+                  <img :src="require(`../assets/images/plane.png`)" alt="user icon image">
                 </figure>
               </div>
 
@@ -242,7 +247,7 @@ export default {
       markers: [],
       currentDestination: '',
       currentTravelMode: '',
-
+      checkedIn: false,
     };
   },
   props: {
@@ -302,6 +307,7 @@ export default {
       console.log(destination);
     },
     showDestinationDivs() {
+      this.checkedIn = false;
       this.choseDestination = false;
       document.getElementById("type").value = "";
       this.displayReviews = false;
@@ -372,6 +378,7 @@ export default {
         return promise;
     },
     checkIn() {
+      this.checkedIn = true;
 
       this.checkInObject.username = this.username;
       console.log("ugh: " + this.checkInObject.username);
