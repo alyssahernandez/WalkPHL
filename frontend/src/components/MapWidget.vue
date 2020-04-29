@@ -222,7 +222,7 @@ export default {
       },
       destinationName: "",
       review: {
-        username: auth.getUser().sub,
+        username: '',
         title: "",
         review: "",
         destinationId: "",
@@ -231,9 +231,9 @@ export default {
         username: '',
         destinationId: ''
       },
-      username: auth.getUser().sub,
-      reviews: null,
-      destinations: null,
+      username: '',
+      reviews: [],
+      destinations: [],
       radiusFilter: '',
       markers: [],
       currentDestination: '',
@@ -251,6 +251,7 @@ export default {
   },
   methods: {
     filterSearch() {
+      
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
         return (destination.name.match(filter) || destination.category.match(filter));
@@ -282,6 +283,11 @@ export default {
           console.log(err);
         });
     },
+    resetDirectionsBackButton() {
+        directionsRenderer.setMap(null);
+        directionsRenderer.setPanel(null);
+        document.getElementById("dir").innerText = "Get Directions";
+    },
     chooseDestination(destination) {
       this.choseDestination = true;
       this.currentDestination = destination;
@@ -293,6 +299,7 @@ export default {
       document.getElementById("type").value = "";
       this.displayReviews = false;
       document.getElementById("dir").innerText = "Get Directions";
+      this.resetDirectionsBackButton();
     },
     swipeUpSidebar() {
       let swipeDiv = document.getElementById("swiper");
@@ -360,7 +367,9 @@ export default {
         console.log(this.destinationPosition);
       }, */
     fetchDestinations() {
-      return fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
+      let promise = null;
+      if (auth.loggedIn()){
+        promise = fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + auth.getToken()
@@ -379,6 +388,10 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      } else {
+        promise = Promise.resolve();
+      }
+      return promise;
     },
     checkIn() {
 
@@ -509,7 +522,9 @@ export default {
   },
   created() {
     this.reviews = this.getReviews();
-    this.username = auth.getUser().sub;
+    if (auth.loggedIn()) {
+      this.username = auth.getUser().sub;
+    } 
   },
   async mounted() {
     await this.fetchDestinations();
@@ -571,13 +586,6 @@ export default {
     infoWindow.open(map);
     map.setCenter({ lat: 39.9526, lng: -75.1652 });
     map.setZoom(14);
-
-    document
-      .getElementById("back-button")
-      .addEventListener("click", function() {
-        directionsRenderer.setMap(null);
-        directionsRenderer.setPanel(null);
-      });
   }
 };
 
