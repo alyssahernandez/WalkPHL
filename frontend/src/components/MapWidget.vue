@@ -346,12 +346,8 @@ export default {
       }, */
     fetchDestinations() {
       let promise = null;
-      if (auth.loggedIn()){
         promise = fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + auth.getToken()
-        }
+        method: "GET"
       })
         .then(response => {
           if (response.ok) {
@@ -366,10 +362,7 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      } else {
-        promise = Promise.resolve();
-      }
-      return promise;
+        return promise;
     },
     checkIn() {
 
