@@ -312,28 +312,6 @@ export default {
     toRad(degree) {
       return (degree * Math.PI) / 180;
     },
-    showMapView() {
-      let whiteOverlay = document.getElementById("map-static");
-      whiteOverlay.style.opacity = "0";
-      setTimeout(function() {
-        whiteOverlay.parentNode.removeChild(whiteOverlay);
-      }, 2000);
-
-      let mobileMapOverlay = document.getElementById("mobile-map-overlay");
-      mobileMapOverlay.classList.add("fade");
-      setTimeout(function() {
-        mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);
-      }, 2000);
-
-      let greyscaleMap = document.getElementById("landing-page-map");
-      greyscaleMap.classList.add("greyscale-click");
-
-      let infoBlock = document.getElementById("app-info-block");
-      infoBlock.classList.add("fade");
-      setTimeout(function() {
-        infoBlock.parentNode.removeChild(infoBlock);
-      }, 2000);
-    },
     leaveReview() {
       this.review.destinationId = this.currentDestination.destinationId;
       fetch(`${process.env.VUE_APP_REMOTE_API}/leave-review`, {
