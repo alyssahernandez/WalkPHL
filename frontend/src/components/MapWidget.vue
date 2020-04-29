@@ -69,7 +69,11 @@
           <p>{{currentDestination.category}}</p>
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
-        </div>
+          <!-- twitter handle link
+          <a href="https://twitter.com/PhiladelphiaGov?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+            Follow {{currentDestination.twitterHandle}}</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          -->
+       </div>
 
       </div>
 

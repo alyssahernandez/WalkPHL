@@ -72,6 +72,7 @@ CREATE TABLE destination
         img_url varchar(255),
         icon_url varchar(255),
         wiki varchar(255),
+        twitter_handle varchar(128),
         
         constraint fk_destination_category foreign key (category_id) references category (category_id)
 );
