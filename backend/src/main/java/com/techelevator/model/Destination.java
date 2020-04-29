@@ -2,8 +2,8 @@ package com.techelevator.model;
 
 public class Destination {
 	
-	private Integer destinationId;
-	private String categoryId;
+	private Long destinationId;
+	private Long categoryId;
 	private String category;
 	private String name;
 	private String description;
@@ -67,11 +67,11 @@ public class Destination {
 		this.openOnWeekends = openOnWeekends;
 	}
 
-	public Integer getDestinationId() {
+	public Long getDestinationId() {
 		return destinationId;
 	}
 
-	public void setDestinationId(Integer destination_id) {
+	public void setDestinationId(Long destination_id) {
 		this.destinationId = destination_id;
 	}
 
@@ -131,11 +131,11 @@ public class Destination {
 		this.name = name;
 	}
 
-	public String getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String category) {
+	public void setCategoryId(Long category) {
 		this.categoryId = category;
 	}
 

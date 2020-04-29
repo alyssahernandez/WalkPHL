@@ -9,6 +9,7 @@ public class Review {
 	private String title;
 	private String review;
 	private Date createdAt;
+	private Long destinationId;
 
 	public Integer getReview_id() {
 		return review_id;
@@ -39,6 +40,14 @@ public class Review {
 	}
 	public void setReview_date(Date review_date) {
 		this.createdAt = review_date;
+	}
+	
+	public Long getDestinationId() {
+		return destinationId;
+	}
+	
+	public void setDestinationId(Long destinationId) {
+		this.destinationId = destinationId;
 	}
 
 }

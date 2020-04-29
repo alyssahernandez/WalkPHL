@@ -16,11 +16,11 @@
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
-        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn(currentDestination.destinationId)">Check-In</button>
+        <button class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
       </div>
 
       <!-- user selects radius -->
-      <div class="location-buttons" v-show="!choseDestination">
+      <div class="location-buttons select" v-show="!choseDestination">
         <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
           <option disabled selected value>Limit search radius to:</option>
           <option value="250">250 Meters</option>
@@ -33,8 +33,8 @@
       </div>
 
       <!-- user selects transportation type -->
-      <div>
-        <select id="type" v-show="!choseDestination" v-model="currentTravelMode">
+      <div class="location-buttons select" v-show="!choseDestination">
+        <select id="type" v-model="currentTravelMode">
           <option disabled selected value>Select a travel mode:</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -45,17 +45,19 @@
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
+        <input type="text" class="input location-buttons" placeholder="Search Destination" v-show="!choseDestination" v-model="searchText">
         <div class="container" v-show="!choseDestination">
           <div
             class="box destination-list hover-mouse"
             v-bind:id="destination.destinationId"
             v-on:click="chooseDestination(destination)"
-            v-for="destination in destinations"
+            v-for="destination in filterSearch()"
             :key="destination.destinationId"
             v-bind:value="destination.name"
           >
             <img :src="require(`../assets/images/${destination.imgUrl}`)" />
             <h4><b>{{destination.name}}</b></h4>
+            <p>{{destination.category}}</p>
             <p>{{destination.description}}</p>
             <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
           </div>
@@ -64,8 +66,7 @@
         <div v-if="choseDestination" class="box center-text">
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)"/>
           <h4><b>{{currentDestination.name}}</b></h4>
-          <!-- we need to put the category of the location here when we have it returned from the backend
-          <p>{{destinationChoice.category}}</p> -->
+          <p>{{currentDestination.category}}</p>
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
         </div>
@@ -75,7 +76,7 @@
       <!-- displays all reviews (not a particular location yet) -->
       <div v-if="this.displayReviews" id="review-div">
         <div class="container">
-          <div class="box" v-for="review in reviews" :key="review.review_id">
+          <div class="box" v-for="review in filterReviews()" :key="review.review_id">
             <article class="media">
               <!-- placeholder for review image -->
               <div class="media-left">
@@ -199,6 +200,7 @@ function filterByRadius(location, pos) {
   return d;
 }
 
+
 export default {
   name: "map-widget",
   components: {},
@@ -222,9 +224,14 @@ export default {
       review: {
         username: auth.getUser().sub,
         title: "",
-        review: ""
+        review: "",
+        destinationId: "",
       },
-      username: null,
+      checkInObject: {
+        username: '',
+        destinationId: ''
+      },
+      username: auth.getUser().sub,
       reviews: null,
       destinations: null,
       radiusFilter: '',
@@ -246,7 +253,12 @@ export default {
     filterSearch() {
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
-        return destination.name.match(filter);
+        return (destination.name.match(filter) || destination.category.match(filter));
+      })
+    },
+    filterReviews() {
+      return this.reviews.filter((review) => {
+        return (review.destinationId == this.currentDestination.destinationId);
       })
     },
     getReviews() {
@@ -279,6 +291,8 @@ export default {
     showDestinationDivs() {
       this.choseDestination = false;
       document.getElementById("type").value = "";
+      this.displayReviews = false;
+      document.getElementById("dir").innerText = "Get Directions";
     },
     swipeUpSidebar() {
       let swipeDiv = document.getElementById("swiper");
@@ -291,30 +305,9 @@ export default {
     toRad(degree) {
       return (degree * Math.PI) / 180;
     },
-    showMapView() {
-      let whiteOverlay = document.getElementById("map-static");
-      whiteOverlay.style.opacity = "0";
-      setTimeout(function() {
-        whiteOverlay.parentNode.removeChild(whiteOverlay);
-      }, 2000);
-
-      let mobileMapOverlay = document.getElementById("mobile-map-overlay");
-      mobileMapOverlay.classList.add("fade");
-      setTimeout(function() {
-        mobileMapOverlay.parentNode.removeChild(mobileMapOverlay);
-      }, 2000);
-
-      let greyscaleMap = document.getElementById("landing-page-map");
-      greyscaleMap.classList.add("greyscale-click");
-
-      let infoBlock = document.getElementById("app-info-block");
-      infoBlock.classList.add("fade");
-      setTimeout(function() {
-        infoBlock.parentNode.removeChild(infoBlock);
-      }, 2000);
-    },
     leaveReview() {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/leave-review`, {
+      this.review.destinationId = this.currentDestination.destinationId;
+      fetch(`${process.env.VUE_APP_REMOTE_API}/leave-review`, {
         method: "POST",
         headers: {
           Authorization: "Bearer " + auth.getToken(),
@@ -365,25 +358,40 @@ export default {
           console.log(err);
         });
     },
-    checkIn(destinationId) {
-      fetch(`${process.env.VUE_APP_REMOTE_API}/api/check-in`, {
+    checkIn() {
+
+      this.checkInObject.username = this.username;
+      console.log("ugh: " + this.checkInObject.username);
+      this.checkInObject.destinationId = this.currentDestination.destinationId;
+      console.log("dfgadfg: " + this.checkInObject.destinationId);
+
+      let bodyyy = JSON.stringify(this.checkInObject);
+      console.log("hellllo before body");
+      console.log(bodyyy);
+      console.log("helllo after body");
+
+
+      fetch(`${process.env.VUE_APP_REMOTE_API}/check-in`, {
           method: "POST",
           headers: {
             Authorization: "Bearer " + auth.getToken(),
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(this.username, destinationId)
+          body: JSON.stringify(this.checkInObject)
         }
       )
         .then(response => {
+          console.log("username: " + this.username);
+          console.log("destinationId: " + this.currentDestination.destinationId);
           if (response.ok) {
-            this.$router.push({ path: "/" });
-            console.log("Successful login");
+            // this.$router.push({ path: "/" });
+            console.log("Successful check-in");
           } else {
             console.log(this.username);
-            console.log(destinationId);
-            console.log("Error logging in");
+            console.log(this.currentDestination);
+            console.log("Error checking in");
+            console.log(this.checkInObject);
           }
         })
         .then(err => console.log(err));
@@ -545,11 +553,8 @@ export default {
     document
       .getElementById("back-button")
       .addEventListener("click", function() {
-        if (directionsRenderer.map != null) {
-          directionsRenderer.setMap(null);
-          directionsRenderer.setPanel(null);
-          document.getElementById("dir").innerText = "Get Directions";
-        }
+        directionsRenderer.setMap(null);
+        directionsRenderer.setPanel(null);
       });
   }
 };
@@ -676,6 +681,10 @@ body {
   font-family: "Roboto", "sans-serif";
   line-height: 30px;
   padding-left: 10px;
+}
+
+.location-buttons {
+  width: 100%;
 }
 
 #right-panel select,

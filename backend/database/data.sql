@@ -23,13 +23,15 @@ INSERT INTO badge (category_id, name, description, img_url) VALUES (3, 'Franklin
 INSERT INTO badge (category_id, name, description, img_url) VALUES (4, 'City Hall Badge', 'Visit City Hall', 'cityhall.png');
 INSERT INTO badge (category_id, name, description, img_url) VALUES (2, 'Independence Park Badge', 'Visit Independence National Historical Park', 'doi.png');
 INSERT INTO badge (category_id, name, description, img_url) VALUES (5, 'Reading Terminal Badge', 'Visit Reading Terminal Market', 'readingterminal.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (9, 'Fairmount Park Badge', 'Visit Fairmount Park', 'fairmountpark.png');
+INSERT INTO badge (category_id, name, description, img_url) VALUES (10, 'Fillmore Philly Badge', 'Visit The Fillmore Philadelphia', 'fillmorephilly.png');
 
 
-INSERT INTO user_badge (username, badge_id) VALUES ('admin', 1);
-INSERT INTO user_badge (username, badge_id) VALUES ('admin', 2);
-INSERT INTO user_badge (username, badge_id) VALUES ('admin', 3);
-INSERT INTO user_badge (username, badge_id) VALUES ('frog', 1);
-INSERT INTO user_badge (username, badge_id) VALUES ('frog', 2);
+INSERT INTO user_badge (username, badge_id) VALUES ('admin', 6);
+INSERT INTO user_badge (username, badge_id) VALUES ('admin', 8);
+INSERT INTO user_badge (username, badge_id) VALUES ('admin', 4);
+INSERT INTO user_badge (username, badge_id) VALUES ('frog', 5);
+INSERT INTO user_badge (username, badge_id) VALUES ('frog', 7);
 
 
 INSERT INTO destination (category_id, name, description, lat, long, city, state, zip_code, img_url, icon_url, open_from, open_to, weekends, wiki) VALUES (4, 'City Hall', 'Philadelphia City Hall is the world’s largest free standing masonry building made of brick, white marble, limestone and granite and functions as the seat of government for the city.', '39.9526', '-75.1652', 'Philadelphia', 'PA', '19103', 'cityhall.jpg', 'arts.png', '700', '1800', 'No', 'https://en.wikipedia.org/wiki/Philadelphia_City_Hall');
@@ -46,17 +48,19 @@ INSERT INTO destination (category_id, name, description, lat, long, city, state,
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 1, '2019-02-09');
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 2, '2020-09-20');
 INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('admin', 3, '2018-05-04');
-INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 1, '2020-09-09');
-INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 3, '2020-12-12');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 4, '2020-09-09');
+INSERT INTO user_destination (username, destination_id, date_visited) VALUES ('frog', 5, '2020-12-12');
 
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (1, 1);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (2, 2);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (3, 3);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (4, 1);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (5, 2);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (6, 3);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (7, 1);
-INSERT INTO destination_badge (destination_id, badge_id) VALUES (8, 2);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (1, 6);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (2, 8);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (3, 4);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (4, 5);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (5, 7);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (6, 1);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (7, 2);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (8, 3);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (9, 9);
+INSERT INTO destination_badge (destination_id, badge_id) VALUES (10, 10);
 
 
 INSERT INTO user_destination_submission (destination_name, submitted_by) VALUES ('The Cookie Club', 'frog');

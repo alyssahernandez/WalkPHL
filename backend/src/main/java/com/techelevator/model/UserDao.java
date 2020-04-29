@@ -35,7 +35,5 @@ public interface UserDao {
     
     public void setAdmin(String username);
     
-    public void checkIntoDestination(String username, Integer destinationId);
-    
     public List<Destination> getVisitedDestinations(String username);
 }

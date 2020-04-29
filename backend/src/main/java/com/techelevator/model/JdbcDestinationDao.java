@@ -34,7 +34,7 @@ public class JdbcDestinationDao implements DestinationDao {
 
     // TODO: This likely won't be needed. Pull destinations, filter by name, pull info from Google by name, etc.
     @Override
-    public Destination getDestination(Integer destination_id)
+    public Destination getDestination(Long destination_id)
     {
     	String query = "SELECT * FROM destination WHERE destination_id = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, destination_id);
@@ -42,7 +42,7 @@ public class JdbcDestinationDao implements DestinationDao {
     }
     
     @Override
-    public List<Destination> getDestinationsByCategory(Integer category_id)
+    public List<Destination> getDestinationsByCategory(Long category_id)
     {
     	String query = "SELECT * FROM destination WHERE category_id = ?";
     	SqlRowSet results = jdbcTemplate.queryForRowSet(query, category_id);
@@ -81,19 +81,28 @@ public class JdbcDestinationDao implements DestinationDao {
 		return destinations;
 	}
     
-    private Destination mapRowSetToDestination(SqlRowSet results)
-    {
-    	Destination d = new Destination();
+    private Destination mapRowSetToDestination(SqlRowSet results) {
+    	
+    	String catName = null;
+    
+	    String query = "SELECT category_name FROM category WHERE category_id = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(query, results.getLong("category_id"));
+		if (result.next()) {
+			catName = result.getString("category_name");
+		}
+			
+		Destination d = new Destination();
     	
 		d.setCity(results.getString("city"));
 		d.setDescription(results.getString("description"));
-		d.setDestinationId(results.getInt("destination_id"));
+		d.setDestinationId(results.getLong("destination_id"));
 		d.setName(results.getString("name"));
 		d.setState(results.getString("state"));
 		d.setLatitude(results.getString("lat"));
 		d.setLongitude(results.getString("long"));
 		d.setZip_code(results.getString("zip_code"));
-		d.setCategoryId(results.getString("category_id"));
+		d.setCategoryId(results.getLong("category_id"));
+		d.setCategory(catName);
 		d.setOpenFrom(results.getString("open_from"));
 		d.setOpenOnWeekends(results.getString("open_to"));
 		d.setOpenTo(results.getString("weekends"));

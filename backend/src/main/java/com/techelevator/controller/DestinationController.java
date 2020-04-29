@@ -28,9 +28,9 @@ public class DestinationController {
 	public List<Destination> getCheckins(@PathVariable String username) {
 		return userDao.getVisitedDestinations(username);
 	}
-	
-	@PostMapping("/profile/{username}/{destinationId}") 
-	public void checkIn(@PathVariable String username, @PathVariable Integer destinationId) {
-		userDao.checkIntoDestination(username, destinationId);
-	}
+//	
+//	@PostMapping("/profile/{username}/{destinationId}") 
+//	public void checkIn(@PathVariable String username, @PathVariable Long destinationId) {
+//		userDao.checkIntoDestination(username, destinationId);
+//	}
 }
