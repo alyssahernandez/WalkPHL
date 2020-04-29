@@ -22,7 +22,7 @@
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
         <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
-          <option disabled selected value>Limit search radius to:</option>
+          <option disabled selected value="100000">Limit search radius to:</option>
           <option value="250">250 Meters</option>
           <option value="804">Half Mile</option>
           <option value="1607">One Mile</option>
@@ -234,7 +234,7 @@ export default {
       username: '',
       reviews: [],
       destinations: [],
-      radiusFilter: '',
+      radiusFilter: 100000,
       markers: [],
       currentDestination: '',
       currentTravelMode: '',
@@ -252,10 +252,13 @@ export default {
   methods: {
     filterSearch() {
       
+      const vm = this;
       const filter = new RegExp(this.searchText, 'i');
       return this.destinations.filter((destination) => {
         return (destination.name.match(filter) || destination.category.match(filter));
-      })
+      }).filter(destination => {
+        return filterByRadius(destination, vm.userPosition) <= vm.radiusFilter})
+      
     },
     filterReviews() {
       return this.reviews.filter((review) => {
