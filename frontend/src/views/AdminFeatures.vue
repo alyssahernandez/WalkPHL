@@ -131,6 +131,7 @@
           <option value="Food">Food</option>
         </select>
       </label>
+      <br>
       <label for="openOnWeekends">
         Open weekends?
         <select id= "openOnWeekends" v-model="destination.openOnWeekends">
@@ -138,6 +139,7 @@
           <option value="No">No</option>
         </select>
       </label>
+      <br>
       <label for="wiki">
         Wikipedia Link
         <input
@@ -153,6 +155,11 @@
 
       <button class="button" type="submit">Submit Location</button>
     </form>
+
+    <div class="user-requests">
+        
+      </div>
+
   </div>
 </template>
 
@@ -179,10 +186,7 @@ export default {
         iconUrl: "arts.jpg",
         wiki: "",
       },
-      options: [
-        { value: "true", text: "True" },
-        { value: "false", text: "False" }
-      ]
+      requests: null,
     };
   },
   computed: {
@@ -210,8 +214,34 @@ export default {
           }
         })
         .then(err => console.log(err));
-    }
-  }
+    },
+    getRequests() {
+      fetch(`${process.env.VUE_APP_REMOTE_API}/user-requests`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + auth.getToken(),
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log(response);
+            return response.json();
+          }
+        })
+        .then(requests => {
+          console.log(requests);
+          this.requests = requests;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+  },
+  created() {
+    this.requests = this.getRequests();
+  },
 };
 </script>
 
