@@ -172,6 +172,12 @@ public class JdbcUserDao implements UserDao {
     	return destinations;
     }
     
+    @Override
+    public void setBio(String username, String bio) {
+    	String query = "UPDATE users SET bio = ? WHERE username = ?";
+    	jdbcTemplate.update(query, bio, username);
+    }
+    
 	/*
 	 * public void checkIn(User user, Destination destination) { String query =
 	 * "UPDATE user_destination SET checked_in" }
