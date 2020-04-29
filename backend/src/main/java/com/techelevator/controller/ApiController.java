@@ -67,4 +67,13 @@ public class ApiController {
     public void createNewDestination(@RequestBody Destination destination) {
 		destinationDao.createDestination(destination);
 	}
+    
+    @RequestMapping(path = "/role-check", method = RequestMethod.GET)
+    public boolean roleCheck() {
+        
+        if (authProvider.userHasRole(new String[] { "City Administrator" })) {
+            return true;
+        }
+        return false;
+    }
  }
