@@ -53,7 +53,7 @@ export default {
       })
         .then(response => {
           if (response.ok) {
-            this.$router.push({ path: "/locationrequest" });
+            this.$router.push({ path: "/" });
             console.log("success! destination added");
           } else {
             console.log("error adding destination");
