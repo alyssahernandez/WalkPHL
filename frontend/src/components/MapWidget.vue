@@ -439,10 +439,11 @@ export default {
       });
       let infowindow = null;
       marker.addListener(`dblclick`, () => this.markerClickHandler(marker));
+
       if (location.category === 'secret') {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <img src="' + require(`../assets/images/${location.imgUrl}`) + '" alt="a secret" height="150" width="150"/>'});
       } else if (location.category === 'camden') {
-        infowindow = new google.maps.InfoWindow({content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p>' })
+        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p>' });
       } else {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + location.wiki + '">View on Wikipedia</a></p>'});
       }
@@ -469,6 +470,7 @@ export default {
     },
     filterDestinations() {
       for (var i = 0; i < this.markers.length; i++) {
+        
         this.markers[i].setMap(null);
       }
       const currentUserPosition = this.userPosition;
@@ -478,6 +480,10 @@ export default {
           this.addMarker(location);
         }
       })
+      if (filterByRadius(techelevator, currentUserPosition) <= currentRadiusFilter) {
+        this.addMarker(techelevator);
+      }
+      this.addMarker(camden);
     },
     calculateAndDisplayRoute() {
       // var end = document.getElementById('end').value;

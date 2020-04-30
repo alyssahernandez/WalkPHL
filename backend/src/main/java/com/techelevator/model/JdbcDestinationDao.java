@@ -101,7 +101,7 @@ public class JdbcDestinationDao implements DestinationDao {
 		}
 			
 		Destination d = new Destination();
-    	
+    
 		d.setCity(results.getString("city"));
 		d.setDescription(results.getString("description"));
 		d.setDestinationId(results.getLong("destination_id"));

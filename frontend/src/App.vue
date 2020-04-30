@@ -42,7 +42,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
-              <router-link class="navbar-item blue-nav-item" :to="{name:'profile', params:{username: user}}"><b class="blue-nav-item">{{user}}</b></router-link>
+              <router-link class="navbar-item blue-nav-item" :to="{name:'profile', params:{username: user}}"><b>{{user}}</b></router-link>
             </div>
             <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
             <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
