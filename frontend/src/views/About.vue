@@ -3,9 +3,7 @@
     <div class="container content is-large">
         <h1>We are WalkPHL</h1>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
-            nec rutrum justo nibh eu lectus. 
-            Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+            Our goal is to help you, the intrepid city slicker, find everything that Philadelphia has to offer. From the cornucopia of local and international cuisines to the history of the nation's dawn, the city is brimming with opportunities for leisurely exploration.  We've found the spots; your next journey is a click away. What are you waiting for?
         </p>
     </div>
     <br>
@@ -17,9 +15,7 @@
                 </h1>
                 <div class="container content is-medium">
                     <p> 
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
-                        nec rutrum justo nibh eu lectus. 
-                        Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                        Upon checking in select locations, you'll receive an badge on your profile! By visiting the One Liberty Observation Deck, for example, you'll receive the Sky Badge — a WalkPHL favorite. We don't just give these things away, so we'll let you find the rest &#128521;. 
                     </p>
                 </div>
             </div>
@@ -33,9 +29,7 @@
                 </h1>
                 <div class="container content is-medium">
                     <p> 
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
-                        nec rutrum justo nibh eu lectus. 
-                        Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                        Effortlessly find popular tourist attractions near you.  We'll fill this out tonight, LeeAnn. Oh, and we have a RADIUS FINDER 3000!
                     </p>
                 </div>
             </div>
@@ -49,9 +43,7 @@
                 </h1>
                 <div class="container content is-medium">
                     <p> 
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus, 
-                        nec rutrum justo nibh eu lectus. 
-                        Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                       If you had a particularly enjoyable time at one of our curated destinations, we encourage you to leave a review! Philadelphia is visted by millions of individuals annually. Your feedback could be the reason that someone has an amazing adventure that they may not have otherwise had! 
                     </p>
                 </div>
                 <br>

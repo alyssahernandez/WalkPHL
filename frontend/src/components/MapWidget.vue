@@ -10,15 +10,18 @@
 
       <!-- buttons at the top -->
       <div class="location-buttons" v-show="choseDestination">
-        <button id="dir" v-on:click="renderDirections" class="button is-primary" >Get Directions</button>
+        <button id="dir" v-on:click="renderDirectionsButton" class="button is-primary" >Get Directions</button>
         <button
           class="button is-primary button-2"
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
         <button id="check-in-button" :disabled="checkedIn" class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
-        <p v-show="checkedIn">Hope you enjoy your visit!</p>
+        
       </div>
+      <p v-show="checkedIn">Hope you enjoy your visit!</p>
+
+      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Search Destinations or Categories" v-show="!choseDestination" v-model="searchText">
 
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
@@ -34,8 +37,8 @@
       </div>
 
       <!-- user selects transportation type -->
-      <div class="location-buttons select" v-show="!choseDestination">
-        <select id="type" v-model="currentTravelMode">
+      <div class="location-buttons select" v-show="choseDestination">
+        <select id="type" v-model="currentTravelMode" v-on:change="renderDirectionsMode">
           <option disabled selected value>Select a travel mode:</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -46,10 +49,9 @@
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
-        <input type="text" class="input location-buttons" placeholder="Search Destination" v-show="!choseDestination" v-model="searchText">
         <div class="container" v-show="!choseDestination">
           <div
-            class="box destination-list hover-mouse"
+            class="box destination-list hover-mouse center-text"
             v-bind:id="destination.destinationId"
             v-on:click="chooseDestination(destination)"
             v-for="destination in filterSearch()"
@@ -57,19 +59,18 @@
             v-bind:value="destination.name"
           >
             <img :src="require(`../assets/images/${destination.imgUrl}`)" alt="image of a destination in this list"/>
-            <h4><b>{{destination.name}}</b></h4>
-            <p>{{destination.category}}</p>
+            <h4><b>{{destination.name}}</b> - {{destination.category}}</h4>
+            <p></p>
             <p>{{destination.description}}</p>
-            <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
+            <p>Hours: {{destination.openFrom}} - {{destination.openTo}} <br>Open Weekends: {{destination.openOnWeekends}}</p>
           </div>
         </div>
 
         <div v-if="choseDestination" class="box center-text">
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)" alt="image of current destination"/>
-          <h4><b>{{currentDestination.name}}</b></h4>
-          <p>{{currentDestination.category}}</p>
+          <h4><b>{{currentDestination.name}}</b> - {{currentDestination.category}}</h4>
           <p>{{currentDestination.description}}</p>
-          <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
+          <p>Hours:  {{currentDestination.openFrom}} - {{currentDestination.openTo}} <br> Open Weekends:  {{currentDestination.openOnWeekends}}</p>
           <a class="icon" v-if="currentDestination.twitterHandle" v-bind:href="'https://twitter.com/' + currentDestination.twitterHandle">
             <img class="fas fa-home" :src="require(`../assets/images/twitter.png`)" alt="twitter icon"/>
           </a>    
@@ -172,15 +173,6 @@ let geocoder = null;
 let map = null;
 let directionsService = null;
 let directionsRenderer = null
-
-const camden =   {
-    name: 'Camden, NJ',
-    category: 'camden',
-    description: '...Nope',
-    latitude: 39.9259, 
-    longitude: -75.1196,
-    iconUrl: 'danger.png'
-};
 
 const techelevator = {
   name: 'What\'s this?',
@@ -303,6 +295,7 @@ export default {
     chooseDestination(destination) {
       this.choseDestination = true;
       this.currentDestination = destination;
+      directionsRenderer.map = null;
       console.log("hi chosedestination is now " + this.choseDestination);
       console.log(destination);
     },
@@ -327,6 +320,7 @@ export default {
     },
     leaveReview() {
       this.review.destinationId = this.currentDestination.destinationId;
+      this.review.username = this.username;
       fetch(`${process.env.VUE_APP_REMOTE_API}/leave-review`, {
         method: "POST",
         headers: {
@@ -420,9 +414,10 @@ export default {
     addMarker(location) {
 
       var scales = null;
-      if (location.category === 'camden') {
-        scales = new google.maps.Size(60, 60);
-      } else if (location.iconUrl === 'arts.png') {
+
+       if (location.iconUrl === 'arts.png') {
+        scales = new google.maps.Size(35, 35);
+      }  else if (location.iconUrl === 'globe.png') {
         scales = new google.maps.Size(35, 35);
       } else {
         scales = new google.maps.Size(30, 30);
@@ -437,10 +432,11 @@ export default {
       });
       let infowindow = null;
       marker.addListener(`dblclick`, () => this.markerClickHandler(marker));
+
       if (location.category === 'secret') {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <img src="' + require(`../assets/images/${location.imgUrl}`) + '" alt="a secret" height="150" width="150"/>'});
       } else {
-        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + require(`../assets/images/${location.imgUrl}`) + '">View on Wikipedia</a></p>'});
+        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + location.wiki + '">View on Wikipedia</a></p>'});
       }
       marker.addListener("click", function() {
         if (!this.displayInfo) {
@@ -464,16 +460,19 @@ export default {
       map.setCenter(marker.getPosition());
     },
     filterDestinations() {
-      for (var i = 0; i < this.markers.length; i++) {
+      for (var i = 0; i < this.markers.length; i++) {  
         this.markers[i].setMap(null);
       }
       const currentUserPosition = this.userPosition;
       const currentRadiusFilter = this.radiusFilter;
-      this.destinations.map(location => {
+      this.destinations.forEach(location => {
         if (filterByRadius(location, currentUserPosition) <= currentRadiusFilter) {
           this.addMarker(location);
         }
       })
+      if (filterByRadius(techelevator, currentUserPosition) <= currentRadiusFilter) {
+        this.addMarker(techelevator);
+      }
     },
     calculateAndDisplayRoute() {
       // var end = document.getElementById('end').value;
@@ -492,18 +491,26 @@ export default {
         }
       );
     },
-    renderDirections() {
+    renderDirectionsButton() {
       if (directionsRenderer.map != null) {
         directionsRenderer.setMap(null);
         directionsRenderer.setPanel(null);
         document.getElementById("dir").innerText = "Get Directions";
       } else {
-        directionsRenderer.setPanel(document.getElementById("right-panel"));
-        directionsRenderer.setMap(map);
-        this.calculateAndDisplayRoute();
+        this.renderDirections();
         document.getElementById("dir").innerText = "Hide Directions";
       }
     },    
+    renderDirectionsMode() {
+      if (directionsRenderer.map != null) {
+         this.renderDirections();
+      }
+    },
+    renderDirections(){
+        directionsRenderer.setPanel(document.getElementById("right-panel"));
+        directionsRenderer.setMap(map);
+        this.calculateAndDisplayRoute();
+    },
   },
   created() {
     this.reviews = this.getReviews();
@@ -560,7 +567,6 @@ export default {
     this.destinations.map(location => {
       this.addMarker(location);
     });
-    this.addMarker(camden);
     this.addMarker(techelevator);
 
 
@@ -716,8 +722,9 @@ body {
 }
 
 .maps {
-  margin-right: 400px;
+  margin-right: 20%;
 }
+
 #floating-panel {
   background: #fff;
   padding: 5px;

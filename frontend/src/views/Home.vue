@@ -9,7 +9,7 @@
       <div class="walkphl-wrap">
         <h1 class="app-title-landing mobile-landing-title">WalkPHL</h1>
       </div>
-      <p class="browser-view-description push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p class="browser-view-description push-away">Visiting Philadelphia? New to the city? Lifelong denizen looking to branch out? We've got you covered. Earn badges, leaves reviews, and enjoy your time exploring the city as you WalkPHL!</p>
  
       <p v-if="!userLoggedIn" class="mobile-view-description blue-font push-away">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <button v-on:click="initializeMapView" class="button is-rounded is-primary explore-btn desktop-button">Start Exploring</button>
@@ -112,7 +112,7 @@ export default {
 }
 
 .push-away {
-  margin-top: 7rem;
+  margin-top: 1rem;
   width: 75%;
 }
 

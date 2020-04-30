@@ -101,7 +101,7 @@ public class JdbcDestinationDao implements DestinationDao {
 		}
 			
 		Destination d = new Destination();
-    	
+    
 		d.setCity(results.getString("city"));
 		d.setDescription(results.getString("description"));
 		d.setDestinationId(results.getLong("destination_id"));
@@ -113,8 +113,8 @@ public class JdbcDestinationDao implements DestinationDao {
 		d.setCategoryId(results.getLong("category_id"));
 		d.setCategory(catName);
 		d.setOpenFrom(results.getString("open_from"));
-		d.setOpenOnWeekends(results.getString("open_to"));
-		d.setOpenTo(results.getString("weekends"));
+		d.setOpenOnWeekends(results.getString("weekends"));
+		d.setOpenTo(results.getString("open_to"));
 		d.setImgUrl(results.getString("img_url"));
 		d.setIconUrl(results.getString("icon_url"));
 		d.setWiki(results.getString("wiki"));
