@@ -10,15 +10,18 @@
 
       <!-- buttons at the top -->
       <div class="location-buttons" v-show="choseDestination">
-        <button id="dir" v-on:click="renderDirections" class="button is-primary" >Get Directions</button>
+        <button id="dir" v-on:click="renderDirectionsButton" class="button is-primary" >Get Directions</button>
         <button
           class="button is-primary button-2"
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
         <button id="check-in-button" :disabled="checkedIn" class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
-        <p v-show="checkedIn">Hope you enjoy your visit!</p>
+        
       </div>
+      <p v-show="checkedIn">Hope you enjoy your visit!</p>
+
+      <input type="text" class="input location-buttons" placeholder="Search Destinations or Categories" v-show="!choseDestination" v-model="searchText">
 
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
@@ -34,8 +37,8 @@
       </div>
 
       <!-- user selects transportation type -->
-      <div class="location-buttons select" v-show="!choseDestination">
-        <select id="type" v-model="currentTravelMode">
+      <div class="location-buttons select" v-show="choseDestination">
+        <select id="type" v-model="currentTravelMode" v-on:change="renderDirectionsMode">
           <option disabled selected value>Select a travel mode:</option>
           <option value="WALKING">Walk PHL!</option>
           <option value="BICYCLING">Bicycle</option>
@@ -46,10 +49,9 @@
 
       <!-- displays and loops through all of the locations -->
       <div id="destination-div">
-        <input type="text" class="input location-buttons" placeholder="Search Destination" v-show="!choseDestination" v-model="searchText">
         <div class="container" v-show="!choseDestination">
           <div
-            class="box destination-list hover-mouse"
+            class="box destination-list hover-mouse center-text"
             v-bind:id="destination.destinationId"
             v-on:click="chooseDestination(destination)"
             v-for="destination in filterSearch()"
@@ -57,17 +59,16 @@
             v-bind:value="destination.name"
           >
             <img :src="require(`../assets/images/${destination.imgUrl}`)" alt="image of a destination in this list"/>
-            <h4><b>{{destination.name}}</b></h4>
-            <p>{{destination.category}}</p>
+            <h4><b>{{destination.name}}</b> - {{destination.category}}</h4>
+            <p></p>
             <p>{{destination.description}}</p>
-            <p>{{destination.openFrom}} - {{destination.openTo}} - Weekends:{{destination.openOnWeekends}}</p>
+            <p>Hours: {{destination.openFrom}} - {{destination.openTo}} <br>Open Weekends: {{destination.openOnWeekends}}</p>
           </div>
         </div>
 
         <div v-if="choseDestination" class="box center-text">
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)" alt="image of current destination"/>
-          <h4><b>{{currentDestination.name}}</b></h4>
-          <p>{{currentDestination.category}}</p>
+          <h4><b>{{currentDestination.name}}</b> - {{currentDestination.category}}</h4>
           <p>{{currentDestination.description}}</p>
           <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
           <a class="icon" v-if="currentDestination.twitterHandle" v-bind:href="'https://twitter.com/' + currentDestination.twitterHandle">
@@ -303,6 +304,7 @@ export default {
     chooseDestination(destination) {
       this.choseDestination = true;
       this.currentDestination = destination;
+      directionsRenderer.map = null;
       console.log("hi chosedestination is now " + this.choseDestination);
       console.log(destination);
     },
@@ -439,8 +441,10 @@ export default {
       marker.addListener(`dblclick`, () => this.markerClickHandler(marker));
       if (location.category === 'secret') {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <img src="' + require(`../assets/images/${location.imgUrl}`) + '" alt="a secret" height="150" width="150"/>'});
+      } else if (location.category === 'camden') {
+        infowindow = new google.maps.InfoWindow({content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p>' })
       } else {
-        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + require(`../assets/images/${location.imgUrl}`) + '">View on Wikipedia</a></p>'});
+        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + location.wiki + '">View on Wikipedia</a></p>'});
       }
       marker.addListener("click", function() {
         if (!this.displayInfo) {
@@ -492,18 +496,26 @@ export default {
         }
       );
     },
-    renderDirections() {
+    renderDirectionsButton() {
       if (directionsRenderer.map != null) {
         directionsRenderer.setMap(null);
         directionsRenderer.setPanel(null);
         document.getElementById("dir").innerText = "Get Directions";
       } else {
-        directionsRenderer.setPanel(document.getElementById("right-panel"));
-        directionsRenderer.setMap(map);
-        this.calculateAndDisplayRoute();
+        this.renderDirections();
         document.getElementById("dir").innerText = "Hide Directions";
       }
     },    
+    renderDirectionsMode() {
+      if (directionsRenderer.map != null) {
+         this.renderDirections();
+      }
+    },
+    renderDirections(){
+        directionsRenderer.setPanel(document.getElementById("right-panel"));
+        directionsRenderer.setMap(map);
+        this.calculateAndDisplayRoute();
+    },
   },
   created() {
     this.reviews = this.getReviews();
