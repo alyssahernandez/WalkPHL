@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="admin-features">
+  <div id="app" class="admin-features container">
     <form @submit.prevent="addDestination">
       <h1 class="add-header">
         Add a destination
