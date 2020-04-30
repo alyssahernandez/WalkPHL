@@ -27,14 +27,11 @@
         <router-link class="navbar-item" :to="{name: 'review'}">
           Reviews
         </router-link>
-        <a class="navbar-item">
-          Contact
-        </a>
         <hr class="navbar-divider">
         <router-link class="navbar-item" v-if="userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
           Admin Features
         </router-link>
-        <router-link class="navbar-item" v-else :to="{name: 'locationrequest'}">
+        <router-link class="navbar-item" v-if="userRole == 'City Visitor'" :to="{name: 'locationrequest'}">
          Location Request
         </router-link>
 

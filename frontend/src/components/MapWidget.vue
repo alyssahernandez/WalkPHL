@@ -70,7 +70,7 @@
           <img :src="require(`../assets/images/${currentDestination.imgUrl}`)" alt="image of current destination"/>
           <h4><b>{{currentDestination.name}}</b> - {{currentDestination.category}}</h4>
           <p>{{currentDestination.description}}</p>
-          <p>{{currentDestination.openFrom}} - {{currentDestination.openTo}} - Weekends:{{currentDestination.openOnWeekends}}</p>
+          <p>Hours:  {{currentDestination.openFrom}} - {{currentDestination.openTo}} <br> Open Weekends:  {{currentDestination.openOnWeekends}}</p>
           <a class="icon" v-if="currentDestination.twitterHandle" v-bind:href="'https://twitter.com/' + currentDestination.twitterHandle">
             <img class="fas fa-home" :src="require(`../assets/images/twitter.png`)" alt="twitter icon"/>
           </a>    
@@ -329,6 +329,7 @@ export default {
     },
     leaveReview() {
       this.review.destinationId = this.currentDestination.destinationId;
+      this.review.username = this.username;
       fetch(`${process.env.VUE_APP_REMOTE_API}/leave-review`, {
         method: "POST",
         headers: {
