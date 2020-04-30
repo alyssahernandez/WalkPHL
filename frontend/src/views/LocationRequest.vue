@@ -2,10 +2,9 @@
   <div id="app" class="location-request">
     <form class="location-request" @submit.prevent="addRequest">
       <p>
-        <strong>Recommend a destination!</strong>
+        <strong class="request-header">Recommend a destination!</strong>
       </p>
-      <label for="name">
-        Name
+      
         <input
           type="text"
           v-model="destination.name"
@@ -16,9 +15,8 @@
           required
           autofocus
         />
-      </label>
-
-      <button class="button" type="submit">Submit Location</button>
+        <br>
+      <button class="button is-rounded is-primary" type="submit">Submit Location</button>
     </form>
   </div>
 </template>
@@ -80,6 +78,13 @@ export default {
   flex-direction: column;
   z-index: 9;
 }
+
+.request-header {
+    font-family: 'Francois One', sans-serif;
+    color: #03b6fc;
+    font-size: 3em;
+    text-align: center;
+  }
 
 
 
