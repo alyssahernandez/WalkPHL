@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="location-request">
-    <form @submit.prevent="addRequest">
+    <form class="location-request" @submit.prevent="addRequest">
       <p>
         <strong>Recommend a destination!</strong>
       </p>
@@ -69,4 +69,18 @@ export default {
 </script>
 
 <style>
+
+.location-request {
+  height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9;
+}
+
+
+
 </style>
