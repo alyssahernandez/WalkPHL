@@ -21,7 +21,7 @@
       </div>
       <p v-show="checkedIn">Hope you enjoy your visit!</p>
 
-      <input type="text" class="input location-buttons" placeholder="Search Destinations or Categories" v-show="!choseDestination" v-model="searchText">
+      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Search Destinations or Categories" v-show="!choseDestination" v-model="searchText">
 
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
