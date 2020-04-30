@@ -166,10 +166,6 @@ export default {
     return {
       username: null,
       user: null,
-      userSub: {
-        username: auth.getUser().sub,
-        bio: ''
-      },
       badgesOn: true,
       checkInsOn: false,
       reviewsOn: false

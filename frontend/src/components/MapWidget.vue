@@ -460,13 +460,12 @@ export default {
       map.setCenter(marker.getPosition());
     },
     filterDestinations() {
-      for (var i = 0; i < this.markers.length; i++) {
-        
+      for (var i = 0; i < this.markers.length; i++) {  
         this.markers[i].setMap(null);
       }
       const currentUserPosition = this.userPosition;
       const currentRadiusFilter = this.radiusFilter;
-      this.destinations.map(location => {
+      this.destinations.forEach(location => {
         if (filterByRadius(location, currentUserPosition) <= currentRadiusFilter) {
           this.addMarker(location);
         }
