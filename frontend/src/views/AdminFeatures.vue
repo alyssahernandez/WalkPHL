@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="admin-features">
     <form @submit.prevent="addDestination">
-      <h1>
-        <strong>Add a destination</strong>
+      <h1 class="add-header">
+        Add a destination
       </h1>
       <label for="name">
         Name
@@ -165,12 +165,12 @@
         />
       </label>
 
-
-      <button class="button" type="submit">Submit Location</button>
+      <br>
+      <button class="button is-primary" type="submit">Submit Destination</button>
     </form>
     <br>
     <br>
-    <h1> 
+    <h1 class="add-header"> 
       Current Requests:
     </h1>
 
@@ -281,4 +281,12 @@ export default {
 </script>
 
 <style>
+
+.add-header {
+    font-family: 'Francois One', sans-serif;
+    color: #03b6fc;
+    font-size: 2em;
+    text-align: center;
+  }
+
 </style>
