@@ -48,7 +48,7 @@ public class ApiController {
         In this example, if the user does not have the admin role
         we send back an unauthorized error.
         */
-        if (!authProvider.userHasRole(new String[] { "City Administrator" })) {
+        if (!authProvider.userHasRole(new String[] { "admin" })) {
             throw new UnauthorizedException();
         }
         return "Success";
