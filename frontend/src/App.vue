@@ -7,8 +7,6 @@
           <h1 class="app-title-white navbar-item has-text-centered">
             <a class="walk-phl-nav blue-nav-item" href="/">WalkPHL</a>
           </h1>
-
-          
         <a role="button" class="navbar-burger burger { is Active }" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -21,33 +19,27 @@
         
           
         <router-link class="navbar-item" :to="{name: 'about'}">
-          About WalkPHL
+          About
+        </router-link>
+        <router-link class="navbar-item" :to="{name: 'badges'}">
+          Badges
+        </router-link>
+        <router-link class="navbar-item" :to="{name: 'review'}">
+          Reviews
+        </router-link>
+        <hr class="navbar-divider">
+        <router-link class="navbar-item" v-if="loggedIn && userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
+          Admin Features
+        </router-link>
+        <router-link class="navbar-item" v-if="loggedIn && userRole == 'City Visitor'" :to="{name: 'locationrequest'}">
+         Location Request
         </router-link>
 
         
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="navbar-item has-dropdown is-hoverable" v-if="loggedIn">
-              <router-link class="navbar-item navbar-link" :to="{name:'profile', params:{username: user}}">{{user}}</router-link>
-
-              <div class="navbar-dropdown">
-                <router-link class="navbar-item" :to="{name: 'badges'}">
-                  Badges
-                </router-link>
-                <router-link class="navbar-item" :to="{name: 'review'}">
-                  Reviews
-                </router-link>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider">
-                <router-link class="navbar-item" v-if="userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
-                Admin Features
-                </router-link>
-                <router-link class="navbar-item" v-else :to="{name: 'locationrequest'}">
-                Location Request
-                </router-link>
-              </div>
+              <router-link class="navbar-item blue-nav-item" :to="{name:'profile', params:{username: user}}"><b>{{user}}</b></router-link>
             </div>
             <router-link class="navbar-item" v-if="!loggedIn" :to="{name:'login'}">Sign In</router-link>
             <a class="navbar-item" v-if="loggedIn" v-on:click.prevent="logout" href="/logout">Logout</a>
@@ -105,6 +97,9 @@ export default {
     },
   },
   created() {    
+      this.loggedIn = auth.loggedIn();
+      this.user = auth.getUser().sub;
+      this.userRole = auth.getUser().rol;
   }
 };
 
@@ -170,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .space-below-input {
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 </style>

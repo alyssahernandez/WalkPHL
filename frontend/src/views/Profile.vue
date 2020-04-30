@@ -11,7 +11,7 @@
           <section class="modal-card-body">
             <label class="label">Description</label>
             <p class="control">
-              <textarea class="textarea" placeholder="Describe Yourself!" v-model="userSub.bio"></textarea>
+              <textarea class="textarea" placeholder="Describe Yourself!" v-model="user.user.bio"></textarea>
             </p>
           </section>
           <footer class="modal-card-foot">
@@ -166,10 +166,6 @@ export default {
     return {
       username: null,
       user: null,
-      userSub: {
-        username: auth.getUser().sub,
-        bio: ''
-      },
       badgesOn: true,
       checkInsOn: false,
       reviewsOn: false
@@ -203,7 +199,7 @@ export default {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(this.userSub)
+        body: JSON.stringify(this.user.user)
       })
       .then(response => {
         if(response.ok) {
