@@ -174,15 +174,6 @@ let map = null;
 let directionsService = null;
 let directionsRenderer = null
 
-const camden =   {
-    name: 'Camden, NJ',
-    category: 'camden',
-    description: '...Nope',
-    latitude: 39.9259, 
-    longitude: -75.1196,
-    iconUrl: 'danger.png'
-};
-
 const techelevator = {
   name: 'What\'s this?',
   category: 'secret',
@@ -423,9 +414,10 @@ export default {
     addMarker(location) {
 
       var scales = null;
-      if (location.category === 'camden') {
-        scales = new google.maps.Size(60, 60);
-      } else if (location.iconUrl === 'arts.png') {
+
+       if (location.iconUrl === 'arts.png') {
+        scales = new google.maps.Size(35, 35);
+      }  else if (location.iconUrl === 'globe.png') {
         scales = new google.maps.Size(35, 35);
       } else {
         scales = new google.maps.Size(30, 30);
@@ -443,8 +435,6 @@ export default {
 
       if (location.category === 'secret') {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <img src="' + require(`../assets/images/${location.imgUrl}`) + '" alt="a secret" height="150" width="150"/>'});
-      } else if (location.category === 'camden') {
-        infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p>' });
       } else {
         infowindow = new google.maps.InfoWindow({ content: '<b><h1 style="padding-bottom: 4px"></b>' + location.name + '</h1><p style="padding-bottom: 4px">' + location.description + '</p> <p><a style="color: blue" href="' + location.wiki + '">View on Wikipedia</a></p>'});
       }
@@ -484,7 +474,6 @@ export default {
       if (filterByRadius(techelevator, currentUserPosition) <= currentRadiusFilter) {
         this.addMarker(techelevator);
       }
-      this.addMarker(camden);
     },
     calculateAndDisplayRoute() {
       // var end = document.getElementById('end').value;
@@ -579,7 +568,6 @@ export default {
     this.destinations.map(location => {
       this.addMarker(location);
     });
-    this.addMarker(camden);
     this.addMarker(techelevator);
 
 
@@ -735,8 +723,9 @@ body {
 }
 
 .maps {
-  margin-right: 400px;
+  margin-right: 20%;
 }
+
 #floating-panel {
   background: #fff;
   padding: 5px;

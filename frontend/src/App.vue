@@ -28,10 +28,10 @@
           Reviews
         </router-link>
         <hr class="navbar-divider">
-        <router-link class="navbar-item" v-if="userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
+        <router-link class="navbar-item" v-if="loggedIn && userRole == 'City Administrator'" :to="{name: 'adminfeatures'}">
           Admin Features
         </router-link>
-        <router-link class="navbar-item" v-if="loggedIn" :to="{name: 'locationrequest'}">
+        <router-link class="navbar-item" v-if="loggedIn && userRole == 'City Visitor'" :to="{name: 'locationrequest'}">
          Location Request
         </router-link>
 
