@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="admin-features">
+  <div id="app" class="admin-features container">
     <form @submit.prevent="addDestination">
       <h1 class="add-header">
         Add a destination
@@ -12,7 +12,7 @@
           placeholder="Name"
           id="name"
           class="input"
-          maxlength="30"
+          maxlength="128"
           required
           autofocus
         />
@@ -25,7 +25,7 @@
           placeholder="description"
           id="description"
           class="input"
-          maxlength="30"
+          maxlength="255"
           required
           autofocus
         />
@@ -38,7 +38,7 @@
           placeholder="Latitude"
           id="latitude"
           class="input"
-          maxlength="30"
+          maxlength="128"
           required
           autofocus
         />
@@ -51,7 +51,7 @@
           placeholder="longitude"
           id="longitude"
           class="input"
-          maxlength="30"
+          maxlength="128"
           required
           autofocus
         />
@@ -64,7 +64,7 @@
           placeholder="Philadelphia"
           id="city"
           class="input"
-          maxlength="30"
+          maxlength="64"
           required
           autofocus
         />
@@ -77,7 +77,7 @@
           placeholder="PA"
           id="state"
           class="input"
-          maxlength="30"
+          maxlength="32"
           required
           autofocus
         />
@@ -90,7 +90,7 @@
           placeholder="19103"
           id="zip_code"
           class="input"
-          maxlength="30"
+          maxlength="16"
           required
           autofocus
         />
@@ -103,7 +103,7 @@
           placeholder="0000"
           id="openFrom"
           class="input"
-          maxlength="30"
+          maxlength="32"
           required
           autofocus
         />
@@ -116,7 +116,7 @@
           placeholder="0000"
           id="openTo"
           class="input"
-          maxlength="30"
+          maxlength="32"
           required
           autofocus
         />
@@ -148,7 +148,7 @@
           placeholder="wiki"
           id="wiki"
           class="input"
-          maxlength="30"
+          maxlength="255"
           autofocus
         />
       </label>
@@ -160,7 +160,7 @@
           placeholder="twitterHandle"
           id="wiki"
           class="input"
-          maxlength="30"
+          maxlength="128"
           autofocus
         />
       </label>
