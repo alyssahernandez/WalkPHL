@@ -11,7 +11,7 @@
           placeholder="Name"
           id="name"
           class="input"
-          maxlength="30"
+          maxlength="64"
           required
           autofocus
         />
