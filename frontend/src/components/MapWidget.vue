@@ -16,13 +16,15 @@
           v-if="userLoggedIn"
           v-on:click="reviewButtonClicked"
         >Show Reviews</button>
-        <button id="check-in-button" :disabled="checkedIn" class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>
-        
+        <button id="check-in-button" :disabled="checkedIn" class="button is-primary button-3" v-if="userLoggedIn" v-on:click="checkIn()">Check-In</button>   
       </div>
       <p v-show="checkedIn">Hope you enjoy your visit!</p>
 
+      <p v-show="!choseDestination"><b>Search:</b></p>
       <input type="text" id="searchfilter" class="input location-buttons" placeholder="Search Destinations or Categories" v-show="!choseDestination" v-model="searchText">
-
+      <p v-show="!choseDestination"><b>Filter by distance:</b></p>
+     
+      <p class="directions-error" v-show="!selectedMode">Please select a travel mode from the drop-down menu below.</p>
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
         <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
@@ -37,6 +39,7 @@
       </div>
 
       <!-- user selects transportation type -->
+      <p v-show="hasSelectedTravelMode"></p>
       <div class="location-buttons select" v-show="choseDestination">
         <select id="type" v-model="currentTravelMode" v-on:change="renderDirectionsMode">
           <option disabled selected value>Select a travel mode:</option>
@@ -240,6 +243,7 @@ export default {
       currentDestination: '',
       currentTravelMode: '',
       checkedIn: false,
+      selectedMode: true,
     };
   },
   props: {
@@ -249,6 +253,9 @@ export default {
     userLoggedIn() {
       return auth.getToken() != null;
     },
+    hasSelectedTravelMode() {
+      return this.currentTravelMode === '';
+    }
   },
   methods: {
     filterSearch() {
@@ -306,6 +313,7 @@ export default {
       this.displayReviews = false;
       document.getElementById("dir").innerText = "Get Directions";
       this.resetDirectionsBackButton();
+      this.selectedMode = true;
     },
     swipeUpSidebar() {
       let swipeDiv = document.getElementById("swiper");
@@ -492,13 +500,19 @@ export default {
       );
     },
     renderDirectionsButton() {
-      if (directionsRenderer.map != null) {
+      if (document.getElementById('radius').value == 100000 || document.getElementById('radius').value == '' || document.getElementById('radius').value == null) {
+        document.getElementById("dir").innerText = "Get Directions";
+        this.selectedMode = false;
+      }
+      else if (directionsRenderer.getMap() != null) {
         directionsRenderer.setMap(null);
         directionsRenderer.setPanel(null);
         document.getElementById("dir").innerText = "Get Directions";
+        //this.selectedRadius = true;
       } else {
         this.renderDirections();
         document.getElementById("dir").innerText = "Hide Directions";
+        this.selectedMode = true;
       }
     },    
     renderDirectionsMode() {
@@ -563,11 +577,11 @@ export default {
 
 
     // Getting an array of markets to plop on our map
-
+    this.addMarker(techelevator);
     this.destinations.map(location => {
       this.addMarker(location);
     });
-    this.addMarker(techelevator);
+    
 
 
     // This sets an infowindow on our current location.
@@ -746,6 +760,10 @@ h4 {
 
 .center-text {
   text-align: center;
+}
+
+.directions-error {
+  color: red;
 }
 @media print {
   #map {
