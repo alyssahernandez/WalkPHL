@@ -66,15 +66,14 @@ export default {
       })
       .then((response) => {
         if(response.ok) {
-          console.log(response);
+          //console.log(response);
           return response.json();
         }
       })
       .then((reviews) => {
-        console.log(reviews);
+        //console.log(reviews);
         this.reviews = reviews;
-      })
-      .catch(err => {console.log(err)})
+      });
     }
   },
   created() {
