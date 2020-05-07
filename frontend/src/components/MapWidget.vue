@@ -39,7 +39,7 @@
       <p v-show="!choseDestination"><b>Filter locations by distance:</b></p>
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
-        <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
+        <select v-on:change="filterIcons" v-model="radiusFilter" id="radius">
           <option disabled selected value="100000">Limit search radius to:</option>
           <option value="250">250 Meters</option>
           <option value="804">Half Mile</option>
@@ -50,7 +50,7 @@
         </select>
       </div>
       <p v-show="!choseDestination"><b>Search locations and categories:</b></p>
-      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Enter a location or category" v-show="!choseDestination" v-model="searchText" v-on:input="filterIconsBySearch">
+      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Enter a location or category" v-show="!choseDestination" v-model="searchText" v-on:input="filterIcons">
 
       <p class="directions-error" v-show="!selectedMode">Please select a travel mode from the drop-down menu below.</p>
 
@@ -503,6 +503,7 @@ export default {
 
       map.setCenter(marker.getPosition());
     },
+    /*
     filterDestinations() {
       for (var i = 0; i < this.markers.length; i++) {  
         this.markers[i].setMap(null);
@@ -517,19 +518,25 @@ export default {
       if (filterByRadius(techelevator, currentUserPosition) <= currentRadiusFilter) {
         this.addMarker(techelevator);
       }
-    },
-    filterIconsBySearch() {
+    }, */
+    filterIcons() {
       for (var i = 0; i < this.markers.length; i++) {  
         this.markers[i].setMap(null);
       }
       const filter = new RegExp(this.searchText, 'i');
       this.destinations.forEach(location => {
         if (location.name.match(filter) || location.category.match(filter)) {
-          this.addMarker(location);
+          if (filterByRadius(location, this.userPosition) <= this.radiusFilter) {
+            this.addMarker(location);
+          }
+          
         }
       })
       if (techelevator.name.match(filter) || techelevator.category.match(filter)) {
-        this.addMarker(techelevator);
+        if (filterByRadius(location, this.userPosition) <= this.radiusFilter) {
+          this.addMarker(techelevator);
+        }
+        
       }
     },
     calculateAndDisplayRoute() {
