@@ -15,7 +15,8 @@
         <option value="default">Default</option>
         <option value="silver">Silver</option>
         <option value="retro">Retro</option>
-        <option value="dark">Dark Mode</option>
+        <option value="dark">Dark</option>
+        <option value="night">Night</option>
         <option value="aubergine">Aubergine</option>
       </select>
       </div>
@@ -290,8 +291,10 @@ export default {
         map.setOptions({styles: mapstyles.silver});
       } else if (this.mapMode === 'aubergine') {
         map.setOptions({styles: mapstyles.aubergine});
+      } else if (this.mapMode === 'night') {
+        map.setOptions({styles: mapstyles.night})
       } else {
-        map.setOptions({styles: []});
+        map.setOptions({styles: mapstyles.default});
       }
     },
     filterSearch() {
@@ -588,7 +591,9 @@ export default {
     // Initialization of Maps objects
     google = await gmapsInit();
     geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById("map"));
+    map = new google.maps.Map(document.getElementById("map"), {
+      styles: mapstyles.default,
+    });
 
     //const places = new google.maps.places.PlacesService(map);
     directionsService = new google.maps.DirectionsService();
