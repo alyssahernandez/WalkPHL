@@ -4,7 +4,7 @@
 
     <!-- entire side bar -->
     <div v-show="panel" id="right-panel">
-      
+    
       <!-- back button to go back to destination choice list -->
       <button v-show="choseDestination" class="button" id="back-button" v-on:click="showDestinationDivs">&#10229; Back</button>
 
@@ -19,6 +19,8 @@
         <option value="aubergine">Aubergine</option>
       </select>
       </div>
+
+      
 
       <!-- buttons at the top -->
       <div class="location-buttons" v-show="choseDestination">
@@ -37,7 +39,7 @@
       <p v-show="!choseDestination"><b>Filter locations by distance:</b></p>
       <!-- user selects radius -->
       <div class="location-buttons select" v-show="!choseDestination">
-        <select v-on:change="filterDestinations" v-model="radiusFilter" id="radius">
+        <select v-on:change="filterIcons" v-model="radiusFilter" id="radius">
           <option disabled selected value="100000">Limit search radius to:</option>
           <option value="250">250 Meters</option>
           <option value="804">Half Mile</option>
@@ -48,7 +50,7 @@
         </select>
       </div>
       <p v-show="!choseDestination"><b>Search locations and categories:</b></p>
-      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Enter a location or category" v-show="!choseDestination" v-model="searchText">
+      <input type="text" id="searchfilter" class="input location-buttons" placeholder="Enter a location or category" v-show="!choseDestination" v-model="searchText" v-on:input="filterIcons">
 
       <p class="directions-error" v-show="!selectedMode">Please select a travel mode from the drop-down menu below.</p>
 
@@ -187,18 +189,21 @@
 
 import gmapsInit from "./../utils/gmaps";
 import auth from "../auth";
+import mapstyles from "../mapstyles.json";
 
 let google = null;
 let geocoder = null;
 let map = null;
 let directionsService = null;
-let directionsRenderer = null
+let directionsRenderer = null;
+
+//const vm = this;
 
 const techelevator = {
-  name: 'What\'s this?',
-  category: 'secret',
-  description: 'Like our app? Find your way here to learn how to make your own',
-  latitude: 39.94939,
+  name: '???',
+  category: '',
+  description: 'Like our app? Find your way here to learn how to make your own.',
+  latitude: 39.949390,
   longitude: -75.169212,
   iconUrl: 'question.png',
   imgUrl: 'dmp.jpg'
@@ -220,7 +225,6 @@ function filterByRadius(location, pos) {
   var d = R * c;
   return d;
 }
-
 
 export default {
   name: "map-widget",
@@ -262,6 +266,7 @@ export default {
       checkedIn: false,
       selectedMode: true,
       mapMode: '',
+      placeId: null,
     };
   },
   props: {
@@ -278,13 +283,13 @@ export default {
   methods: {
     toggleMapMode() {
       if (this.mapMode === 'dark') {
-        map.setOptions({styles: da});
+        map.setOptions({styles: mapstyles.dark});
       } else if (this.mapMode === 'retro') {
-        map.setOptions({styles: ret});
+        map.setOptions({styles: mapstyles.retro});
       } else if (this.mapMode === 'silver') {
-        map.setOptions({styles: silv});
+        map.setOptions({styles: mapstyles.silver});
       } else if (this.mapMode === 'aubergine') {
-        map.setOptions({styles: aub});
+        map.setOptions({styles: mapstyles.aubergine});
       } else {
         map.setOptions({styles: []});
       }
@@ -318,7 +323,6 @@ export default {
           }
         })
         .then(reviews => {
-          console.log(reviews);
           this.reviews = reviews;
         })
         .catch(err => {
@@ -334,8 +338,23 @@ export default {
       this.choseDestination = true;
       this.currentDestination = destination;
       directionsRenderer.map = null;
-      console.log("hi chosedestination is now " + this.choseDestination);
-      console.log(destination);
+      
+      // Note to self: This + the callback method below stores a PlaceID. With this, we'll be able to get address/hours/pictures/etc etc. dynamically.
+
+      var request = {
+        query: this.currentDestination.name + ', Philadelphia'
+      };
+
+      var service = new google.maps.places.PlacesService(map);
+      service.textSearch(request, this.callback);
+
+    },
+    callback(results, status) {
+      const vm = this;
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        vm.placeId =  results[0].place_id;
+        console.log(vm.placeId);
+      }
     },
     showDestinationDivs() {
       this.checkedIn = false;
@@ -378,17 +397,9 @@ export default {
         })
         .then(err => console.log(err));
     },
-    getDestinations() {},
     reviewButtonClicked() {
       this.displayReviews = !this.displayReviews;
     },
-    /* removed this from a v-on:click event on the loop through destinations list
-      showDestinationInfo(destination) {
-        console.log(destination);
-        this.destinationPosition.lat = destination.lat; 
-        this.destinationPosition.long = destination.lng;
-        console.log(this.destinationPosition);
-      }, */
     fetchDestinations() {
       let promise = null;
         promise = fetch(`${process.env.VUE_APP_REMOTE_API}/destinations`, {
@@ -411,17 +422,8 @@ export default {
     },
     checkIn() {
       this.checkedIn = true;
-
       this.checkInObject.username = this.username;
-      console.log("ugh: " + this.checkInObject.username);
       this.checkInObject.destinationId = this.currentDestination.destinationId;
-      console.log("dfgadfg: " + this.checkInObject.destinationId);
-
-      let bodyyy = JSON.stringify(this.checkInObject);
-      console.log("hellllo before body");
-      console.log(bodyyy);
-      console.log("helllo after body");
-
 
       fetch(`${process.env.VUE_APP_REMOTE_API}/check-in`, {
           method: "POST",
@@ -434,23 +436,18 @@ export default {
         }
       )
         .then(response => {
-          console.log("username: " + this.username);
-          console.log("destinationId: " + this.currentDestination.destinationId);
           if (response.ok) {
             // this.$router.push({ path: "/" });
             console.log("Successful check-in");
           } else {
-            console.log(this.username);
-            console.log(this.currentDestination);
             console.log("Error checking in");
-            console.log(this.checkInObject);
           }
         })
         .then(err => console.log(err));
     },
 
     addMarker(location) {
-
+      const vm = this;
       var scales = null;
 
        if (location.iconUrl === 'arts.png') {
@@ -484,6 +481,15 @@ export default {
           infowindow.close(map, marker);
           this.displayInfo = !this.displayInfo;
         }
+
+        // Syncs up icon clicks with sidebar. Every so often, an infowindow won't display properly, but the sidebar changes. Not sure what's going on there yet, but ignoring it for now - Brooks
+        if (!vm.choseDestination) {
+          vm.chooseDestination(location) 
+        } else if (vm.choseDestination && (vm.currentDestination != location)){
+          vm.chooseDestination(location);
+        } else {
+          vm.choseDestination = false;
+        }
       });
 
       this.markers.push(marker);
@@ -497,6 +503,7 @@ export default {
 
       map.setCenter(marker.getPosition());
     },
+    /*
     filterDestinations() {
       for (var i = 0; i < this.markers.length; i++) {  
         this.markers[i].setMap(null);
@@ -510,6 +517,26 @@ export default {
       })
       if (filterByRadius(techelevator, currentUserPosition) <= currentRadiusFilter) {
         this.addMarker(techelevator);
+      }
+    }, */
+    filterIcons() {
+      for (var i = 0; i < this.markers.length; i++) {  
+        this.markers[i].setMap(null);
+      }
+      const filter = new RegExp(this.searchText, 'i');
+      this.destinations.forEach(location => {
+        if (location.name.match(filter) || location.category.match(filter)) {
+          if (filterByRadius(location, this.userPosition) <= this.radiusFilter) {
+            this.addMarker(location);
+          }
+          
+        }
+      })
+      if (techelevator.name.match(filter) || techelevator.category.match(filter)) {
+        if (filterByRadius(location, this.userPosition) <= this.radiusFilter) {
+          this.addMarker(techelevator);
+        }
+        
       }
     },
     calculateAndDisplayRoute() {
@@ -610,654 +637,10 @@ export default {
     infoWindow.open(map);
     map.setCenter({ lat: 39.9526, lng: -75.1652 });
     map.setZoom(14);
+    
   }
 };
 
-// Giant blocks of JSON for maps styling. This needs moved elsewhere, but it was a last-minute addition.
-const aub = [
-            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-            {
-              featureType: 'administrative.locality',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'geometry',
-              stylers: [{color: '#263c3f'}]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#6b9a76'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{color: '#38414e'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#212a37'}]
-            },
-            {
-              featureType: 'road',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#9ca5b3'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{color: '#746855'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#1f2835'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#f3d19c'}]
-            },
-            {
-              featureType: 'transit',
-              elementType: 'geometry',
-              stylers: [{color: '#2f3948'}]
-            },
-            {
-              featureType: 'transit.station',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{color: '#17263c'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#515c6d'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.stroke',
-              stylers: [{color: '#17263c'}]
-            }
-          ];
-
-const ret = [
-              {
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#ebe3cd"
-                  }
-                ]
-              },
-              {
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#523735"
-                  }
-                ]
-              },
-              {
-                "elementType": "labels.text.stroke",
-                "stylers": [
-                  {
-                    "color": "#f5f1e6"
-                  }
-                ]
-              },
-              {
-                "featureType": "administrative",
-                "elementType": "geometry.stroke",
-                "stylers": [
-                  {
-                    "color": "#c9b2a6"
-                  }
-                ]
-              },
-              {
-                "featureType": "administrative.land_parcel",
-                "elementType": "geometry.stroke",
-                "stylers": [
-                  {
-                    "color": "#dcd2be"
-                  }
-                ]
-              },
-              {
-                "featureType": "administrative.land_parcel",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#ae9e90"
-                  }
-                ]
-              },
-              {
-                "featureType": "landscape.natural",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#dfd2ae"
-                  }
-                ]
-              },
-              {
-                "featureType": "poi",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#dfd2ae"
-                  }
-                ]
-              },
-              {
-                "featureType": "poi",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#93817c"
-                  }
-                ]
-              },
-              {
-                "featureType": "poi.park",
-                "elementType": "geometry.fill",
-                "stylers": [
-                  {
-                    "color": "#a5b076"
-                  }
-                ]
-              },
-              {
-                "featureType": "poi.park",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#447530"
-                  }
-                ]
-              },
-              {
-                "featureType": "road",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#f5f1e6"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.arterial",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#fdfcf8"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.highway",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#f8c967"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.highway",
-                "elementType": "geometry.stroke",
-                "stylers": [
-                  {
-                    "color": "#e9bc62"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.highway.controlled_access",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#e98d58"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.highway.controlled_access",
-                "elementType": "geometry.stroke",
-                "stylers": [
-                  {
-                    "color": "#db8555"
-                  }
-                ]
-              },
-              {
-                "featureType": "road.local",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#806b63"
-                  }
-                ]
-              },
-              {
-                "featureType": "transit.line",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#dfd2ae"
-                  }
-                ]
-              },
-              {
-                "featureType": "transit.line",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#8f7d77"
-                  }
-                ]
-              },
-              {
-                "featureType": "transit.line",
-                "elementType": "labels.text.stroke",
-                "stylers": [
-                  {
-                    "color": "#ebe3cd"
-                  }
-                ]
-              },
-              {
-                "featureType": "transit.station",
-                "elementType": "geometry",
-                "stylers": [
-                  {
-                    "color": "#dfd2ae"
-                  }
-                ]
-              },
-              {
-                "featureType": "water",
-                "elementType": "geometry.fill",
-                "stylers": [
-                  {
-                    "color": "#b9d3c2"
-                  }
-                ]
-              },
-              {
-                "featureType": "water",
-                "elementType": "labels.text.fill",
-                "stylers": [
-                  {
-                    "color": "#92998d"
-                  }
-                ]
-              }
-            ];
-
-const silv = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#f5f5f5"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#f5f5f5"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#bdbdbd"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#eeeeee"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#e5e5e5"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#ffffff"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dadada"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#e5e5e5"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#eeeeee"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#c9c9c9"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  }
-];
-
-const da = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#212121"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#212121"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.country",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#9e9e9e"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.locality",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#bdbdbd"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#181818"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#1b1b1b"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#2c2c2c"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#8a8a8a"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#373737"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#3c3c3c"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#4e4e4e"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#616161"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#757575"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#000000"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#3d3d3d"
-      }
-    ]
-  }
-];
 
 </script>
 
