@@ -200,10 +200,10 @@ let directionsRenderer = null;
 //const vm = this;
 
 const techelevator = {
-  name: 'What\'s this?',
-  category: 'secret',
-  description: 'Like our app? Find your way here to learn how to make your own',
-  latitude: 39.94939,
+  name: '???',
+  category: '',
+  description: 'Like our app? Find your way here to learn how to make your own.',
+  latitude: 39.949390,
   longitude: -75.169212,
   iconUrl: 'question.png',
   imgUrl: 'dmp.jpg'
@@ -528,6 +528,9 @@ export default {
           this.addMarker(location);
         }
       })
+      if (techelevator.name.match(filter) || techelevator.category.match(filter)) {
+        this.addMarker(techelevator);
+      }
     },
     calculateAndDisplayRoute() {
       // var end = document.getElementById('end').value;
